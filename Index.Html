@@ -1,332 +1,209 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIN ID Card</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 160vh;
-            width: 75vh;
-            background-color: #f4f4f4;
-            flex-direction: column;
-        }
-        .id-card {
-            width: 480px;
-            height: 300px;
-            background: linear-gradient(to bottom, #eef7eb, #c8e6c9);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: left;
-            position: relative;
-            border: 2px solid #004d00;
-            overflow: hidden;
-        }
-        .header {
-            text-align: left;
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .header .top {
-            color: #008000;
-            font-size: 20px;
-        }
-        .header .bottom {
-            color: black;
-            font-size: 17px;
-            font-weight: bold;
-        }
-        .coat-of-arms {
-            position: absolute;
-            width: 350px;
-            height: auto;
-            opacity: 0.15;
-            top: 0px;
-            left: 90px;
-            z-index: 0;
-        }
-        .profile {
-            position: absolute;
-            left: 15px;
-            top: 70px;
-            text-align: center;
-            z-index: 1;
-        }
-        .profile img {
-            width: 110px;
-            height: 145px;
-            border-radius: 5px;
-            border: 2px solid #;
-            cursor: pointer;
-        }
-        .content {
-            position: absolute;
-            left: 140px;
-            top: px;
-            font-size: 14px;
-            color: #555;
-            z-index: 1;
-        }
-        input {
-            border: none;
-            background: transparent;
-            font-weight: bold;
-            font-size: 16px;
-            width: 300px;
-            text-transform: uppercase;
-        }
-        .qr-container {
-            position: absolute;
-            right: 20px;
-            top: 50px;
-            text-align: right;
-            z-index: 1;
-        }
-        .qr-code {
-            background: white;
-            padding: 5px;
-            border-radius: 5px;
-            width: 80px;
-            height: 80px;
-            margin-bottom: 5px;
-        }
-        .qr-text {
-            font-size: 20px;
-            text-align: center;
-            font-weight: bold;
-            color: black;
-            margin-top: 2px;
-        }
-        .issue-date-container {
-            text-align: center;
-            margin-top: 5px;
-        }
-        .issue-date-title {
-            font-size: 15px;
-            text-align: center;
-            font-weight: bold;
-            color: black;
-            margin-bottom: 5px;
-        }
-        .issue-date-value {
-            font-size: 14px;
-            font-weight: bold;
-            color: black;
-            text-align: center;
-            border: none;
-            background: transparent;
-            width: 90px;
-        }
-        .issue-date-value:focus {
-            outline: none;
-            border-bottom: 1px solid #004d00;
-        }
-        .nin-section {
-            position: absolute;
-            bottom: 15px;
-            width: 100%;
-            text-align: center;
-            font-size: 23px;
-            font-weight: bold;
-            color: black;
-            z-index: 1;
-        }
-        .nin-number {
-            font-size: 35px;
-            text-align: center;
-            font-weight: bold;
-            letter-spacing: 2px;
-            color: black;
-        }
-        .button {
-            margin-top: 20px;
-            padding: 10px 15px;
-            background: #f4f4f4;
-            color: #f4f4f4;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-    </style>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="theme-color" content="#2a2a72"/>
+  <title>Biometric Auth</title>
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css"/>
+  <style>
+    * {
+      margin: 0; padding: 0; box-sizing: border-box;
+      font-family: 'Segoe UI', sans-serif;
+    }
+    body {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      min-height: 100vh;
+      background: linear-gradient(45deg, #2a2a72, #009ffd);
+      overflow: hidden;
+    }
+    .container {
+      position: relative;
+      width: 350px;
+      background: rgba(255, 255, 255, 0.1);
+      backdrop-filter: blur(15px);
+      border: 2px solid rgba(255, 255, 255, 0.2);
+      border-radius: 20px;
+      padding: 40px;
+      box-shadow: 0 15px 35px rgba(0, 0, 0, 0.25);
+    }
+    .tabs {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 40px;
+    }
+    .tab {
+      cursor: pointer;
+      font-size: 1.2em;
+      color: rgba(255, 255, 255, 0.6);
+      transition: 0.3s;
+      position: relative;
+    }
+    .tab.active {
+      color: #fff;
+      transform: scale(1.1);
+    }
+    .tab.active::after {
+      content: '';
+      position: absolute;
+      bottom: -10px;
+      left: 0;
+      width: 100%;
+      height: 3px;
+      background: #fff;
+    }
+    .form-group {
+      margin-bottom: 25px;
+    }
+    input {
+      width: 100%;
+      padding: 12px 20px;
+      background: rgba(255, 255, 255, 0.1);
+      border: none;
+      border-radius: 30px;
+      color: #fff;
+      font-size: 1em;
+      transition: 0.3s;
+    }
+    input:focus {
+      outline: none;
+      background: rgba(255, 255, 255, 0.2);
+    }
+    button {
+      width: 100%;
+      padding: 12px;
+      background: #fff;
+      border: none;
+      border-radius: 30px;
+      font-size: 1.1em;
+      font-weight: 600;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    button:hover {
+      background: #f0f0f0;
+    }
+    .fingerprint-btn {
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      margin-top: 25px;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+    .fingerprint-btn i {
+      font-size: 2.5em;
+      color: rgba(255, 255, 255, 0.8);
+      transition: 0.3s;
+    }
+    .fingerprint-btn.active i {
+      color: #00ff88;
+      text-shadow: 0 0 15px #00ff88;
+      animation: pulse 1s infinite;
+    }
+    @keyframes pulse {
+      0%, 100% { transform: scale(1); }
+      50% { transform: scale(1.1); }
+    }
+    .hidden { display: none; }
+  </style>
 </head>
 <body>
-
-    <div class="id-card" id="idCard">
-        <div class="header">
-            <div class="top">FEDERAL REPUBLIC OF NIGERIA</div>
-            <div class="bottom">DIGITAL NIN SLIP</div>
-        </div>
-
-        <img src="https://shortlink.uk/WMwt" class="coat-of-arms">
-
-        <div class="profile">
-            <input type="file" id="uploadImage" accept="image/*" style="display: none;">
-            <img id="profilePic" src="https://shortlink.uk/WP3Y" onclick="document.getElementById('uploadImage').click();">
-        </div>
-
-        <div class="content">
-            <p><b>SURNAME/NOM</b> <input type="text" id="surname" value="LAWAL"></p>
-            <p><b>GIVEN NAMES/PRENOMS</b> <input type="text" id="givenName" value="IBRAHIM,"></p>
-            <p><b>DATE OF BIRTH</b> <input type="text" id="dob" value="12 NOV 1997     SEX/SEXE: M"></p>
-        </div>
-
-        <div class="qr-container">
-            <div class="qr-code" id="qrcode"></div>
-            <div class="qr-text">NGA</div>
-            <div class="issue-date-container">
-                <div class="issue-date-title">ISSUE DATE</div>
-                <input type="text" id="issueDate" class="issue-date-value" value="21 FEB 2024">
-            </div>
-        </div>
-
-        <div class="nin-section">
-            National Identification Number (NIN)<br>
-            <input type="text" id="nin" class="nin-number" value="5245 007 5958">
-        </div>
+  <div class="container">
+    <div class="tabs">
+      <div class="tab active" onclick="showForm('login')">Login</div>
+      <div class="tab" onclick="showForm('signup')">Sign Up</div>
     </div>
 
-    <button class="button" onclick="window.open('https://shortlink.uk/U4An', '_blank')">TURN BACK OF THE CARD</button>
-    </div>    
+    <form id="loginForm" class="form">
+      <div class="form-group">
+        <input type="email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" placeholder="Password" required>
+      </div>
+      <button type="submit">Login</button>
+      <div class="fingerprint-btn" onclick="handleFingerprint('login')">
+        <i class="fas fa-fingerprint"></i>
+      </div>
+    </form>
 
-    <script>
-        function generateQRCode() {
-            document.getElementById("qrcode").innerHTML = "";
-            new QRCode(document.getElementById("qrcode"), {
-                text: document.getElementById("nin").value,
-                width: 80,
-                height: 80
-            });
-        }
-        generateQRCode();
+    <form id="signupForm" class="form hidden">
+      <div class="form-group">
+        <input type="text" placeholder="Full Name" required>
+      </div>
+      <div class="form-group">
+        <input type="email" placeholder="Email" required>
+      </div>
+      <div class="form-group">
+        <input type="password" placeholder="Password" required>
+      </div>
+      <button type="submit">Create Account</button>
+      <div class="fingerprint-btn" onclick="handleFingerprint('signup')">
+        <i class="fas fa-fingerprint"></i>
+      </div>
+    </form>
+  </div>
 
-        document.getElementById("uploadImage").addEventListener("change", function(event) {
-            let reader = new FileReader();
-            reader.onload = function() {
-                document.getElementById("profilePic").src = reader.result;
-            };
-            reader.readAsDataURL(event.target.files[0]);
+  <script>
+    function showForm(formType) {
+      document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+      document.querySelectorAll('.form').forEach(form => form.classList.add('hidden'));
+      document.querySelector(`.tab[onclick="showForm('${formType}')"]`).classList.add('active');
+      document.getElementById(`${formType}Form`).classList.remove('hidden');
+    }
+
+    async function handleFingerprint(action) {
+      const fingerprintBtn = action === 'login'
+        ? document.querySelector('#loginForm .fingerprint-btn')
+        : document.querySelector('#signupForm .fingerprint-btn');
+
+      try {
+        fingerprintBtn.classList.add('active');
+
+        const publicKeyCredential = await navigator.credentials.get({
+          publicKey: {
+            challenge: new Uint8Array(32),
+            rpId: window.location.hostname,
+            userVerification: 'required'
+          }
         });
 
-        function downloadID() {
-            html2canvas(document.getElementById('idCard')).then(canvas => {
-                let link = document.createElement('a');
-                link.href = canvas.toDataURL();
-                link.download = 'National_ID.png';
-                link.click();
-            });
-        }
+        fingerprintBtn.classList.remove('active');
 
-        document.getElementById("nin").addEventListener("input", generateQRCode);
-    </script>
+        if (action === 'login') {
+          alert('Fingerprint login successful! Redirecting...');
+          window.location.href = '/dashboard';
+        } else {
+          alert('Fingerprint registered successfully!');
+        }
+      } catch (error) {
+        fingerprintBtn.classList.remove('active');
+        alert('Fingerprint authentication failed. Please try again.');
+        console.error('Authentication error:', error);
+      }
+    }
 
-</body>
-</htm<!DOCTYPE html>
-<html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>NIN ID Card - Back</title>
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
-    <style>
-        body {
-            font-family: Arial, sans-serif;
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            height: 160vh;
-            width: 100vh;
-            background-color: #f4f4f4;
-            flex-direction: column;
-        }
-        .id-card-back {
-            width: 480px;
-            height: 300px;
-            background: linear-gradient(to bottom, #eef7eb, #c8e6c9);
-            padding: 15px;
-            border-radius: 10px;
-            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
-            text-align: center;
-            position: relative;
-            border: 2px solid #004d00;
-        }
-        .coat-of-arms {
-            position: absolute;
-            width: 340px;
-            height: auto;
-            opacity: 0.15;
-            top: 35px;
-            left: 80px;
-            z-index: 0;
-        }
-        .disclaimer {
-            font-size: 14px;
-            text-align: center;
-            font-weight: bold;
-        }
-        .disclaimer h2 {
-            font-size: 18px;
-            font-weight: bold;
-        }
-        .disclaimer h3 {
-            font-size: 16px;
-            font-style: italic;
-            margin-bottom: 10px;
-        }
-        .disclaimer p {
-            font-size: 12px;
-            text-align: justify;
-            margin: 5px 10px;
-        }
-        .download-btn {
-            margin-top: 20px;
-            padding: 10px 15px;
-            background: green;
-            color: white;
-            border: none;
-            cursor: pointer;
-            font-size: 16px;
-            border-radius: 5px;
-        }
-    </style>
-</head>
-<body>
+    document.getElementById('loginForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Login successful!');
+    });
 
-    <div class="id-card-back" id="idCardBack">
-        <img src="https://shortlink.uk/U4Ml" class="coat-of-arms">
-        
-        <div class="disclaimer">
-            <h2>DISCLAIMER</h2>
-            <h3>Trust, but verify</h3>
-            <p>Kindly ensure each time this ID is presented, that you verify the credentials using a Government APPROVED verification resource.</p>
-            <p>The details on the front of this NIN Slip must EXACTLY match the verification result.</p>
+    document.getElementById('signupForm').addEventListener('submit', (e) => {
+      e.preventDefault();
+      alert('Account created successfully!');
+    });
 
-            <h2>CAUTION!</h2>
-            <p>If this NIN was not issued to the person on the front of this document, please DO NOT attempt to scan, photocopy or replicate the personal data contained herein.</p>
-            <p>You are only permitted to scan the barcode for the purpose of identity verification.</p>
-            <p>The FEDERAL GOVERNMENT OF NIGERIA assumes no responsibility if you accept any variance on the scan result or do not scan the 2D barcode overleaf.</p>
-        </div>
-    </div>
+    if (!window.PublicKeyCredential) {
+      alert('Biometric authentication is not supported in this browser.');
+      document.querySelectorAll('.fingerprint-btn').forEach(btn => btn.style.display = 'none');
+    }
 
-    <button class="download-btn" onclick="downloadBackID()">Download Back of ID</button>
-
-    <script>
-        function downloadBackID() {
-            html2canvas(document.getElementById('idCardBack')).then(canvas => {
-                let link = document.createElement('a');
-                link.href = canvas.toDataURL();
-                link.download = 'National_ID_Back.png';
-                link.click();
-            });
-        }
-    </script>
-
+    if (location.protocol !== 'https://moviesgram.netlify.app/' && location.hostname !== 'localhost') {
+      alert('Fingerprint login only works over HTTPS.');
+    }
+  </script>
 </body>
 </html>
