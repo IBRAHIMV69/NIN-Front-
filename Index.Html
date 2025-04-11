@@ -16,9 +16,56 @@
       height: 100%;
       border: none;
     }
+    .header {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 5px 20px;
+    background-color: #1A1A24;
+    z-index: 1000;
+}
+.header .logo-container {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+.header .logo {
+    font-size: 24px;
+    background-color: #111;
+    color: #00b300;
+    border-radius: 20px;
+    padding: 5px 8px;
+    font-weight: bold;
+}
+.header .bars-icon {
+    font-size: 20px;
+    cursor: pointer;
+    color: #fff;
+}
+.header .bars-icon:hover {
+    color: #00b300;
+}
+.header .button-group {
+    display: flex;
+    gap: 10px;
+}
   </style>
 </head>
 <body>
-  <iframe src="https://deepai.org/chat"></iframe>
+    <!-- Header -->
+<div class="header">
+    <div class="logo-container">
+        <div class="logo">BlackBox</div>
+    </div>
+    <div class="button-group">
+        <div class="bars-icon"><i class="fas fa-bars"></i></div>
+    </div>
+</div>
+     
+  <iframe src="https://www.blackbox.ai/"></iframe>
 </body>
 </html>
