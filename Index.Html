@@ -1,11 +1,8 @@
 <!DOCTYPE html>
-<html lang="en">
+<html>
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>Website Frame</title>
-  <style>
-    html, body {
+    <style>
+        html, body {
       margin: 0;
       padding: 0;
       height: 100%;
@@ -29,18 +26,19 @@
     z-index: 1000;
 }
 .header .logo-container {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-}
-.header .logo {
-    font-size: 24px;
-    background-color: #111;
-    color: #00b300;
-    border-radius: 20px;
-    padding: 5px 8px;
-    font-weight: bold;
-}
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .header .logo {
+            font-size: 20px;
+            border: 1px solid #ccc;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            border-radius: 20px;
+            padding: 5px 8px;
+            font-weight: bold;
+        }
 .header .bars-icon {
     font-size: 20px;
     cursor: pointer;
@@ -53,19 +51,141 @@
     display: flex;
     gap: 10px;
 }
-  </style>
+        /* Postitial Ad Modal */
+        .ad-modal {
+            display: none;
+            position: fixed;
+            z-index: 2000;
+            top: 0;
+            left: 0;
+            height: 100%;
+            width: 100%;
+            background: rgba(0, 0, 0, 0.7);
+            justify-content: center;
+            align-items: center;
+        }
+
+        .ad-content {
+            background: white;
+            padding: 3px;
+            font-size: 0px;
+            border-radius: 10px;
+            max-width: 85%;
+            text-align: center;
+            position: relative;
+        }
+
+        .close-ad {
+            position: absolute;
+            top: 0px;
+            right: 15px;
+            font-size: 30px;
+            cursor: pointer;
+            color: red;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-    <!-- Header -->
-<div class="header">
+  <!-- Header -->
+  <div class="header">
     <div class="logo-container">
-        <div class="logo">BlackBox</div>
+      <div class="logo">BlackBox</div>
     </div>
     <div class="button-group">
-        <div class="bars-icon"><i class="fas fa-bars"></i></div>
+      <div class="bars-icon"><i class="fas fa-bars"></i></div>
     </div>
-</div>
-     
+  </div>
+
+  <!-- Iframe -->
   <iframe src="https://www.blackbox.ai/screenshot"></iframe>
+
+    <!-- Ad Modal Container -->
+    <div class="ad-modal" id="adModal">
+        <div class="ad-content">
+            <span class="close-ad" onclick="closeAd()">×</span>
+            <div class="ad-container" id="adContainer"></div>
+        </div>
+    </div>
+
+    <script>
+        // Ad configuration
+        let currentAdIndex = 0;
+        const firstPopupDelay = 1000; // 20 seconds before first ad
+        const popupInterval = 1000;   // 15 seconds between ads
+        
+        // Add your Adsterra ad keys here
+        const adUnits = [
+            {
+                key: 'daed8f251a8b05f993211e5dbe98980b',
+                width: 300,
+                height: 35
+            },
+            {
+                key: 'daed8f251a8b05f993211e5dbe98980b',
+                width: 300,
+                height: 35
+            },
+            // Add more ad units as needed
+        ];
+
+        function loadAd() {
+            const ad = adUnits[currentAdIndex];
+            const container = document.getElementById('adContainer');
+            
+            // Clear previous ad
+            container.innerHTML = '';
+
+            // Create ad script
+            const script = document.createElement('script');
+            script.type = 'text/javascript';
+            script.innerHTML = `
+                atOptions = {
+                    'key' : '${ad.key}',
+                    'format' : 'iframe',
+                    'height' : ${ad.height},
+                    'width' : ${ad.width},
+                    'params' : {}
+                };
+            `;
+
+            // Create iframe container
+            const iframe = document.createElement('iframe');
+            iframe.style.border = 'none';
+            iframe.style.overflow = 'hidden';
+            iframe.style.width = `${ad.width}px`;
+            iframe.style.height = `${ad.height}px`;
+
+            // Append elements
+            container.appendChild(script);
+            container.appendChild(iframe);
+
+            // Load ad script
+            const adScript = document.createElement('script');
+            adScript.src = `//www.highperformanceformat.com/${ad.key}/invoke.js`;
+            container.appendChild(adScript);
+
+            // Show modal
+            document.getElementById('adModal').style.display = 'flex';
+        }
+
+        function rotateAd() {
+            currentAdIndex = (currentAdIndex + 1) % adUnits.length;
+            loadAd();
+        }
+
+        function closeAd() {
+            document.getElementById('adModal').style.display = 'none';
+            setTimeout(rotateAd, popupInterval);
+        }
+
+        // Initial setup
+        window.onload = () => {
+            if(adUnits.length > 0) {
+                setTimeout(loadAd, firstPopupDelay);
+            }
+        };
+    </script>
+
 </body>
 </html>
