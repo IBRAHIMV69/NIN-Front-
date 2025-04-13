@@ -21,7 +21,7 @@
     display: flex;
     justify-content: space-between;
     align-items: center;
-    padding: 5px 20px;
+    padding: 10px 20px;
     background-color: #1A1A24;
     z-index: 1000;
 }
@@ -51,59 +51,6 @@
     display: flex;
     gap: 10px;
 }
-.frame-container {
-            width: 100vw;
-            height: 100vh;
-            display: block;
-        }
-        iframe {
-            width: 100%;
-            height: 100%;
-            border: none;
-        }
-/* Netflix Style Bottom Navigation */
-        footer {
-            display: flex;
-            justify-content: space-around;
-            align-items: center;
-            padding: 0px 0;
-            border-radius: 8px;
-            background-color: #1A1A24;
-            position: fixed;
-            bottom: 0;
-            left: 0;
-            width: 100%;
-            z-index: 100;
-            border-top: 1px solid rgba(255, 255, 255, 0.1);
-        }
-        footer .nav-icon {
-            flex: 1;
-            text-align: center;
-            color: #b3b3b3;
-            transition: all 0.3s ease-in-out;
-            cursor: pointer;
-            font-size: 12px;
-            padding: 10px 0;
-        }
-        footer .nav-icon i {
-            font-size: 19px;
-            margin-bottom: 5px;
-            transition: 0.3s;
-        }
-        footer .nav-icon.active, 
-        footer .nav-icon:hover {
-            color: #ff5500;
-        }
-        footer .nav-icon.active i, 
-        footer .nav-icon:hover i {
-            transform: scale(1.2);
-            filter: drop-shadow(0 0 8px rgba(0, 179, 0, 0.6));
-        }
-        footer .nav-icon span {
-            display: block;
-            font-size: 9px;
-            margin-top: 0px;
-        }
         /* Postitial Ad Modal */
         .ad-modal {
             display: none;
@@ -120,8 +67,8 @@
 
         .ad-content {
             background: white;
-            padding: 3px;
-            font-size: 9px;
+            padding: 2px;
+            font-size: 8px;
             border-radius: 10px;
             max-width: 100%;
             text-align: center;
@@ -143,102 +90,63 @@
   <!-- Header -->
   <div class="header">
     <div class="logo-container">
-      <div class="logo">Reel Short</div>
+      <div class="logo">Royal Short</div>
     </div>
     <div class="button-group">
       <div class="bars-icon"><i class="fas fa-bars"></i></div>
     </div>
   </div>
 
+  <!-- Iframe -->
+  <iframe src="https://dramashorts.io/"></iframe>"></iframe>
 
     <!-- Postitial Ad Modal -->
     <div class="ad-modal" id="postAd">
         <div class="ad-content">
             <span class="close-ad" onclick="closeAd()">×</span>
-            <h2><i class="fas fa-ad"></i> Advertisement</h2>
+            <h2><i class="fas fa-ad"></i> Ads</h2>
             <!-- Adsterra Ad -->
+            <script type="text/javascript"> 	atOptions = { 		'key' : 'd73b8fbe346f27f7739b431291537d31', 		'format' : 'iframe', 		'height' : 250, 		'width' : 300, 		'params' : {} 	}; </script> <script type="text/javascript" src="//www.highperformanceformat.com/d73b8fbe346f27f7739b431291537d31/invoke.js"></script>
+            <div>
+            </div>
+            
+            <script type="text/javascript"> 	atOptions = { 		'key' : 'd73b8fbe346f27f7739b431291537d31', 		'format' : 'iframe', 		'height' : 250, 		'width' : 300, 		'params' : {} 	}; </script> <script type="text/javascript" src="//www.highperformanceformat.com/d73b8fbe346f27f7739b431291537d31/invoke.js"></script>
+            <div>
+            </div>
             <script type="text/javascript">
-                atOptions = {
-                    'key' : 'daed8f251a8b05f993211e5dbe98980b',
-                    'format' : 'iframe',
-                    'height' : 250,
-                    'width' : 300,
-                    'params' : {}
-                };
-            </script>
-            <script type="text/javascript" src="//www.highperformanceformat.com/daed8f251a8b05f993211e5dbe98980b/invoke.js"></script>
+	atOptions = {
+		'key' : 'd73b8fbe346f27f7739b431291537d31',
+		'format' : 'iframe',
+		'height' : 250,
+		'width' : 300,
+		'params' : {}
+	};
+</script>
+<script type="text/javascript" src="//www.highperformanceformat.com/d73b8fbe346f27f7739b431291537d31/invoke.js"></script>
         </div>
     </div>
-    
-    <div class="frame-container">
-        <iframe id="video-frame" src="https://www.reelshort.com/" allowfullscreen></iframe>
-    </div>
-
-    <footer>
-        <div class="nav-icon active" data-video="https://www.reelshort.com/">
-            <i class="fas fa-home"></i>
-            <span>Home</span>
-        </div>
-        <div class="nav-icon" data-video="https://www.reelshort.com/search">
-            <i class="fas fa-search"></i>
-            <span>Search</span>
-        </div>
-        <div class="nav-icon" data-video="https://www.reelshort.com/movie-genres/all-movies">
-            <i class="fas fa-film"></i>
-            <span>Drama Series</span>
-        </div>
-        <div class="nav-icon" data-video="https://www.reelshort.com/dashboard/library?tab=mylist">
-            <i class="far fa-clock"></i>
-            <span>History</span>
-        </div>                
-        <div class="nav-icon" data-video="https://www.reelshort.com/fandom/">
-            <i class="fas fa-newspaper"></i>
-            <span>Blog</span>
-        </div>
-    </footer>
 
     <script>
-    let currentAdIndex = 0;
-    const firstPopupDelay = 1000; // 1 second before first ad
-    const popupInterval = 100000;   // 100 seconds between subsequent ads
+        let currentAdIndex = 0;
+        const firstPopupDelay = 2000; // 20 seconds before first ad
+        const popupInterval = 1500000;   // 15 seconds between subsequent ads
 
-    function showNextAd() {
-        document.getElementById("postAd").style.display = "flex";
-        currentAdIndex++;
-    }
+        function showNextAd() {
+            document.getElementById("postAd").style.display = "flex";
+            currentAdIndex++;
+        }
 
-    // Initial ad trigger
-    window.onload = function() {
-        setTimeout(showNextAd, firstPopupDelay);
-    };
+        // Initial ad trigger
+        window.onload = function() {
+            setTimeout(showNextAd, firstPopupDelay);
+        };
 
-    function closeAd() {
-        document.getElementById("postAd").style.display = "none";
-        // Schedule next ad
-        setTimeout(showNextAd, popupInterval);
-    }
-    
-    // Change video source based on the selected section
-    const videoFrame = document.getElementById("video-frame");
-    const header = document.querySelector(".header");
-
-    document.querySelectorAll(".nav-icon").forEach(icon => {
-        icon.addEventListener("click", function() {
-            document.querySelectorAll(".nav-icon").forEach(i => i.classList.remove("active"));
-            this.classList.add("active");
-
-            // Hide header if "New & Hot" is selected
-            if (this.dataset.video === "https://www.reelshort.com/search") {
-                header.style.display = "none"; // Hide header
-            } else {
-                header.style.display = "flex"; // Show header for other sections
-            }
-
-            // Update the iframe source
-            videoFrame.src = this.getAttribute("data-video");
-        });
-    });
-</script>
+        function closeAd() {
+            document.getElementById("postAd").style.display = "none";
+            // Schedule next ad
+            setTimeout(showNextAd, popupInterval);
+        }
+    </script>
 
 </body>
 </html>
