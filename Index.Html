@@ -1,31 +1,39 @@
 <!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Royal Short - Video Platform</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
     <style>
-     html, body {
-      margin: 0;
-      padding: 0;
-      height: 100%;
-      overflow: hidden;
-    }        
-    iframe {
-      width: 100%;
-      height: 100%;
-      border: none;
-    }
-    .header {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-    padding: 10px 20px;
-    background-color: #1A1A24;
-    z-index: 1000;
-}
-.header .logo-container {
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 8px 20px;
+            background-color: #1A1A24;
+            z-index: 1000;
+        }
+        .header .logo-container {
             display: flex;
             align-items: center;
             gap: 10px;
@@ -39,114 +47,434 @@
             padding: 5px 8px;
             font-weight: bold;
         }
-.header .bars-icon {
-    font-size: 20px;
-    cursor: pointer;
-    color: #fff;
-}
-.header .bars-icon:hover {
-    color: #00b300;
-}
-.header .button-group {
-    display: flex;
-    gap: 10px;
-}
-        /* Postitial Ad Modal */
-        .ad-modal {
-            display: none;
-            position: fixed;
-            z-index: 2000;
-            top: 0;
-            left: 0;
-            height: 100%;
-            width: 100%;
-            background: rgba(0, 0, 0, 0.2);
-            justify-content: center;
-            align-items: center;
+        .header .bars-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #fff;
         }
-
-        .ad-content {
-            background: white;
-            padding: 2px;
-            font-size: 8px;
-            border-radius: 10px;
-            max-width: 100%;
-            text-align: center;
+        .header .bars-icon:hover {
+            color: #00b300;
+        }
+        .frame-container {
+            width: 100vw;
+            height: 100vh;
             position: relative;
         }
-
-        .close-ad {
-            position: absolute;
-            top: 0px;
-            right: 15px;
-            font-size: 30px;
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
+        /* Play In App Button */
+        .play-in-app-container {
+            position: fixed;
+            bottom: 67px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 1000;
+        }
+        .play-in-app-button {
+            background: linear-gradient(to right, #00b300, #008000); /* Green gradient */
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
             cursor: pointer;
+            border: none;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .play-in-app-button::before {
+            content: '';
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            width: 300%;
+            height: 300%;
+            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%);
+            transform: translate(-50%, -50%) scale(0);
+            transition: transform 0.5s ease-in-out;
+            border-radius: 50%;
+        }
+        .play-in-app-button:hover {
+            background: linear-gradient(to right, #008000, #006600); /* Darker green gradient */
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
+        }
+        .play-in-app-button:hover::before {
+            transform: translate(-50%, -50%) scale(1);
+        }
+        .play-in-app-button:active {
+            transform: translateY(0);
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+        }
+
+        /* Bottom Navigation */
+        footer {
+            display: flex;
+            justify-content: space-around;
+            align-items: center;
+            padding: 0px 0;
+            border-radius: 8px;
+            background-color: #1A1A24;
+            position: fixed;
+            bottom: 0;
+            left: 0;
+            width: 100%;
+            z-index: 100;
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+        }
+        footer .nav-icon {
+            flex: 1;
+            text-align: center;
+            color: #b3b3b3;
+            transition: all 0.3s ease-in-out;
+            cursor: pointer;
+            font-size: 12px;
+            padding: 10px 0;
+        }
+        footer .nav-icon i {
+            font-size: 19px;
+            margin-bottom: 5px;
+            transition: 0.3s;
+        }
+        footer .nav-icon.active, 
+        footer .nav-icon:hover {
+            color: #00b300;
+        }
+        footer .nav-icon.active i, 
+        footer .nav-icon:hover i {
+            transform: scale(1.2);
+            filter: drop-shadow(0 0 8px rgba(0, 179, 0, 0.6));
+        }
+        footer .nav-icon span {
+            display: block;
+            font-size: 9px;
+            margin-top: 0px;
+        }
+
+        /* Ad Overlay */
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .ad-popup {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .ad-popup img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+        .ad-popup .close-btn {
+            position: absolute;
+            top: 7px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.1);
             color: red;
+            border: none;
+            padding: 0px 0px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .ad-popup .get-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: orange;
+            color: white;
+            padding: 8px 20px;
+            font-size: 15px;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+        }
+
+        /* Sidebar Menu */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 250px;
+            height: 100%;
+            background-color: #1A1A24;
+            transition: 0.3s;
+            z-index: 2000;
+            padding: 20px;
+            box-shadow: -2px 0 15px rgba(0,0,0,0.2);
+        }
+        .sidebar-menu.active {
+            right: 0;
+        }
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+        .close-menu {
+            color: #fff;
+            font-size: 24px;
+            cursor: pointer;
+        }
+        .social-media-list {
+            list-style: none;
+        }
+        .social-media-item {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .social-media-item:hover {
+            color: #ff5500;
+            transform: translateX(10px);
+        }
+        .social-media-item i {
+            font-size: 20px;
+            width: 30px;
+            margin-right: 15px;
+        }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+            display: none;
         }
     </style>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css">
 </head>
 <body>
-  <!-- Header -->
-  <div class="header">
-    <div class="logo-container">
-      <div class="logo">Royal Short</div>
+    <!-- Menu Overlay -->
+    <div class="menu-overlay" id="menuOverlay"></div>
+    
+    <!-- Social Media Sidebar -->
+    <div class="sidebar-menu" id="sidebarMenu">
+        <div class="menu-header">
+            <h3 style="color: #fff">Menu</h3>
+            <div class="close-menu" onclick="closeMenu()">×</div>
+        </div>
+        <ul class="social-media-list">
+            <li>
+                <a href="https://facebook.com" class="social-media-item" target="_blank">
+                    <i class="fab fa-facebook"></i>
+                    Facebook
+                </a>
+            </li>
+            <li>
+                <a href="https://twitter.com" class="social-media-item" target="_blank">
+                    <i class="fab fa-twitter"></i>
+                    Twitter
+                </a>
+            </li>
+            <li>
+                <a href="https://instagram.com" class="social-media-item" target="_blank">
+                    <i class="fab fa-instagram"></i>
+                    Instagram
+                </a>
+            </li>
+            <li>
+                <a href="https://youtube.com" class="social-media-item" target="_blank">
+                    <i class="fab fa-youtube"></i>
+                    YouTube
+                </a>
+            </li>
+            <li>
+                <a href="https://tiktok.com" class="social-media-item" target="_blank">
+                    <i class="fab fa-tiktok"></i>
+                    TikTok
+                </a>
+            </li>
+        </ul>
     </div>
-    <div class="button-group">
-      <div class="bars-icon"><i class="fas fa-bars"></i></div>
-    </div>
-  </div>
 
-  <!-- Iframe -->
-  <iframe src="https://dramashorts.io/"></iframe>"></iframe>
-
-    <!-- Postitial Ad Modal -->
-    <div class="ad-modal" id="postAd">
-        <div class="ad-content">
-            <span class="close-ad" onclick="closeAd()">×</span>
-            <h2><i class="fas fa-ad"></i> Ads</h2>
-            <!-- Adsterra Ad -->
-            <script type="text/javascript"> 	atOptions = { 		'key' : 'd73b8fbe346f27f7739b431291537d31', 		'format' : 'iframe', 		'height' : 250, 		'width' : 300, 		'params' : {} 	}; </script> <script type="text/javascript" src="//www.highperformanceformat.com/d73b8fbe346f27f7739b431291537d31/invoke.js"></script>
-            <div>
-            </div>
-            
-            <script type="text/javascript"> 	atOptions = { 		'key' : 'd73b8fbe346f27f7739b431291537d31', 		'format' : 'iframe', 		'height' : 250, 		'width' : 300, 		'params' : {} 	}; </script> <script type="text/javascript" src="//www.highperformanceformat.com/d73b8fbe346f27f7739b431291537d31/invoke.js"></script>
-            <div>
-            </div>
-            <script type="text/javascript">
-	atOptions = {
-		'key' : 'd73b8fbe346f27f7739b431291537d31',
-		'format' : 'iframe',
-		'height' : 250,
-		'width' : 300,
-		'params' : {}
-	};
-</script>
-<script type="text/javascript" src="//www.highperformanceformat.com/d73b8fbe346f27f7739b431291537d31/invoke.js"></script>
+    <!-- Header -->
+    <div class="header">
+        <div class="logo-container">
+            <div class="logo">Movie Gram</div>
+        </div>
+        <div class="button-group">
+            <div class="bars-icon" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
         </div>
     </div>
 
-    <script>
-        let currentAdIndex = 0;
-        const firstPopupDelay = 2000; // 20 seconds before first ad
-        const popupInterval = 1500000;   // 15 seconds between subsequent ads
+    <!-- Video Container -->
+    <div class="frame-container">
+        <iframe id="video-frame" allowfullscreen></iframe>
+    </div>
+    
+    <!-- Play In App Button -->
+<div class="play-in-app-container">
+    <a href="https://example.com/sports">
+        <button class="play-in-app-button" id="play-in-app-button">
+            <i class="fas fa-futbol"></i> Sports
+        </button>
+    </a>
+</div>
 
-        function showNextAd() {
-            document.getElementById("postAd").style.display = "flex";
-            currentAdIndex++;
+    <!-- Ad Overlay -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-popup">
+            <button class="close-btn" onclick="closeAd()">✖</button>
+            <img id="adImage" src="" alt="Ad Image">
+            <button class="get-btn">Chat Now</button>
+        </div>
+    </div>
+
+    <!-- Bottom Navigation -->
+    <footer>
+        <div class="nav-icon active" data-video="https://moviebox.ng/web/filter?tab=movie">
+            <i class="fas fa-home"></i>
+            <span>Home</span>
+        </div>
+        <div class="nav-icon" data-video="https://moviebox.ng/web/class-list?platform=Netflix&utm_source=">
+            <i class="fas fa-fire"></i>
+            <span>New & Hot</span>
+        </div>
+        <div class="nav-icon" data-video="https://moviebox.ng/web/filter?tab=tv">
+            <i class="fas fa-film"></i>
+            <span>Movies</span>
+        </div>
+        <div class="nav-icon" data-video="https://moviebox.ng/web/ranking-list?id=1232643093049001320">
+            <i class="fas fa-medal"></i>
+            <span>Ranking</span>
+        </div>
+        <div class="nav-icon" data-video="https://moviebox.ng/web/filter?tab=anime">
+            <i class="fas fa-theater-masks"></i>
+            <span>Animation</span>
+        </div>
+    </footer>
+
+    <script>
+        // Video Player Functionality
+        const videoFrame = document.getElementById("video-frame");
+        const navIcons = document.querySelectorAll(".nav-icon");
+        const adOverlay = document.getElementById("adOverlay");
+
+        function changeVideo(src) {
+            videoFrame.style.opacity = "0";
+            setTimeout(() => {
+                videoFrame.src = src;
+                videoFrame.style.opacity = "1";
+            }, 300);
         }
 
-        // Initial ad trigger
-        window.onload = function() {
-            setTimeout(showNextAd, firstPopupDelay);
-        };
+        function setActiveTab(selectedIcon) {
+            navIcons.forEach(icon => icon.classList.remove("active"));
+            selectedIcon.classList.add("active");
+            localStorage.setItem("activeTab", selectedIcon.getAttribute("data-video"));
+        }
+
+        navIcons.forEach(icon => {
+            icon.addEventListener("click", function() {
+                setActiveTab(this);
+                changeVideo(this.getAttribute("data-video"));
+            });
+        });
+
+        // Menu Functionality
+        function toggleMenu() {
+            document.getElementById("sidebarMenu").classList.toggle("active");
+            document.getElementById("menuOverlay").style.display = "block";
+        }
+
+        function closeMenu() {
+            document.getElementById("sidebarMenu").classList.remove("active");
+            document.getElementById("menuOverlay").style.display = "none";
+        }
+
+        document.getElementById("menuOverlay").addEventListener("click", closeMenu);
+        
+
+        // Ad System
+        const ads = [
+            {
+                image: "https://bitly.cx/ph6T1",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx"
+            },                
+            {
+                image: "https://bitly.cx/0zlN",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx"
+            }
+        ];
+
+        let currentAdIndex = 0;
+        const firstPopupDelay = 1000;
+        const popupInterval = 10000;
+
+        function showAd() {
+            const lastPopupTime = localStorage.getItem('lastPopupTime');
+            const currentTime = Date.now();
+
+            if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
+                updateAdContent();
+                document.getElementById('adOverlay').style.display = 'flex';
+                localStorage.setItem('lastPopupTime', currentTime);
+            } else {
+                setTimeout(showAd, popupInterval - (currentTime - lastPopupTime));
+            }
+        }
+
+        function updateAdContent() {
+            const ad = ads[currentAdIndex];
+            document.getElementById("adImage").src = ad.image;
+            document.getElementById("adImage").setAttribute("data-link", ad.link);
+            document.querySelector(".get-btn").setAttribute("data-link", ad.link);
+            
+            document.getElementById("adImage").onclick = visitAd;
+            document.querySelector(".get-btn").onclick = visitAd;
+
+            currentAdIndex = (currentAdIndex + 1) % ads.length;
+        }
+
+        function visitAd(event) {
+            const url = event.target.getAttribute("data-link");
+            window.open(url, '_blank');
+            closeAd();
+        }
 
         function closeAd() {
-            document.getElementById("postAd").style.display = "none";
-            // Schedule next ad
-            setTimeout(showNextAd, popupInterval);
+            document.getElementById('adOverlay').style.display = 'none';
+            setTimeout(showAd, popupInterval);
         }
-    </script>
 
+        // Initialize
+        window.onload = function () {
+            const savedVideo = localStorage.getItem("activeTab") || navIcons[0].getAttribute("data-video");
+            const activeIcon = [...navIcons].find(icon => icon.getAttribute("data-video") === savedVideo);
+            
+            if (activeIcon) setActiveTab(activeIcon);
+            changeVideo(savedVideo);
+
+            setTimeout(showAd, firstPopupDelay);
+        };
+    </script>
 </body>
 </html>
