@@ -191,7 +191,7 @@
             top: 7px;
             right: 10px;
             background: rgba(0, 0, 0, 0.1);
-            color: red;
+            color: white;
             border: none;
             padding: 0px 0px;
             font-size: 20px;
@@ -206,7 +206,7 @@
             background: orange;
             color: white;
             padding: 8px 20px;
-            font-size: 15px;
+            font-size: 18px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -334,7 +334,7 @@
 <div class="play-in-app-container">
     <a href="https://example.com/sports">
         <button class="play-in-app-button" id="play-in-app-button">
-            <i class="fas fa-futbol"></i> Sports
+            <i class="fas fa-basketball-ball"></i> Sports
         </button>
     </a>
 </div>
@@ -426,8 +426,8 @@
         ];
 
         let currentAdIndex = 0;
-        const firstPopupDelay = 1000;
-        const popupInterval = 10000;
+        const firstPopupDelay = 15000;
+        const popupInterval = 150000;
 
         function showAd() {
             const lastPopupTime = localStorage.getItem('lastPopupTime');
