@@ -167,7 +167,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+            background: rgba(0, 0, 0, 0.5);
             display: none;
             align-items: center;
             justify-content: center;
@@ -175,6 +175,7 @@
         }
         .ad-popup {
             position: relative;
+            bottom: 15px;
             width: 100%;
             max-width: 250px;
             border-radius: 15px;
@@ -183,6 +184,7 @@
         }
         .ad-popup img {
             width: 100%;
+            bottom: 18px;
             border-radius: 15px;
             display: block;
         }
@@ -332,7 +334,7 @@
     
     <!-- Play In App Button -->
 <div class="play-in-app-container">
-    <a href="https://example.com/sports">
+    <a href="https://spa.aisports.cc/h5-live/matches">
         <button class="play-in-app-button" id="play-in-app-button">
             <i class="fas fa-basketball-ball"></i> Sports
         </button>
@@ -344,7 +346,7 @@
         <div class="ad-popup">
             <button class="close-btn" onclick="closeAd()">✖</button>
             <img id="adImage" src="" alt="Ad Image">
-            <button class="get-btn">Chat Now</button>
+            <button class="get-btn">Start Chat</button>
         </div>
     </div>
 
@@ -416,18 +418,26 @@
         // Ad System
         const ads = [
             {
-                image: "https://bitly.cx/ph6T1",
+                image: "https://bit.ly/49TAXap",
                 link: "https://true-click.pro/a/44J1UBOggfxOkx"
             },                
             {
-                image: "https://bitly.cx/0zlN",
+                image: "https://bit.ly/4gHMJHL",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx"
+            },
+            {
+                image: "https://bit.ly/4gqlalZ",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx"
+            },                
+            {
+                image: "https://bit.ly/4fyTFVW",
                 link: "https://true-click.pro/a/44J1UBOggfxOkx"
             }
         ];
 
         let currentAdIndex = 0;
         const firstPopupDelay = 15000;
-        const popupInterval = 150000;
+        const popupInterval = 1500000;
 
         function showAd() {
             const lastPopupTime = localStorage.getItem('lastPopupTime');
