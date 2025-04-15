@@ -46,29 +46,71 @@
             background-color: rgba(0, 0, 0, 0.9);
             color: #fff;
             border-radius: 20px;
-            padding: 5px 8px;
+            padding: 5px 6px;
             font-weight: bold;
         }
         .balance-container {
             display: flex;
-            font-size: 17px;
+            font-size: 15.5px;
             align-items: center;
             gap: 10px;
             color: #fff;
         }
         .wallet-icon {
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
             transition: 0.3s;
             color: #fff;
         }
         .header .bars-icon {
-            font-size: 22px;
+            font-size: 20px;
             cursor: pointer;
             color: #fff;
         }
         .header .bars-icon:hover {
             color: #00b300;
+        }
+
+        /* Ad Toggle Styles */
+        .ad-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            cursor: pointer;
+            padding: 5px 2px;
+            border-radius: 20px;
+            border: 1px solid #555;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .ad-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .toggle-switch {
+            width: 40px;
+            height: 20px;
+            background: #444;
+            border-radius: 10px;
+            position: relative;
+            transition: 0.3s;
+        }
+        .toggle-knob {
+            width: 16px;
+            height: 16px;
+            background: #777;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+        .ad-toggle.active .toggle-switch {
+            background: #00b300;
+        }
+        .ad-toggle.active .toggle-knob {
+            background: #fff;
+            left: 22px;
         }
 
         /* Video Container */
@@ -94,7 +136,7 @@
             z-index: 1000;
         }
         .play-in-app-button {
-            background: linear-gradient(to right, #00b300, #008000); /* Green gradient */
+            background: linear-gradient(to right, #00b300, #008000);
             color: white;
             padding: 12px 24px;
             border-radius: 30px;
@@ -108,29 +150,10 @@
             overflow: hidden;
             transition: all 0.3s ease-in-out;
         }
-        .play-in-app-button::before {
-            content: '';
-            position: absolute;
-            top: 50%;
-            left: 50%;
-            width: 300%;
-            height: 300%;
-            background: radial-gradient(circle, rgba(255, 255, 255, 0.3), rgba(255, 255, 255, 0) 70%);
-            transform: translate(-50%, -50%) scale(0);
-            transition: transform 0.5s ease-in-out;
-            border-radius: 50%;
-        }
         .play-in-app-button:hover {
-            background: linear-gradient(to right, #008000, #006600); /* Darker green gradient */
+            background: linear-gradient(to right, #008000, #006600);
             box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
             transform: translateY(-2px);
-        }
-        .play-in-app-button:hover::before {
-            transform: translate(-50%, -50%) scale(1);
-        }
-        .play-in-app-button:active {
-            transform: translateY(0);
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
         }
 
         /* Bottom Navigation */
@@ -210,7 +233,7 @@
             background: rgba(0, 0, 0, 0.2);
             color: white;
             border: none;
-            padding: 0px 0px;
+            padding: 0px;
             font-size: 20px;
             cursor: pointer;
             border-radius: 50%;
@@ -223,7 +246,7 @@
             background: orange;
             color: white;
             padding: 8px 20px;
-            font-size: 15px;
+            font-size: 17px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -309,7 +332,7 @@
             text-align: center;
         }
         .balance-display {
-            font-size: 2.2rem;
+            font-size: 2.1rem;
             color: #fff;
             margin: 20px 0;
         }
@@ -327,22 +350,27 @@
             background: #555;
             cursor: not-allowed;
         }
+
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-left: 20px;
+        }
     </style>
 </head>
 <body>
     <!-- Wallet Overlay -->
     <div class="wallet-overlay" id="walletOverlay">
-        <div class="wallet-popup">
+        <div class="wallet-popup" role="dialog" aria-labelledby="withdrawTitle" aria-modal="true">
             <div class="menu-header">
-                <h3 style="color: #fff">Withdraw funds</h3>
-                <div class="close-menu" onclick="closeWallet()">×</div>
+                <h3 id="withdrawTitle" style="color: #fff">Balance</h3>
+                <div class="close-menu" onclick="closeWallet()" aria-label="Close wallet overlay">×</div>
             </div>
             <div class="balance-display" id="balanceDisplay">$0.00000</div>
             <button class="withdraw-btn" id="withdrawBtn" onclick="handleWithdraw()">
                 Withdraw
             </button>
-            <p style="color: #888; margin-top: 15px; font-size: 12px;">
-                (Minimum amount for withdrawing $100). Earn more by visiting ads Reach $100 to withdraw.
+            <p style="color: #888; margin-top: 15px; font-size: 11px;">
+                (Minimum amount for withdrawal $100). Earn more by visiting ads <i class="fab fa-paypal"></i> PayPal <i class="fab fa-bitcoin"></i> Bitcoin <i class="fab fa-ethereum"></i> Ethereum
             </p>
         </div>
     </div>
@@ -352,35 +380,35 @@
     <div class="sidebar-menu" id="sidebarMenu">
         <div class="menu-header">
             <h3 style="color: #fff">Menu</h3>
-            <div class="close-menu" onclick="closeMenu()">×</div>
+            <div class="close-menu" onclick="closeMenu()" aria-label="Close settings menu">×</div>
         </div>
         <ul class="social-media-list">
             <li>
-                <a href="https://facebook.com" class="social-media-item" target="_blank">
+                <a href="https://facebook.com" class="social-media-item" target="_blank" aria-label="Visit our Facebook page">
                     <i class="fab fa-facebook"></i>
                     Facebook
                 </a>
             </li>
             <li>
-                <a href="https://twitter.com" class="social-media-item" target="_blank">
+                <a href="https://twitter.com" class="social-media-item" target="_blank" aria-label="Visit our Twitter page">
                     <i class="fab fa-twitter"></i>
                     Twitter
                 </a>
             </li>
             <li>
-                <a href="https://instagram.com" class="social-media-item" target="_blank">
+                <a href="https://instagram.com" class="social-media-item" target="_blank" aria-label="Visit our Instagram page">
                     <i class="fab fa-instagram"></i>
                     Instagram
                 </a>
             </li>
             <li>
-                <a href="https://youtube.com" class="social-media-item" target="_blank">
+                <a href="https://youtube.com" class="social-media-item" target="_blank" aria-label="Visit our YouTube page">
                     <i class="fab fa-youtube"></i>
                     YouTube
                 </a>
             </li>
             <li>
-                <a href="https://tiktok.com" class="social-media-item" target="_blank">
+                <a href="https://tiktok.com" class="social-media-item" target="_blank" aria-label="Visit our TikTok page">
                     <i class="fab fa-tiktok"></i>
                     TikTok
                 </a>
@@ -394,8 +422,14 @@
             <div class="logo">Movie Gram</div>
         </div>
         <div class="balance-container">
-            <i class="fas fa-wallet wallet-icon" onclick="showWallet()"></i>
+            <i class="fas fa-wallet wallet-icon" onclick="showWallet()" aria-label="Open wallet"></i>
             <span id="headerBalance">$0.00000</span>
+        </div>
+        <div class="ad-toggle" id="adToggle" onclick="toggleAd()">
+            <span><i class="fas fa-ad"></i></span>
+            <div class="toggle-switch">
+                <div class="toggle-knob"></div>
+            </div>
         </div>
         <div class="button-group">
             <div class="bars-icon" onclick="toggleMenu()">
@@ -408,20 +442,20 @@
     <div class="frame-container">
         <iframe id="video-frame" allowfullscreen></iframe>
     </div>
-    
+
     <!-- Play In App Button -->
-<div class="play-in-app-container">
-    <a href="https://spa.aisports.cc/h5-live/matches">
-        <button class="play-in-app-button" id="play-in-app-button">
-            <i class="fas fa-basketball-ball"></i> Sports
-        </button>
-    </a>
-</div>
+    <div class="play-in-app-container">
+        <a href="https://spa.aisports.cc/h5-live/matches">
+            <button class="play-in-app-button" id="play-in-app-button">
+                <i class="fas fa-basketball-ball"></i> Sports
+            </button>
+        </a>
+    </div>
 
     <!-- Ad Overlay -->
     <div class="ad-overlay" id="adOverlay">
         <div class="ad-popup">
-            <button class="close-btn" onclick="closeAd()">✖</button>
+            <button class="close-btn" onclick="closeAd()" aria-label="Close ad">✖</button>
             <img id="adImage" src="" alt="Ad Image">
             <button class="get-btn">Chat Now</button>
         </div>
@@ -429,48 +463,54 @@
 
     <!-- Bottom Navigation -->
     <footer>
-        <div class="nav-icon active" data-video="https://moviebox.ng/web/filter?tab=movie">
+        <div class="nav-icon active" data-video="https://moviebox.ng/web/filter?tab=movie" aria-label="Go to Home">
             <i class="fas fa-home"></i>
             <span>Home</span>
         </div>
-        <div class="nav-icon" data-video="https://moviebox.ng/web/class-list?platform=Netflix&utm_source=">
+        <div class="nav-icon" data-video="https://moviebox.ng/web/class-list?platform=Netflix&utm_source=" aria-label="View New & Hot">
             <i class="fas fa-fire"></i>
             <span>New & Hot</span>
         </div>
-        <div class="nav-icon" data-video="https://moviebox.ng/web/filter?tab=tv">
+        <div class="nav-icon" data-video="https://moviebox.ng/web/filter?tab=tv" aria-label="View Movies">
             <i class="fas fa-film"></i>
             <span>Movies</span>
         </div>
-        <div class="nav-icon" data-video="https://moviebox.ng/web/ranking-list?id=1232643093049001320">
+        <div class="nav-icon" data-video="https://moviebox.ng/web/ranking-list?id=1232643093049001320" aria-label="View Rankings">
             <i class="fas fa-medal"></i>
             <span>Ranking</span>
         </div>
-        <div class="nav-icon" data-video="https://moviebox.ng/web/filter?tab=anime">
+        <div class="nav-icon" data-video="https://moviebox.ng/web/filter?tab=anime" aria-label="View Animation">
             <i class="fas fa-theater-masks"></i>
             <span>Animation</span>
         </div>
     </footer>
 
     <script>
-        // Monetization System
+        // Variables
         let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
-        
+        let adsEnabled = true; // Track whether ads are enabled, default to true
+        const videoFrame = document.getElementById("video-frame");
+        const navIcons = document.querySelectorAll(".nav-icon");
+        const body = document.body;
+
+        // Update Balance Display
         function updateBalanceDisplay() {
             document.getElementById('balanceDisplay').textContent = `$${balance.toFixed(5)}`;
             document.getElementById('headerBalance').textContent = `$${balance.toFixed(5)}`;
             localStorage.setItem('userBalance', balance);
             document.getElementById('withdrawBtn').disabled = balance < 100;
         }
-        
+
+        // Show and Hide Wallet
         function showWallet() {
             document.getElementById('walletOverlay').style.display = 'flex';
             updateBalanceDisplay();
         }
-        
         function closeWallet() {
             document.getElementById('walletOverlay').style.display = 'none';
         }
-        
+
+        // Handle Withdraw
         function handleWithdraw() {
             if (balance >= 100) {
                 if(confirm(`Are you sure you want to withdraw $${balance.toFixed(2)}?`)) {
@@ -483,10 +523,7 @@
             }
         }
 
-        // Video Player Functionality
-        const videoFrame = document.getElementById("video-frame");
-        const navIcons = document.querySelectorAll(".nav-icon");
-
+        // Change Video
         function changeVideo(src) {
             videoFrame.style.opacity = "0";
             setTimeout(() => {
@@ -494,13 +531,11 @@
                 videoFrame.style.opacity = "1";
             }, 300);
         }
-
         function setActiveTab(selectedIcon) {
             navIcons.forEach(icon => icon.classList.remove("active"));
             selectedIcon.classList.add("active");
             localStorage.setItem("activeTab", selectedIcon.getAttribute("data-video"));
         }
-
         navIcons.forEach(icon => {
             icon.addEventListener("click", function() {
                 setActiveTab(this);
@@ -508,56 +543,71 @@
             });
         });
 
-        // Menu Functionality
+        // Toggle Menu
         function toggleMenu() {
             document.getElementById("sidebarMenu").classList.toggle("active");
             document.getElementById("menuOverlay").style.display = "block";
         }
-
         function closeMenu() {
             document.getElementById("sidebarMenu").classList.remove("active");
             document.getElementById("menuOverlay").style.display = "none";
         }
-
         document.getElementById("menuOverlay").addEventListener("click", closeMenu);
-        document.getElementById('walletOverlay').addEventListener('click', function(e) {
-            if(e.target === this) closeWallet();
-        });
-        document.addEventListener('keydown', function(e) {
-            if(e.key === 'Escape') closeWallet();
-        });
+
+        // Theme Toggle
+        function toggleTheme() {
+            const isDarkMode = body.classList.toggle('dark-mode');
+            body.style.backgroundColor = isDarkMode ? '#fff' : '#000';
+            body.style.color = isDarkMode ? '#000' : '#fff';
+        }
+
+        // Ad Toggle
+        function toggleAd() {
+            adsEnabled = !adsEnabled; // Toggle the state
+            const adToggleElement = document.getElementById('adToggle');
+            adToggleElement.classList.toggle('active', adsEnabled); // Update toggle UI
+
+            // Show or hide ads based on the toggle state
+            if (adsEnabled) {
+                showAd(); // Start showing ads if enabled
+            } else {
+                closeAd(); // Hide ads if disabled
+            }
+        }
 
         // Ad System
         const ads = [
             {
                 image: "https://bit.ly/4gHMJHL",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx",
-                buttonTitle: "Chat Now" // Custom button text
+                link: "https://www.profitableratecpm.com/f9z72jat9s?key=fb6ef61efc0589cd3f5c869f9e3a5a18",
+                buttonTitle: "Chat Now"
             },                
             {
                 image: "https://bit.ly/49TAXap",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx",
-                buttonTitle: "Chat Now" // Different button text
+                link: "https://www.profitableratecpm.com/gph5sivvp?key=7191fbf56c824024de7a4266801a0e57",
+                buttonTitle: "Chat Now"
             }
         ];
-
         let currentAdIndex = 0;
         const firstPopupDelay = 15000;
-        const popupInterval = 150000;
+        const popupInterval = 100000;
 
         function showAd() {
+            if (!adsEnabled) return; // Only show ads if enabled
+            
             const lastPopupTime = localStorage.getItem('lastPopupTime');
             const currentTime = Date.now();
 
             if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
                 updateAdContent();
                 document.getElementById('adOverlay').style.display = 'flex';
+                balance += 0.00001; // Increase balance for showing the ad
+                updateBalanceDisplay(); // Update balance displayed
                 localStorage.setItem('lastPopupTime', currentTime);
             } else {
                 setTimeout(showAd, popupInterval - (currentTime - lastPopupTime));
             }
         }
-
         function updateAdContent() {
             const ad = ads[currentAdIndex];
             const getBtn = document.querySelector(".get-btn");
@@ -572,18 +622,15 @@
 
             currentAdIndex = (currentAdIndex + 1) % ads.length;
         }
-
         function visitAd(event) {
             const url = event.target.getAttribute("data-link");
             window.open(url, '_blank');
             
-            // Add earnings
-            balance += 0.00021;
+            // Add earnings for clicking the ad (if desired)
+            balance += 0.00021; // Optional: give extra balance for ad click
             updateBalanceDisplay();
-            
             closeAd();
         }
-
         function closeAd() {
             document.getElementById('adOverlay').style.display = 'none';
             setTimeout(showAd, popupInterval);
@@ -597,7 +644,11 @@
             if (activeIcon) setActiveTab(activeIcon);
             changeVideo(savedVideo);
             updateBalanceDisplay();
-            setTimeout(showAd, firstPopupDelay);
+            
+            // Set toggle to active state and show ads immediately upon page load
+            const adToggleElement = document.getElementById('adToggle');
+            adToggleElement.classList.add('active'); // Set the toggle on
+            showAd(); // Show the first ad immediately
         };
     </script>
 </body>
