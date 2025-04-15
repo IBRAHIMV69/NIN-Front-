@@ -21,6 +21,8 @@
             height: 100vh;
             overflow: hidden;
         }
+        
+        /* Header Styles */
         .header {
             position: fixed;
             top: 0;
@@ -29,16 +31,16 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 8px 20px;
+            padding: 7px 20px;
             background-color: #1A1A24;
             z-index: 1000;
         }
-        .header .logo-container {
+        .logo-container {
             display: flex;
             align-items: center;
             gap: 10px;
         }
-        .header .logo {
+        .logo {
             font-size: 20px;
             border: 1px solid #ccc;
             background-color: rgba(0, 0, 0, 0.9);
@@ -47,14 +49,29 @@
             padding: 5px 8px;
             font-weight: bold;
         }
+        .balance-container {
+            display: flex;
+            font-size: 17px;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+        .wallet-icon {
+            font-size: 22px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #fff;
+        }
         .header .bars-icon {
-            font-size: 20px;
+            font-size: 22px;
             cursor: pointer;
             color: #fff;
         }
         .header .bars-icon:hover {
             color: #00b300;
         }
+
+        /* Video Container */
         .frame-container {
             width: 100vw;
             height: 100vh;
@@ -167,7 +184,7 @@
             left: 0;
             width: 100%;
             height: 100%;
-            background: rgba(0, 0, 0, 0.5);
+            background: rgba(0, 0, 0, 0.3);
             display: none;
             align-items: center;
             justify-content: center;
@@ -175,7 +192,6 @@
         }
         .ad-popup {
             position: relative;
-            bottom: 15px;
             width: 100%;
             max-width: 250px;
             border-radius: 15px;
@@ -184,7 +200,6 @@
         }
         .ad-popup img {
             width: 100%;
-            bottom: 18px;
             border-radius: 15px;
             display: block;
         }
@@ -192,7 +207,7 @@
             position: absolute;
             top: 7px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.1);
+            background: rgba(0, 0, 0, 0.2);
             color: white;
             border: none;
             padding: 0px 0px;
@@ -208,7 +223,7 @@
             background: orange;
             color: white;
             padding: 8px 20px;
-            font-size: 18px;
+            font-size: 15px;
             border: none;
             border-radius: 30px;
             cursor: pointer;
@@ -253,7 +268,7 @@
             transition: 0.3s;
         }
         .social-media-item:hover {
-            color: #ff5500;
+            color: #00b300;
             transform: translateX(10px);
         }
         .social-media-item i {
@@ -271,13 +286,69 @@
             z-index: 1999;
             display: none;
         }
+
+        /* Wallet Overlay */
+        .wallet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        .wallet-popup {
+            background: #1A1A24;
+            padding: 25px;
+            border-radius: 15px;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .balance-display {
+            font-size: 2.2rem;
+            color: #fff;
+            margin: 20px 0;
+        }
+        .withdraw-btn {
+            background: #ff5500;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .withdraw-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
     </style>
 </head>
 <body>
-    <!-- Menu Overlay -->
+    <!-- Wallet Overlay -->
+    <div class="wallet-overlay" id="walletOverlay">
+        <div class="wallet-popup">
+            <div class="menu-header">
+                <h3 style="color: #fff">Withdraw funds</h3>
+                <div class="close-menu" onclick="closeWallet()">×</div>
+            </div>
+            <div class="balance-display" id="balanceDisplay">$0.00000</div>
+            <button class="withdraw-btn" id="withdrawBtn" onclick="handleWithdraw()">
+                Withdraw
+            </button>
+            <p style="color: #888; margin-top: 15px; font-size: 12px;">
+                (Minimum amount for withdrawing $100). Earn more by visiting ads Reach $100 to withdraw.
+            </p>
+        </div>
+    </div>
+
+    <!-- Social Media Menu -->
     <div class="menu-overlay" id="menuOverlay"></div>
-    
-    <!-- Social Media Sidebar -->
     <div class="sidebar-menu" id="sidebarMenu">
         <div class="menu-header">
             <h3 style="color: #fff">Menu</h3>
@@ -322,8 +393,14 @@
         <div class="logo-container">
             <div class="logo">Movie Gram</div>
         </div>
+        <div class="balance-container">
+            <i class="fas fa-wallet wallet-icon" onclick="showWallet()"></i>
+            <span id="headerBalance">$0.00000</span>
+        </div>
         <div class="button-group">
-            <div class="bars-icon" onclick="toggleMenu()"><i class="fas fa-bars"></i></div>
+            <div class="bars-icon" onclick="toggleMenu()">
+                <i class="fas fa-bars"></i>
+            </div>
         </div>
     </div>
 
@@ -346,7 +423,7 @@
         <div class="ad-popup">
             <button class="close-btn" onclick="closeAd()">✖</button>
             <img id="adImage" src="" alt="Ad Image">
-            <button class="get-btn">Start Chat</button>
+            <button class="get-btn">Chat Now</button>
         </div>
     </div>
 
@@ -375,10 +452,40 @@
     </footer>
 
     <script>
+        // Monetization System
+        let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+        
+        function updateBalanceDisplay() {
+            document.getElementById('balanceDisplay').textContent = `$${balance.toFixed(5)}`;
+            document.getElementById('headerBalance').textContent = `$${balance.toFixed(5)}`;
+            localStorage.setItem('userBalance', balance);
+            document.getElementById('withdrawBtn').disabled = balance < 100;
+        }
+        
+        function showWallet() {
+            document.getElementById('walletOverlay').style.display = 'flex';
+            updateBalanceDisplay();
+        }
+        
+        function closeWallet() {
+            document.getElementById('walletOverlay').style.display = 'none';
+        }
+        
+        function handleWithdraw() {
+            if (balance >= 100) {
+                if(confirm(`Are you sure you want to withdraw $${balance.toFixed(2)}?`)) {
+                    alert('Withdrawal request sent! Payment will be processed within 7 working days.');
+                    balance = 0;
+                    updateBalanceDisplay();
+                }
+            } else {
+                alert('Minimum withdrawal amount is $100. Keep watching to earn more!');
+            }
+        }
+
         // Video Player Functionality
         const videoFrame = document.getElementById("video-frame");
         const navIcons = document.querySelectorAll(".nav-icon");
-        const adOverlay = document.getElementById("adOverlay");
 
         function changeVideo(src) {
             videoFrame.style.opacity = "0";
@@ -413,31 +520,30 @@
         }
 
         document.getElementById("menuOverlay").addEventListener("click", closeMenu);
-        
+        document.getElementById('walletOverlay').addEventListener('click', function(e) {
+            if(e.target === this) closeWallet();
+        });
+        document.addEventListener('keydown', function(e) {
+            if(e.key === 'Escape') closeWallet();
+        });
 
         // Ad System
         const ads = [
             {
-                image: "https://bit.ly/49TAXap",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx"
-            },                
-            {
                 image: "https://bit.ly/4gHMJHL",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx"
-            },
-            {
-                image: "https://bit.ly/4gqlalZ",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx"
+                link: "https://true-click.pro/a/44J1UBOggfxOkx",
+                buttonTitle: "Chat Now" // Custom button text
             },                
             {
-                image: "https://bit.ly/4fyTFVW",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx"
+                image: "https://bit.ly/49TAXap",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx",
+                buttonTitle: "Chat Now" // Different button text
             }
         ];
 
         let currentAdIndex = 0;
         const firstPopupDelay = 15000;
-        const popupInterval = 1500000;
+        const popupInterval = 150000;
 
         function showAd() {
             const lastPopupTime = localStorage.getItem('lastPopupTime');
@@ -454,12 +560,15 @@
 
         function updateAdContent() {
             const ad = ads[currentAdIndex];
+            const getBtn = document.querySelector(".get-btn");
+            
             document.getElementById("adImage").src = ad.image;
             document.getElementById("adImage").setAttribute("data-link", ad.link);
-            document.querySelector(".get-btn").setAttribute("data-link", ad.link);
+            getBtn.setAttribute("data-link", ad.link);
+            getBtn.textContent = ad.buttonTitle;
             
             document.getElementById("adImage").onclick = visitAd;
-            document.querySelector(".get-btn").onclick = visitAd;
+            getBtn.onclick = visitAd;
 
             currentAdIndex = (currentAdIndex + 1) % ads.length;
         }
@@ -467,6 +576,11 @@
         function visitAd(event) {
             const url = event.target.getAttribute("data-link");
             window.open(url, '_blank');
+            
+            // Add earnings
+            balance += 0.00021;
+            updateBalanceDisplay();
+            
             closeAd();
         }
 
@@ -482,7 +596,7 @@
             
             if (activeIcon) setActiveTab(activeIcon);
             changeVideo(savedVideo);
-
+            updateBalanceDisplay();
             setTimeout(showAd, firstPopupDelay);
         };
     </script>
