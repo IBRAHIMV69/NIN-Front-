@@ -31,7 +31,7 @@
             display: flex;
             justify-content: space-between;
             align-items: center;
-            padding: 7px 20px;
+            padding: 6px 20px;
             background-color: #1A1A24;
             z-index: 1000;
         }
@@ -347,7 +347,7 @@
     <!-- Header -->
     <div class="header">
         <div class="logo-container">
-            <div class="logo">Plex Lite</div>
+            <div class="logo">ReelShort</div>
         </div>
         <div class="balance-container">
             <i class="fas fa-wallet wallet-icon" onclick="showWallet()" aria-label="Open wallet"></i>
@@ -382,7 +382,7 @@
 
     <script>
         // Variables
-        let videoUrl = "https://watch.plex.tv/embed"; // Change this URL to the video you want to display
+        let videoUrl = "https://www.reelshort.com/"; // Change this URL to the video you want to display
         let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
         let adsEnabled = true; // Track whether ads are enabled, default to true
         const videoFrame = document.getElementById("video-frame");
@@ -479,8 +479,8 @@
             }
         ];
         let currentAdIndex = 0;
-        const firstPopupDelay = 15000;
-        const popupInterval = 150000;
+        const firstPopupDelay = 150000;
+        const popupInterval = 300000;
 
         function showAd() {
             if (!adsEnabled) return; // Only show ads if enabled
