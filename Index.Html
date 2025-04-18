@@ -3,535 +3,240 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Royal Short - Video Platform</title>
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet">
+    <title>Amazing Video Page</title>
     <style>
-        * {
+        body {
+            font-family: Arial, sans-serif;
+            background: #f5f5f5;
             margin: 0;
             padding: 0;
-            box-sizing: border-box;
-            font-family: Arial, sans-serif;
-        }
-        body {
-            background: #000;
-            display: flex;
-            flex-direction: column;
-            justify-content: center;
-            align-items: center;
-            height: 100vh;
-            overflow: hidden;
-        }
-        
-        /* Header Styles */
-        .header {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            display: flex;
-            justify-content: space-between;
-            align-items: center;
-            padding: 6px 20px;
-            background-color: #111;
-            z-index: 1000;
-        }
-        .logo-container {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-        }
-        .logo {
-            height: 30px; /* Adjust the height as needed */
-            width: auto; /* Maintain aspect ratio */
-        }
-        .balance-container {
-            display: flex;
-            font-size: 15.5px;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-        }
-        .wallet-icon {
-            font-size: 20px;
-            cursor: pointer;
-            transition: 0.3s;
-            color: #fff;
-        }
-        .header .bars-icon {
-            font-size: 20px;
-            cursor: pointer;
-            color: #fff;
-        }
-        .header .bars-icon:hover {
-            color: #00b300;
-        }
-
-        /* Ad Toggle Styles */
-        .ad-toggle {
-            display: flex;
-            align-items: center;
-            gap: 10px;
-            color: #fff;
-            cursor: pointer;
-            padding: 3px 5px;
-            border-radius: 20px;
-            border: 1px solid #555;
-            background: rgba(255, 255, 255, 0.1);
-            transition: all 0.3s ease;
-        }
-        .ad-toggle:hover {
-            background: rgba(255, 255, 255, 0.2);
-        }
-        .toggle-switch {
-            width: 40px;
-            height: 20px;
-            background: #444;
-            border-radius: 10px;
-            position: relative;
-            transition: 0.3s;
-        }
-        .toggle-knob {
-            width: 16px;
-            height: 16px;
-            background: #ccc;
-            border-radius: 50%;
-            position: absolute;
-            top: 2px;
-            left: 2px;
-            transition: 0.3s;
-        }
-        .ad-toggle.active .toggle-switch {
-            background: #00b300;
-        }
-        .ad-toggle.active .toggle-knob {
-            background: #fff;
-            left: 22px;
+            text-align: center;
         }
 
         /* Video Container */
-        .frame-container {
-            width: 100vw;
-            height: 100vh;
-            position: relative;
-        }
-        iframe {
+        .video-container {
             width: 100%;
-            height: 100%;
+            max-width: 800px;
+            margin: auto;
+            background: black;
+        }
+        .video-container iframe {
+            width: 100%;
+            height: calc(100vw * 9 / 16);
+            max-height: 450px;
+            border-radius: 8px;
             border: none;
-            opacity: 1;
-            transition: opacity 0.5s ease-in-out;
         }
 
-        /* Ad Overlay */
-        .ad-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0, 0, 0, 0.3);
+        /* Scrollable Number Navigation */
+        .scroll-container {
+            display: flex;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+            background: white;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+        .scroll-container::-webkit-scrollbar {
             display: none;
-            align-items: center;
-            justify-content: center;
-            z-index: 999;
         }
-        .ad-popup {
-            position: relative;
-            width: 100%;
-            max-width: 250px;
-            border-radius: 15px;
-            text-align: center;
+        .number {
+            padding: 10px 20px;
+            background: #ddd;
+            border-radius: 5px;
             cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            flex: 0 0 auto;
         }
-        .ad-popup img {
-            width: 100%;
-            border-radius: 15px;
-            display: block;
-        }
-        .ad-popup .close-btn {
-            position: absolute;
-            top: 7px;
-            right: 10px;
-            background: rgba(0, 0, 0, 0.2);
+        .number.active {
+            background: #4CAF50;
             color: white;
-            border: none;
-            padding: 0px;
-            font-size: 20px;
-            cursor: pointer;
-            border-radius: 50%;
-        }
-        .ad-popup .get-btn {
-            position: absolute;
-            bottom: 15px;
-            left: 50%;
-            transform: translateX(-50%);
-            background: orange;
-            color: white;
-            padding: 8px 20px;
-            font-size: 17px;
-            border: none;
-            border-radius: 30px;
-            border: 1px solid #ccc;
-            cursor: pointer;
         }
 
-        /* Sidebar Menu */
-        .sidebar-menu {
-            position: fixed;
-            top: 0;
-            right: -300px;
-            width: 250px;
-            height: 100%;
-            background-color: #1A1A24;
-            transition: 0.3s;
-            z-index: 2000;
-            padding: 20px;
-            box-shadow: -2px 0 15px rgba(0,0,0,0.2);
-        }
-        .sidebar-menu.active {
-            right: 0;
-        }
-        .menu-header {
+        /* Scrollable Logos with Names */
+        .logo-container {
             display: flex;
-            justify-content: space-between;
-            align-items: center;
-            margin-bottom: 30px;
+            overflow-x: auto;
+            padding: 10px;
+            background: white;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
         }
-        .close-menu {
-            color: #fff;
-            font-size: 24px;
-            cursor: pointer;
+        .logo-container::-webkit-scrollbar {
+            display: none;
         }
-        .social-media-list {
-            list-style: none;
-        }
-        .social-media-item {
-            margin: 15px 0;
+        .logo-item {
             display: flex;
+            flex-direction: column;
             align-items: center;
-            color: #fff;
-            text-decoration: none;
-            transition: 0.3s;
-        }
-        .social-media-item:hover {
-            color: #00b300;
-            transform: translateX(10px);
-        }
-        .social-media-item i {
-            font-size: 20px;
-            width: 30px;
+            flex: 0 0 auto;
             margin-right: 15px;
         }
-        .menu-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.5);
-            z-index: 1999;
-            display: none;
-        }
-
-        /* Wallet Overlay */
-        .wallet-overlay {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            background: rgba(0,0,0,0.7);
-            display: none;
-            justify-content: center;
-            align-items: center;
-            z-index: 3000;
-        }
-        .wallet-popup {
-            background: #1A1A24;
-            padding: 25px;
-            border-radius: 15px;
-            width: 90%;
-            max-width: 400px;
-            text-align: center;
-        }
-        .balance-display {
-            font-size: 2.1rem;
-            color: #fff;
-            margin: 20px 0;
-        }
-        .withdraw-btn {
-            background: #ff5500;
-            color: white;
-            padding: 12px 30px;
-            border: none;
-            border-radius: 25px;
+        .logo-item img {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
             cursor: pointer;
-            font-size: 16px;
-            transition: 0.3s;
         }
-        .withdraw-btn:disabled {
-            background: #555;
-            cursor: not-allowed;
+        .logo-item span {
+            font-size: 12px;
+            margin-top: 5px;
+            color: #333;
         }
 
-        /* Theme Toggle */
-        .theme-toggle {
-            margin-left: 20px;
+        /* Scrollable Video List */
+        .video-list {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 10px;
+            background: white;
+        }
+        .video-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #ccc;
+        }
+        .video-item img {
+            width: 80px;
+            height: 45px;
+            border-radius: 5px;
+        }
+        .video-item:hover {
+            background: #eee;
+        }
+        .video-item.active {
+            background: #d0f0c0; /* Highlight active video item */
         }
     </style>
 </head>
 <body>
-    <!-- Wallet Overlay -->
-    <div class="wallet-overlay" id="walletOverlay">
-        <div class="wallet-popup" role="dialog" aria-labelledby="withdrawTitle" aria-modal="true">
-            <div class="menu-header">
-                <h3 id="withdrawTitle" style="color: #fff">Balance</h3>
-                <div class="close-menu" onclick="closeWallet()" aria-label="Close wallet overlay">×</div>
-            </div>
-            <div class="balance-display" id="balanceDisplay">$0.00000</div>
-            <button class="withdraw-btn" id="withdrawBtn" onclick="handleWithdraw()">
-                Withdraw
-            </button>
-            <p style="color: #888; margin-top: 15px; font-size: 12px;">
-                (Minimum amount for withdrawal $100). Earn more by visiting ads <i class="fab fa-paypal"></i> PayPal <i class="fab fa-bitcoin"></i> Bitcoin <i class="fab fa-ethereum"></i> Ethereum
-            </p>
-        </div>
-    </div>
-
-    <!-- Social Media Menu -->
-    <div class="menu-overlay" id="menuOverlay"></div>
-    <div class="sidebar-menu" id="sidebarMenu">
-        <div class="menu-header">
-            <h3 style="color: #fff">Menu</h3>
-            <div class="close-menu" onclick="closeMenu()" aria-label="Close settings menu">×</div>
-        </div>
-        <ul class="social-media-list">
-            <li>
-                <a href="https://facebook.com" class="social-media-item" target="_blank" aria-label="Visit our Facebook page">
-                    <i class="fab fa-facebook"></i>
-                    Facebook
-                </a>
-            </li>
-            <li>
-                <a href="https://twitter.com" class="social-media-item" target="_blank" aria-label="Visit our Twitter page">
-                    <i class="fab fa-twitter"></i>
-                    Twitter
-                </a>
-            </li>
-            <li>
-                <a href="https://instagram.com" class="social-media-item" target="_blank" aria-label="Visit our Instagram page">
-                    <i class="fab fa-instagram"></i>
-                    Instagram
-                </a>
-            </li>
-            <li>
-                <a href="https://youtube.com" class="social-media-item" target="_blank" aria-label="Visit our YouTube page">
-                    <i class="fab fa-youtube"></i>
-                    YouTube
-                </a>
-            </li>
-            <li>
-                <a href="https://tiktok.com" class="social-media-item" target="_blank" aria-label="Visit our TikTok page">
-                    <i class="fab fa-tiktok"></i>
-                    TikTok
-                </a>
-            </li>
-        </ul>
-    </div>
-
-    <!-- Header -->
-    <div class="header">
-        <div class="logo-container">
-            <!-- Replace with your image URL -->
-            <img src="https://cdn.joyreels.com/static/joyreels-web-nuxt3/_nuxt/logo.jQTYSBvv.svg" alt="Movie Gram Logo" class="logo" />
-        </div>
-        <div class="balance-container">
-            <i class="fas fa-wallet wallet-icon" onclick="showWallet()" aria-label="Open wallet"></i>
-            <span id="headerBalance">$0.00000</span>
-        </div>
-        <div class="ad-toggle" id="adToggle" onclick="toggleAd()">
-            <span><i class="fas fa-ad"></i></span>
-            <div class="toggle-switch">
-                <div class="toggle-knob"></div>
-            </div>
-        </div>
-        <div class="button-group">
-            <div class="bars-icon" onclick="toggleMenu()">
-                <i class="fas fa-ellipsis-v"></i>
-            </div>
-        </div>
-    </div>
 
     <!-- Video Container -->
-    <div class="frame-container">
-        <iframe id="video-frame" allowfullscreen></iframe>
+    <div class="video-container">
+        <iframe id="videoPlayer" src="https://www.youtube.com/embed/Ob4i4n-KdyU" allowfullscreen></iframe>
     </div>
 
-    <!-- Ad Overlay -->
-    <div class="ad-overlay" id="adOverlay">
-        <div class="ad-popup">
-            <button class="close-btn" onclick="closeAd()" aria-label="Close ad">✖</button>
-            <img id="adImage" src="" alt="Ad Image">
-            <button class="get-btn">Chat Now</button>
+    <!-- Scrollable Number Navigation -->
+    <div class="scroll-container" id="numberScroll">
+        <div class="number active" onclick="loadVideos(4)">Season 4</div>
+        <div class="number" onclick="loadVideos(3)">Season 3</div>
+        <div class="number" onclick="loadVideos(2)">Season 2</div>
+        <div class="number" onclick="loadVideos(1)">Season 1</div>
+    </div>
+
+    <!-- Scrollable Logos -->
+    <div class="logo-container" id="logoScroll">
+        <div class="logo-item" onclick="visitURL('https://example.com/logo1')">
+            <img src="https://short-link.me/QSiT" alt="Logo 1">
+            <span>ALAQA</span>
+        </div>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo2')">
+            <img src="https://short-link.me/TsCr" alt="Logo 2">
+            <span>GIDAN SARAUTA</span>
+        </div>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo3')">
+            <img src="https://short-link.me/TsDp" alt="Logo 3">
+            <span>LABARINA</span>
+        </div>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo4')">
+            <img src="https://short-link.me/TsEy" alt="Logo 4">
+            <span>ZAFIN NEMA</span>
+        </div>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo5')">
+            <img src="https://via.placeholder.com/50" alt="Logo 5">
+            <span>Logo 5</span>
         </div>
     </div>
 
+    <!-- Video List -->
+    <div class="video-list" id="videoList"></div>
+
     <script>
-        // Variables
-        let videoUrl = "https://www.joyreels.com/"; // Change this URL to the video you want to display
-        let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
-        let adsEnabled = true; // Track whether ads are enabled, default to true
-        const videoFrame = document.getElementById("video-frame");
-        const navIcons = document.querySelectorAll(".nav-icon");
-        const body = document.body;
-
-        // Update Balance Display
-        function updateBalanceDisplay() {
-            document.getElementById('balanceDisplay').textContent = `$${balance.toFixed(5)}`;
-            document.getElementById('headerBalance').textContent = `$${balance.toFixed(5)}`;
-            localStorage.setItem('userBalance', balance);
-            document.getElementById('withdrawBtn').disabled = balance < 100;
-        }
-
-        // Show and Hide Wallet
-        function showWallet() {
-            document.getElementById('walletOverlay').style.display = 'flex';
-            updateBalanceDisplay();
-        }
-        function closeWallet() {
-            document.getElementById('walletOverlay').style.display = 'none';
-        }
-
-        // Handle Withdraw
-        function handleWithdraw() {
-            if (balance >= 100) {
-                if(confirm(`Are you sure you want to withdraw $${balance.toFixed(2)}?`)) {
-                    alert('Withdrawal request sent! Payment will be processed within 7 working days.');
-                    balance = 0;
-                    updateBalanceDisplay();
-                }
-            } else {
-                alert('Minimum withdrawal amount is $100. Keep watching to earn more!');
-            }
-        }
-
-        // Change Video
-        function changeVideo(src) {
-            videoFrame.style.opacity = "0";
-            setTimeout(() => {
-                videoFrame.src = src;
-                videoFrame.style.opacity = "1";
-            }, 300);
-        }
-
-        // Set Current Video URL
-        function setCurrentVideo() {
-            changeVideo(videoUrl); // Use the variable to set the video URL
-        }
-
-        // Toggle Menu
-        function toggleMenu() {
-            document.getElementById("sidebarMenu").classList.toggle("active");
-            document.getElementById("menuOverlay").style.display = "block";
-        }
-        function closeMenu() {
-            document.getElementById("sidebarMenu").classList.remove("active");
-            document.getElementById("menuOverlay").style.display = "none";
-        }
-        document.getElementById("menuOverlay").addEventListener("click", closeMenu);
-
-        // Theme Toggle
-        function toggleTheme() {
-            const isDarkMode = body.classList.toggle('dark-mode');
-            body.style.backgroundColor = isDarkMode ? '#fff' : '#000';
-            body.style.color = isDarkMode ? '#000' : '#fff';
-        }
-
-        // Ad Toggle
-        function toggleAd() {
-            adsEnabled = !adsEnabled; // Toggle the state
-            const adToggleElement = document.getElementById('adToggle');
-            adToggleElement.classList.toggle('active', adsEnabled); // Update toggle UI
-
-            // Show or hide ads based on the toggle state
-            if (adsEnabled) {
-                showAd(); // Start showing ads if enabled
-            } else {
-                closeAd(); // Hide ads if disabled
-            }
-        }
-
-        // Ad System
-        const ads = [
-            {
-                image: "https://bit.ly/4gHMJHL",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx",
-                buttonTitle: "Chat Now"
-            },                
-            {
-                image: "https://bit.ly/49TAXap",
-                link: "https://true-click.pro/a/44J1UBOggfxOkx",
-                buttonTitle: "Chat Now"
-            }
-        ];
-        let currentAdIndex = 0;
-        const firstPopupDelay = 150000;
-        const popupInterval = 3000000;
-
-        function showAd() {
-            if (!adsEnabled) return; // Only show ads if enabled
-            
-            const lastPopupTime = localStorage.getItem('lastPopupTime');
-            const currentTime = Date.now();
-
-            if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
-                updateAdContent();
-                document.getElementById('adOverlay').style.display = 'flex';
-                balance += 0.00001; // Increase balance for showing the ad
-                updateBalanceDisplay(); // Update balance displayed
-                localStorage.setItem('lastPopupTime', currentTime);
-            } else {
-                setTimeout(showAd, popupInterval - (currentTime - lastPopupTime));
-            }
-        }
-        function updateAdContent() {
-            const ad = ads[currentAdIndex];
-            const getBtn = document.querySelector(".get-btn");
-            
-            document.getElementById("adImage").src = ad.image;
-            document.getElementById("adImage").setAttribute("data-link", ad.link);
-            getBtn.setAttribute("data-link", ad.link);
-            getBtn.textContent = ad.buttonTitle;
-            
-            document.getElementById("adImage").onclick = visitAd;
-            getBtn.onclick = visitAd;
-
-            currentAdIndex = (currentAdIndex + 1) % ads.length;
-        }
-        function visitAd(event) {
-            const url = event.target.getAttribute("data-link");
-            window.open(url, '_blank');
-            
-            // Add earnings for clicking the ad (if desired)
-            balance += 0.00021; // Optional: give extra balance for ad click
-            updateBalanceDisplay();
-            closeAd();
-        }
-        function closeAd() {
-            document.getElementById('adOverlay').style.display = 'none';
-            setTimeout(showAd, popupInterval);
-        }
-
-        // Initialize
-        window.onload = function () {
-            setCurrentVideo(); // Set the video URL on load
-            updateBalanceDisplay();
-            
-            // Immediately show ads upon page load
-            const adToggleElement = document.getElementById('adToggle');
-            adToggleElement.classList.add('active'); // Set the toggle on
-            showAd(); // Show the first ad immediately
+        // Video Data (Simulated YouTube Links with unlimited videos per season)
+        const videoData = {
+            4: [
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/Ob4i4n-KdyU/maxresdefault.jpg", id: "Ob4i4n-KdyU" },
+                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/9i1O2DDtSo4/maxresdefault.jpg", id: "9i1O2DDtSo4" },
+                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/abc12345/0.jpg", id: "abc12345" } // Add more as needed
+            ],
+            3: [
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/UE4LjZE-iB0/maxresdefault.jpg", id: "UE4LjZE-iB0" },
+                { title: "Season 9 Episode 2", thumb: "https://img.youtube.com/vi/efgh5678/sddefault.jpg", id: "efgh5678" },
+                { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" }
+            ],
+            2: [
+                { title: "Funny Scene 3", thumb: "https://img.youtube.com/vi/V-_O7nl0Ii0/0.jpg", id: "V-_O7nl0Ii0" },
+                { title: "Funny Scene 4", thumb: "https://img.youtube.com/vi/mnop1213/0.jpg", id: "mnop1213" }
+            ],
+            // Add more seasons and their corresponding video arrays as needed
         };
+
+        // Load videos based on number selection
+        function loadVideos(num) {
+            const videoList = document.getElementById("videoList");
+            videoList.innerHTML = "";
+            videoData[num]?.forEach(video => {
+                const videoItem = document.createElement("div");
+                videoItem.classList.add("video-item");
+                videoItem.innerHTML = `<img src="${video.thumb}" alt="Thumbnail"><span>${video.title}</span>`;
+                videoItem.onclick = () => playVideo(video.id, videoItem);
+                videoList.appendChild(videoItem);
+            });
+
+            // Update active number
+            document.querySelectorAll(".number").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".number")[10 - num].classList.add("active");
+        }
+
+        // Play video in container and highlight the active video item
+        function playVideo(videoId, videoItem) {
+            document.getElementById("videoPlayer").src = `https://www.youtube.com/embed/${videoId}`;
+            
+            // Reset previous active item
+            const videoItems = document.querySelectorAll(".video-item");
+            videoItems.forEach(item => item.classList.remove("active"));
+
+            // Set current item as active
+            videoItem.classList.add("active");
+        }
+
+        // Enable horizontal scroll with drag
+        function enableScrollDrag(scrollContainer) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            scrollContainer.addEventListener("mousedown", (e) => {
+                isDown = true;
+                startX = e.pageX - scrollContainer.offsetLeft;
+                scrollLeft = scrollContainer.scrollLeft;
+            });
+
+            scrollContainer.addEventListener("mouseleave", () => isDown = false);
+            scrollContainer.addEventListener("mouseup", () => isDown = false);
+
+            scrollContainer.addEventListener("mousemove", (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - scrollContainer.offsetLeft;
+                const walk = (x - startX) * 2;
+                scrollContainer.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // Enable scrolling for numbers & logos
+        enableScrollDrag(document.getElementById("numberScroll"));
+        enableScrollDrag(document.getElementById("logoScroll"));
+
+        // Load first video's list on page load
+        window.onload = () => loadVideos(10);
     </script>
+
 </body>
 </html>
