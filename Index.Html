@@ -3,8 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Amazing Video Page</title>
+    <title>Amazing Video Page with Ads</title>
     <style>
+        /* General Styles */
         body {
             font-family: Arial, sans-serif;
             background: #f5f5f5;
@@ -20,6 +21,7 @@
             margin: auto;
             background: black;
         }
+
         .video-container iframe {
             width: 100%;
             height: calc(100vw * 9 / 16);
@@ -38,9 +40,11 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
+
         .scroll-container::-webkit-scrollbar {
             display: none;
         }
+
         .number {
             padding: 10px 20px;
             background: #ddd;
@@ -50,6 +54,7 @@
             margin: 0 5px;
             flex: 0 0 auto;
         }
+
         .number.active {
             background: #4CAF50;
             color: white;
@@ -64,9 +69,11 @@
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
+
         .logo-container::-webkit-scrollbar {
             display: none;
         }
+
         .logo-item {
             display: flex;
             flex-direction: column;
@@ -74,12 +81,14 @@
             flex: 0 0 auto;
             margin-right: 15px;
         }
+
         .logo-item img {
             width: 50px;
             height: 50px;
             border-radius: 50%;
             cursor: pointer;
         }
+
         .logo-item span {
             font-size: 12px;
             margin-top: 5px;
@@ -94,6 +103,7 @@
             padding: 10px;
             background: white;
         }
+
         .video-item {
             display: flex;
             align-items: center;
@@ -102,16 +112,61 @@
             cursor: pointer;
             border-bottom: 1px solid #ccc;
         }
+
         .video-item img {
             width: 80px;
             height: 45px;
             border-radius: 5px;
         }
+
         .video-item:hover {
             background: #eee;
         }
+
         .video-item.active {
             background: #d0f0c0; /* Highlight active video item */
+        }
+
+        /* Ad Overlay */
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .ad-popup {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .ad-popup img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+
+        .ad-popup .close-btn {
+            position: absolute;
+            top: 7px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border: none;
+            padding: 0px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
         }
     </style>
 </head>
@@ -119,16 +174,11 @@
 
     <!-- Video Container -->
     <div class="video-container">
-        <iframe id="videoPlayer" src="https://www.youtube.com/embed/Ob4i4n-KdyU" allowfullscreen></iframe>
+        <iframe id="videoPlayer" src="" allowfullscreen></iframe>
     </div>
 
     <!-- Scrollable Number Navigation -->
-    <div class="scroll-container" id="numberScroll">
-        <div class="number active" onclick="loadVideos(4)">Season 4</div>
-        <div class="number" onclick="loadVideos(3)">Season 3</div>
-        <div class="number" onclick="loadVideos(2)">Season 2</div>
-        <div class="number" onclick="loadVideos(1)">Season 1</div>
-    </div>
+    <div class="scroll-container" id="numberScroll"></div>
 
     <!-- Scrollable Logos -->
     <div class="logo-container" id="logoScroll">
@@ -157,25 +207,101 @@
     <!-- Video List -->
     <div class="video-list" id="videoList"></div>
 
+    <!-- Ad Overlay -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-popup">
+            <button class="close-btn" onclick="closeAd()" aria-label="Close ad">✖</button>
+            <img id="adImage" src="" alt="Ad Image" onclick="goToAdLink()">
+        </div>
+    </div>
+
     <script>
         // Video Data (Simulated YouTube Links with unlimited videos per season)
         const videoData = {
-            4: [
-                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/Ob4i4n-KdyU/maxresdefault.jpg", id: "Ob4i4n-KdyU" },
-                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/9i1O2DDtSo4/maxresdefault.jpg", id: "9i1O2DDtSo4" },
+            10: [
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
+                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/kJQP7kiw5Fk/0.jpg", id: "kJQP7kiw5Fk" },
                 { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/abc12345/0.jpg", id: "abc12345" } // Add more as needed
             ],
-            3: [
-                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/UE4LjZE-iB0/maxresdefault.jpg", id: "UE4LjZE-iB0" },
+            9: [
+                { title: "Season 9 Episode 1", thumb: "https://img.youtube.com/vi/abcd1234/sddefault.jpg", id: "abcd1234" },
                 { title: "Season 9 Episode 2", thumb: "https://img.youtube.com/vi/efgh5678/sddefault.jpg", id: "efgh5678" },
-                { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" }
+                { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" },
+                
             ],
-            2: [
+            8: [
                 { title: "Funny Scene 3", thumb: "https://img.youtube.com/vi/V-_O7nl0Ii0/0.jpg", id: "V-_O7nl0Ii0" },
                 { title: "Funny Scene 4", thumb: "https://img.youtube.com/vi/mnop1213/0.jpg", id: "mnop1213" }
             ],
             // Add more seasons and their corresponding video arrays as needed
         };
+
+        // Ad System
+        const ads = [
+            {
+                image: "https://bit.ly/4gHMJHL",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx",
+                buttonTitle: "Chat Now"
+            },
+            {
+                image: "https://bit.ly/49TAXap",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx",
+                buttonTitle: "Chat Now"
+            }
+        ];
+        let currentAdIndex = 0;
+        const firstPopupDelay = 15000; // 15 seconds
+        const popupInterval = 300000; // 30 seconds
+        let adsEnabled = true;
+
+        function showAd() {
+            if (!adsEnabled) return; // Only show ads if enabled
+
+            const lastPopupTime = localStorage.getItem('lastPopupTime');
+            const currentTime = Date.now();
+
+            if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
+                updateAdContent();
+                localStorage.setItem('lastPopupTime', currentTime);
+            }
+        }
+
+        function updateAdContent() {
+            const adOverlay = document.getElementById("adOverlay");
+            const adImage = document.getElementById("adImage");
+
+            // Update ad content
+            adImage.src = ads[currentAdIndex].image;
+
+            // Show the ad overlay
+            adOverlay.style.display = "flex";
+
+            // Move to the next ad
+            currentAdIndex = (currentAdIndex + 1) % ads.length;
+        }
+
+        function closeAd() {
+            const adOverlay = document.getElementById("adOverlay");
+            adOverlay.style.display = "none";
+        }
+
+        function goToAdLink() {
+            window.open(ads[currentAdIndex].link, "_blank"); // Open ad link in a new tab
+        }
+
+        // Dynamically generate season buttons
+        function generateSeasonButtons() {
+            const numberScroll = document.getElementById("numberScroll");
+            for (let season in videoData) {
+                const numberButton = document.createElement("div");
+                numberButton.classList.add("number");
+                numberButton.innerText = `Season ${season}`;
+                numberButton.onclick = () => loadVideos(season);
+                numberScroll.appendChild(numberButton);
+            }
+            // Set the first season's video list by default
+            loadVideos(Object.keys(videoData)[0]);
+        }
 
         // Load videos based on number selection
         function loadVideos(num) {
@@ -191,13 +317,13 @@
 
             // Update active number
             document.querySelectorAll(".number").forEach(el => el.classList.remove("active"));
-            document.querySelectorAll(".number")[10 - num].classList.add("active");
+            document.querySelectorAll(".number")[Object.keys(videoData).indexOf(num)].classList.add("active");
         }
 
         // Play video in container and highlight the active video item
         function playVideo(videoId, videoItem) {
             document.getElementById("videoPlayer").src = `https://www.youtube.com/embed/${videoId}`;
-            
+
             // Reset previous active item
             const videoItems = document.querySelectorAll(".video-item");
             videoItems.forEach(item => item.classList.remove("active"));
@@ -225,7 +351,7 @@
                 if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - scrollContainer.offsetLeft;
-                const walk = (x - startX) * 2;
+                const walk = (x - startX) * 2; // Scroll-fast
                 scrollContainer.scrollLeft = scrollLeft - walk;
             });
         }
@@ -234,9 +360,12 @@
         enableScrollDrag(document.getElementById("numberScroll"));
         enableScrollDrag(document.getElementById("logoScroll"));
 
-        // Load first video's list on page load
-        window.onload = () => loadVideos(10);
+        // Load seasons and videos on page load
+        window.onload = () => {
+            generateSeasonButtons();
+            setTimeout(showAd, firstPopupDelay); // Show first ad after the delay
+            setInterval(showAd, popupInterval); // Show ads at the defined interval
+        };
     </script>
-
 </body>
 </html>
