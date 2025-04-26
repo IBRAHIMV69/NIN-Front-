@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iTUBE</title>
+  <title>Kanny</title>
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
   <style>
     :root {
@@ -36,7 +36,7 @@
     }
 
     .logo {
-      font-size: 1.7rem;
+      font-size: 1.8rem;
       font-weight: 800;
       margin-right: 10px;
       background: linear-gradient(45deg, #00ff88, #00ccff);
@@ -92,8 +92,6 @@
       justify-content: space-between;
       align-items: center;
       padding: 0px 15px;
-      border-radius: 50px;
-      margin-bottom: 20px;
       background-color: #ff3300;
     }
 
@@ -338,6 +336,7 @@
       font-size: 11px;
       margin: 0;
       color: #fff;
+      cursor: pointer; /* Indicate that this is clickable */
     }
 
     .history-item p {
@@ -346,14 +345,16 @@
       color: #fff;
     }
 
-    .history-item button {
-      background-color: #ff0000;
+    .watch-button {
+      background-color: #00ff88;
       color: #fff;
       border: 1px solid #ccc;
       padding: 5px;
       border-radius: 8px;
       cursor: pointer;
       font-size: 9px;
+      text-decoration: none; /* Remove underline */
+      display: inline-block; /* To properly size the button */
     }
 
     .clear-history-button {
@@ -378,7 +379,7 @@
 
 <div class="sticky-container">
   <header class="header">
-    <div class="logo">PlexTube</div>
+    <div class="logo">KANNY</div>
     <div class="header-icons" role="navigation">
       <div class="search" role="search">
         <i class="fas fa-search"></i>
@@ -393,7 +394,7 @@
 <!-- Sidebar Menu -->
 <div class="sidebar-menu" id="sidebar">
   <div class="menu-header">
-    <h2></h2>
+    <h2>Menu</h2>
     <span class="close-menu" id="close-menu">×</span>
   </div>
   <ul class="social-media-list">
@@ -409,7 +410,7 @@
 <div class="history-modal" id="historyModal">
   <div class="history-modal-header">
     <h3>Watch History</h3>
-    <button id="closeHistoryModal">&times;</button>
+    <button id="closeHistoryModal">×</button>
   </div>
   <div class="history-list" id="historyList"></div>
   <button class="clear-history-button" id="clearHistory">Clear All History</button>
@@ -445,6 +446,7 @@
 </main>
 
 <script>
+  // Sample Movie Data
   const moviesData = {
     featured: [
       {
@@ -541,7 +543,7 @@
   // Render Movies
   function createMovieCard(movie) {
     return `
-      <a href="${movie.link}" class="movie-card" data-title="${movie.title}">
+      <div class="movie-card" data-title="${movie.title}" data-link="${movie.link}">
         <button class="favorite-btn" aria-label="Add to favorites">
           <i class="far fa-heart"></i>
         </button>
@@ -550,7 +552,7 @@
         <div class="movie-info">
           <div class="movie-title">${movie.title} (${movie.year})</div>
         </div>
-      </a>
+      </div>
     `;
   }
 
@@ -587,36 +589,54 @@
   const historyList = document.getElementById('historyList');
 
   function updateHistoryUI() {
-    historyList.innerHTML = watchHistory.map((item, index) => `
+    historyList.innerHTML = watchHistory.map(item => `
       <div class="history-item">
         <img src="${item.img}" alt="${item.title}">
         <div class="content">
-          <h4>${item.title}</h4>
+          <h4 onclick="window.open('${item.link}', '_blank')">${item.title}</h4>
           <p>Viewed: ${new Date(item.timestamp).toLocaleString()}</p>
         </div>
-        <button onclick="removeFromHistory(${index})">Remove</button>
+        <a href="${item.link}" class="watch-button">Watch</a>
       </div>
     `).join('');
   }
 
-  function addToHistory(movie) {
-    if (!watchHistory.some(item => item.title === movie.title)) {
-      watchHistory.unshift({...movie, timestamp: Date.now()});
-      if (watchHistory.length > 10) watchHistory.pop();
-      localStorage.setItem('watchHistory', JSON.stringify(watchHistory));
-      updateHistoryUI();
-    }
-  }
+  function addToHistory(title, img, link) {
+    const movie = { title, img, link, timestamp: Date.now() };
 
-  window.removeFromHistory = (index) => {
-    watchHistory.splice(index, 1);
+    // Remove the movie from history if it already exists
+    watchHistory = watchHistory.filter(item => item.title !== movie.title);
+    
+    // Add the new movie to the beginning of the history
+    watchHistory.unshift(movie);
+
+    // Limit the history to 10 items
+    if (watchHistory.length > 10) watchHistory.pop();
+    
+    // Save to local storage
     localStorage.setItem('watchHistory', JSON.stringify(watchHistory));
     updateHistoryUI();
-  };
+  }
 
-  // Event Listeners
+  // Adding click event to movie cards
+  document.addEventListener('click', function(event) {
+    const movieCard = event.target.closest('.movie-card');
+    if (movieCard) {
+      const title = movieCard.getAttribute('data-title');
+      const img = movieCard.querySelector('img').src;
+      const link = movieCard.getAttribute('data-link');
+
+      // Open the link in a new tab
+      window.open(link, '_blank');
+
+      // Add to history after opening the link
+      addToHistory(title, img, link);
+    }
+  });
+
   document.getElementById('historyButton').addEventListener('click', () => {
     historyModal.classList.toggle('open');
+    updateHistoryUI();  // Refresh UI when opening history
   });
 
   document.getElementById('closeHistoryModal').addEventListener('click', () => {
@@ -625,8 +645,8 @@
 
   document.getElementById('clearHistory').addEventListener('click', () => {
     watchHistory = [];
-    localStorage.removeItem('watchHistory');
-    updateHistoryUI();
+    localStorage.removeItem('watchHistory'); // Remove history from local storage
+    updateHistoryUI(); // Update UI
   });
 
   document.addEventListener('click', (e) => {
@@ -657,7 +677,7 @@
 
   // Initialize
   renderMovies();
-  updateHistoryUI();
+  updateHistoryUI(); // Populate the history UI on page load
 </script>
 
 </body>
