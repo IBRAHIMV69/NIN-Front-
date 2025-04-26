@@ -446,7 +446,6 @@
 </main>
 
 <script>
-  // Sample Movie Data
   const moviesData = {
     featured: [
       {
@@ -609,7 +608,7 @@
     
     // Add the new movie to the beginning of the history
     watchHistory.unshift(movie);
-
+    
     // Limit the history to 10 items
     if (watchHistory.length > 10) watchHistory.pop();
     
@@ -625,7 +624,7 @@
       const title = movieCard.getAttribute('data-title');
       const img = movieCard.querySelector('img').src;
       const link = movieCard.getAttribute('data-link');
-
+      
       // Open the link in a new tab
       window.open(link, '_blank');
 
@@ -677,7 +676,7 @@
 
   // Initialize
   renderMovies();
-  updateHistoryUI(); // Populate the history UI on page load
+  updateHistoryUI();
 </script>
 
 </body>
