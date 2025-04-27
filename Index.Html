@@ -61,50 +61,17 @@
             color: black;
         }
 
-        /* Scrollable Logos with Names */
-        .logo-container {
-            display: flex;
-            overflow-x: auto;
-            padding: 10px;
-            background: #242424;
-            border: 1px solid #;
-            scrollbar-width: none;
-            -ms-overflow-style: none;
-        }
-
-        .logo-container::-webkit-scrollbar {
-            display: none;
-        }
-
-        .logo-item {
-            display: flex;
-            flex-direction: column;
-            align-items: center;
-            flex: 0 0 auto;
-            margin-right: 15px;
-        }
-
-        .logo-item img {
-            width: 80px;
-            height: 100px;
-            border-radius: 8%;
-            cursor: pointer;
-        }
-
-        .logo-item span {
-            font-size: 12px;
-            margin-top: 5px;
-            color: #fff;
-        }
-
         /* Scrollable Video List */
         .video-list {
-            max-height: 800px;
-            overflow-y: auto;
+            max-height: 400px; /* Set a maximum height */
+            overflow-y: auto;   /* Enable vertical scrolling */
             text-align: left;
             padding: 10px;
             background: #1a1a1a;
             color: #fff;
+            margin: 0 auto; /* Center the video list */
+            width: 100%;
+            max-width: 800px; /* Match max width with video container */
         }
 
         .video-item {
@@ -171,6 +138,95 @@
             cursor: pointer;
             border-radius: 50%;
         }
+
+        /* Ad Container Styles */
+        .ad-container {
+            position: fixed;
+            bottom: 0;
+            width: 100%;
+            background: #fff;
+            box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+            padding: 10px;
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            z-index: 1000;
+            display: none; /* Hidden until ad shows */
+        }
+
+        .ad-content {
+            display: flex;
+            align-items: center;
+            flex-grow: 1;
+            overflow: hidden;
+        }
+
+        .app-icon {
+            width: 50px;
+            height: 50px;
+            border-radius: 12px;
+            overflow: hidden;
+            margin-right: 10px;
+            flex-shrink: 0;
+        }
+
+        .app-icon img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .ad-info {
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+        }
+
+        .app-name {
+            font-weight: bold;
+            font-size: 16px;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+            max-width: 200px; /* Limit width so button stays */
+            margin-bottom: 4px;
+        }
+
+        .ad-meta {
+            font-size: 14px;
+            color: #555;
+            white-space: nowrap;
+        }
+
+        .install-button {
+            background-color: #007bff;
+            color: white;
+            padding: 8px 14px;
+            border: none;
+            border-radius: 20px;
+            font-weight: bold;
+            cursor: pointer;
+            text-decoration: none;
+            margin-right: 40px;
+            flex-shrink: 0;
+        }
+
+        .install-button:hover {
+            background-color: #0056b3;
+        }
+
+        .sponsored {
+            font-size: 12px;
+            color: #777;
+            margin-right: 5px;
+        }
+
+        .ad-wrapper {
+            display: flex;
+            align-items: center;
+            flex: 1;
+            overflow: hidden;
+        }
     </style>
 </head>
 <body>
@@ -183,30 +239,6 @@
     <!-- Scrollable Number Navigation -->
     <div class="scroll-container" id="numberScroll"></div>
 
-    <!-- Scrollable Logos -->
-    <div class="logo-container" id="logoScroll">
-        <div class="logo-item" onclick="visitURL('https://example.com/logo1')">
-            <img src="https://short-link.me/QSiT" alt="Logo 1">
-            <span>ALAQA</span>
-        </div>
-        <div class="logo-item" onclick="visitURL('https://example.com/logo2')">
-            <img src="https://short-link.me/TsCr" alt="Logo 2">
-            <span>GIDAN SARAUTA</span>
-        </div>
-        <div class="logo-item" onclick="visitURL('https://example.com/logo3')">
-            <img src="https://short-link.me/TsDp" alt="Logo 3">
-            <span>LABARINA</span>
-        </div>
-        <div class="logo-item" onclick="visitURL('https://example.com/logo4')">
-            <img src="https://short-link.me/TsEy" alt="Logo 4">
-            <span>ZAFIN NEMA</span>
-        </div>
-        <div class="logo-item" onclick="visitURL('https://example.com/logo5')">
-            <img src="https://via.placeholder.com/50" alt="Logo 5">
-            <span>Logo 5</span>
-        </div>
-    </div>
-
     <!-- Video List -->
     <div class="video-list" id="videoList"></div>
 
@@ -218,32 +250,76 @@
         </div>
     </div>
 
-    <script>
-        // Video Data (Simulated YouTube Links with unlimited videos per season)
-        const videoData = {
-            3: [
-                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
-                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/kJQP7kiw5Fk/0.jpg", id: "kJQP7kiw5Fk" },
-                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/abc12345/0.jpg", id: "abc12345" } // Add more as needed
-            ],
-            2: [
-                { title: "Season 9 Episode 1", thumb: "https://img.youtube.com/vi/abcd1234/sddefault.jpg", id: "abcd1234" },
-                { title: "Season 9 Episode 2", thumb: "https://img.youtube.com/vi/efgh5678/sddefault.jpg", id: "efgh5678" },
-                { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" },
-                
-            ],
-            1: [
-                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
-                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
-                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" },
-                { title: "GIDAN SARAUTA EPISODE 4", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
-                { title: "GIDAN SARAUTA EPISODE 5", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
-                { title: "GIDAN SARAUTA EPISODE 6", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" }
-            ],
-            // Add more seasons and their corresponding video arrays as needed
-        };
+    <!-- Ad Container -->
+    <div class="ad-container" id="adContainer">
+        <div class="ad-wrapper">
+            <div class="ad-content" id="adContent"></div>
+        </div>
+        <a href="#" id="installButton" class="install-button" target="_blank">Install</a>
+    </div>
 
-        // Ad System
+    <script>
+        // App data for ads
+        const apps = [
+            {
+                name: "Cheelee: Short Videos f...",
+                icon: "https://via.placeholder.com/50",
+                rating: "4.6",
+                link: "https://play.google.com/store/apps/details?id=com.cheelee.app"
+            },
+            {
+                name: "CoolApp",
+                icon: "https://via.placeholder.com/50",
+                rating: "4.8",
+                link: "https://play.google.com/store/apps/details?id=com.coolapp.earn"
+            },
+            {
+                name: "FunGame: Battle Arena Online Multiplayer",
+                icon: "https://via.placeholder.com/50",
+                rating: "4.5",
+                link: "https://play.google.com/store/apps/details?id=com.fungame.battle"
+            }
+            // You can add unlimited apps here
+        ];
+
+        const adContainer = document.getElementById('adContainer');
+        const adContent = document.getElementById('adContent');
+        const installButton = document.getElementById('installButton');
+
+        // Load saved index
+        let currentAdIndex = parseInt(localStorage.getItem('currentAdIndex')) || 0;
+
+        function showAd(index) {
+            const app = apps[index];
+            adContent.innerHTML = `
+                <div class="app-icon">
+                    <img src="${app.icon}" alt="App Icon">
+                </div>
+                <div class="ad-info">
+                    <div class="app-name">${app.name}</div>
+                    <div class="ad-meta">
+                        <span class="sponsored">Sponsored ·</span>
+                        <span>${app.rating} ★ FREE</span>
+                    </div>
+                </div>
+            `;
+            installButton.href = app.link;
+            adContainer.style.display = 'flex';
+
+            // Save the current index for next time
+            localStorage.setItem('currentAdIndex', index);
+        }
+
+        function rotateAds() {
+            showAd(currentAdIndex);
+            currentAdIndex = (currentAdIndex + 1) % apps.length;
+        }
+
+        // Show ad immediately and start rotating
+        rotateAds();
+        setInterval(rotateAds, 15000); // Rotate every 15 seconds
+
+        // Ad Overlay
         const ads = [
             {
                 image: "https://bit.ly/4gHMJHL",
@@ -256,35 +332,19 @@
                 buttonTitle: "Chat Now"
             }
         ];
-        let currentAdIndex = 0;
+
+        let currentOverlayAdIndex = 0;
         const firstPopupDelay = 15000; // 15 seconds
         const popupInterval = 300000; // 30 seconds
-        let adsEnabled = true;
 
-        function showAd() {
-            if (!adsEnabled) return; // Only show ads if enabled
-
-            const lastPopupTime = localStorage.getItem('lastPopupTime');
-            const currentTime = Date.now();
-
-            if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
-                updateAdContent();
-                localStorage.setItem('lastPopupTime', currentTime);
-            }
-        }
-
-        function updateAdContent() {
+        function showOverlayAd() {
             const adOverlay = document.getElementById("adOverlay");
             const adImage = document.getElementById("adImage");
 
-            // Update ad content
-            adImage.src = ads[currentAdIndex].image;
-
-            // Show the ad overlay
+            adImage.src = ads[currentOverlayAdIndex].image;
             adOverlay.style.display = "flex";
 
-            // Move to the next ad
-            currentAdIndex = (currentAdIndex + 1) % ads.length;
+            currentOverlayAdIndex = (currentOverlayAdIndex + 1) % ads.length;
         }
 
         function closeAd() {
@@ -293,8 +353,30 @@
         }
 
         function goToAdLink() {
-            window.open(ads[currentAdIndex].link, "_blank"); // Open ad link in a new tab
+            window.open(ads[currentOverlayAdIndex].link, "_blank");
         }
+
+        // Video Data (Simulated YouTube Links with unlimited videos per season)
+        const videoData = {
+            3: [
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
+                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/kJQP7kiw5Fk/0.jpg", id: "kJQP7kiw5Fk" },
+                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/abc12345/0.jpg", id: "abc12345" }
+            ],
+            2: [
+                { title: "Season 9 Episode 1", thumb: "https://img.youtube.com/vi/abcd1234/sddefault.jpg", id: "abcd1234" },
+                { title: "Season 9 Episode 2", thumb: "https://img.youtube.com/vi/efgh5678/sddefault.jpg", id: "efgh5678" },
+                { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" },
+            ],
+            1: [
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
+                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
+                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" },
+                { title: "GIDAN SARAUTA EPISODE 4", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
+                { title: "GIDAN SARAUTA EPISODE 5", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
+                { title: "GIDAN SARAUTA EPISODE 6", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" }
+            ],
+        };
 
         // Dynamically generate season buttons
         function generateSeasonButtons() {
@@ -306,7 +388,6 @@
                 numberButton.onclick = () => loadVideos(season);
                 numberScroll.appendChild(numberButton);
             }
-            // Set the first season's video list by default
             loadVideos(Object.keys(videoData)[0]);
         }
 
@@ -322,7 +403,6 @@
                 videoList.appendChild(videoItem);
             });
 
-            // Update active number
             document.querySelectorAll(".number").forEach(el => el.classList.remove("active"));
             document.querySelectorAll(".number")[Object.keys(videoData).indexOf(num)].classList.add("active");
         }
@@ -331,11 +411,8 @@
         function playVideo(videoId, videoItem) {
             document.getElementById("videoPlayer").src = `https://www.youtube.com/embed/${videoId}`;
 
-            // Reset previous active item
             const videoItems = document.querySelectorAll(".video-item");
             videoItems.forEach(item => item.classList.remove("active"));
-
-            // Set current item as active
             videoItem.classList.add("active");
         }
 
@@ -358,20 +435,19 @@
                 if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - scrollContainer.offsetLeft;
-                const walk = (x - startX) * 2; // Scroll-fast
+                const walk = (x - startX) * 2;
                 scrollContainer.scrollLeft = scrollLeft - walk;
             });
         }
 
-        // Enable scrolling for numbers & logos
+        // Enable scrolling for numbers
         enableScrollDrag(document.getElementById("numberScroll"));
-        enableScrollDrag(document.getElementById("logoScroll"));
 
         // Load seasons and videos on page load
         window.onload = () => {
             generateSeasonButtons();
-            setTimeout(showAd, firstPopupDelay); // Show first ad after the delay
-            setInterval(showAd, popupInterval); // Show ads at the defined interval
+            setTimeout(showOverlayAd, firstPopupDelay);
+            setInterval(showOverlayAd, popupInterval);
         };
     </script>
 </body>
