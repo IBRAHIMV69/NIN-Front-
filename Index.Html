@@ -35,17 +35,22 @@
       justify-content: space-between;
     }
 
-    .logo {
-      font-size: 1.5rem;
-      font-weight: 800;
-      margin-right: 10px;
-      background: linear-gradient(45deg, #00ff88, #00ccff);
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-    }
+    .logo-container {
+            display: flex;
+            font-size: 1.5rem;
+            font-weight: 600;
+            color: #fff;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            height: 35px; /* Adjust the height as needed */
+            width: auto; /* Maintain aspect ratio */
+        }
 
     .header-icons {
       display: flex;
+      font-size: 20px;
       gap: 15px;
       align-items: center;
     }
@@ -55,6 +60,7 @@
       border-radius: 15px;
       padding: 5px 10px;
       display: flex;
+      margin-left: 10px;      
       align-items: center;
       border: 1px solid #444;
     }
@@ -93,11 +99,12 @@
       align-items: center;
       padding: 0px 15px;
       border-radius: 50px;
-      background-color: #ff3300;
+      border: 1px solid #555;
+      background-color: #ffcc00;
     }
 
     .close-menu {
-      background-color: #fff;
+      background-color: #333;
       color: #ff3300;
       font-size: 28px;
       padding: 0px 4px;
@@ -120,7 +127,7 @@
     }
 
     .social-media-item:hover {
-      color: var(--primary-green);
+      color: #ffcc00;
       transform: translateX(10px);
     }
 
@@ -158,7 +165,7 @@
     }
 
     .view-all-btn {
-      background: var(--primary-green);
+      background: #ffcc00;
       color: #000;
       border: none;
       padding: 6px 10px;
@@ -268,7 +275,7 @@
     }
 
     .history-icon:hover {
-      color: #ff0000;
+      color: #ffcc00;
     }
 
     .history-modal {
@@ -347,8 +354,8 @@
     }
 
     .watch-button {
-      background-color: #00ff88;
-      color: #fff;
+      background-color: #ffcc00;
+      color: #000;
       border: 1px solid #ccc;
       padding: 5px;
       border-radius: 8px;
@@ -360,8 +367,8 @@
 
     .clear-history-button {
       width: 100%;
-      background-color: #ff0000;
-      color: #fff;
+      background-color: #ffcc00;
+      color: #000;
       border: none;
       padding: 10px;
       border-radius: 8px;
@@ -427,10 +434,10 @@
       position: absolute;
       bottom: 15px;
       right: 15px;
-      background: #00b300;
-      color: white;
-      font-size: 10px;
-      padding: 5px 10px;
+      background: #ffcc00;
+      color: black;
+      font-size: 12px;
+      padding: 8px 10px;
       border-radius: 8px;
       border: none;
       cursor: pointer;
@@ -463,7 +470,7 @@
     }
 
     .dot.active {
-      background-color: white;
+      background-color: #ffcc00;
     }
 
     /* Search Results */
@@ -487,9 +494,9 @@
     }
 
     .search-results li a {
-      color: var(--primary-green);
+      color: #ffcc00;
       text-decoration: none;
-      font-size: 1.4rem;
+      font-size: 1.2rem;
     }
 
     .search-results li a:hover {
@@ -543,7 +550,10 @@
 
 <div class="sticky-container">
   <header class="header">
-    <div class="logo">iBTUBE</div>
+    <div class="logo-container">
+            <!-- Replace with your image URL -->
+            <img src="https://images.sftcdn.net/images/t_app-icon-m/p/2c20b462-825b-463a-954b-ac0f4f24f579/1514922571/northflix-logo" alt="Movie Gram Logo" class="logo" /><span>iPlex</span>
+        </div>
     <div class="header-icons" role="navigation">
       <div class="search" role="search">
         <i class="fas fa-search"></i>
@@ -736,7 +746,7 @@
   ];
   let currentAdIndex = 0;
         const firstPopupDelay = 1000; // 15 seconds
-        const popupInterval = 350000; // 30 seconds
+        const popupInterval = 35000; // 30 seconds
         let adsEnabled = true;
 
   function showAd() {
