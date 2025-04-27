@@ -1,1100 +1,374 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>iBTUBE</title>
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" />
-  <style>
-    :root {
-      --primary-green: #00ff88;
-      --dark-bg: #1a1a1a;
-      --card-bg: #242424;
-      --text-color: #ffffff;
-    }
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Amazing Video Page with Ads</title>
+    <style>
+        /* General Styles */
+        body {
+            font-family: Arial, sans-serif;
+            background: #1a1a1a;
+            margin: 0;
+            padding: 0;
+            text-align: center;
+        }
 
-    body {
-      margin: 0;
-      font-family: 'Inter', sans-serif;
-      background-color: var(--dark-bg);
-      color: var(--text-color);
-      padding-top: 60px;
-    }
+        /* Video Container */
+        .video-container {
+            width: 100%;
+            max-width: 800px;
+            margin: auto;
+            background: black;
+        }
 
-    /* Header Styles */
-    .header {
-      position: fixed;
-      top: 0;
-      left: 0;
-      right: 0;
-      padding: 8px 20px;
-      background-color: rgba(30, 30, 30, 0.95);
-      z-index: 1000;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-    }
+        .video-container iframe {
+            width: 100%;
+            height: calc(100vw * 9 / 16);
+            max-height: 450px;
+            border-radius: 8px;
+            border: none;
+        }
 
-    .logo-container {
+        /* Scrollable Number Navigation */
+        .scroll-container {
             display: flex;
-            font-size: 1.5rem;
-            font-weight: 600;
+            overflow-x: auto;
+            white-space: nowrap;
+            padding: 10px;
+            background: #000;
+            border: 1px solid #ccc;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .scroll-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .number {
+            padding: 8px 20px;
+            background: #ccc;
+            border-radius: 8px;
+            cursor: pointer;
+            font-weight: bold;
+            margin: 0 5px;
+            flex: 0 0 auto;
+        }
+
+        .number.active {
+            background: #00b300;
+            color: white;
+        }
+
+        /* Scrollable Logos with Names */
+        .logo-container {
+            display: flex;
+            overflow-x: auto;
+            padding: 10px;
+            background: #242424;
+            border: 1px solid #;
+            scrollbar-width: none;
+            -ms-overflow-style: none;
+        }
+
+        .logo-container::-webkit-scrollbar {
+            display: none;
+        }
+
+        .logo-item {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            flex: 0 0 auto;
+            margin-right: 15px;
+        }
+
+        .logo-item img {
+            width: 80px;
+            height: 100px;
+            border-radius: 8%;
+            cursor: pointer;
+        }
+
+        .logo-item span {
+            font-size: 12px;
+            margin-top: 5px;
             color: #fff;
+        }
+
+        /* Scrollable Video List */
+        .video-list {
+            max-height: 300px;
+            overflow-y: auto;
+            text-align: left;
+            padding: 10px;
+            background: #1a1a1a;
+            color: #fff;
+        }
+
+        .video-item {
+            display: flex;
             align-items: center;
             gap: 10px;
+            padding: 10px;
+            cursor: pointer;
+            border-bottom: 1px solid #333;
         }
-        .logo {
-            height: 35px; /* Adjust the height as needed */
-            width: auto; /* Maintain aspect ratio */
+
+        .video-item img {
+            width: 80px;
+            height: 45px;
+            border-radius: 5px;
         }
 
-    .header-icons {
-      display: flex;
-      font-size: 20px;
-      gap: 15px;
-      align-items: center;
-    }
-
-    .search {
-      background-color: #333;
-      border-radius: 15px;
-      padding: 5px 10px;
-      display: flex;
-      margin-left: 10px;      
-      align-items: center;
-      border: 1px solid #444;
-    }
-
-    .search input {
-      border: none;
-      background: transparent;
-      color: #fff;
-      outline: none;
-      margin-left: 10px;
-      font-size: 0.95rem;
-      width: 100%;
-    }
-
-    /* Sidebar Menu */
-    .sidebar-menu {
-      position: fixed;
-      top: 0;
-      right: -300px;
-      width: 200px;
-      height: 100%;
-      background-color: #2a2a2a;
-      transition: 0.3s;
-      z-index: 2000;
-      padding: 20px;
-      box-shadow: -2px 0 15px rgba(0, 0, 0, 0.2);
-    }
-
-    .sidebar-menu.active {
-      right: 0;
-    }
-
-    .menu-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0px 15px;
-      border-radius: 50px;
-      border: 1px solid #555;
-      background-color: #ffcc00;
-    }
-
-    .close-menu {
-      background-color: #333;
-      color: #ff3300;
-      font-size: 28px;
-      padding: 0px 4px;
-      border-radius: 50px;
-      cursor: pointer;
-    }
-
-    .social-media-list {
-      list-style: none;
-      padding: 0;
-    }
-
-    .social-media-item {
-      margin: 15px 0;
-      display: flex;
-      align-items: center;
-      color: #fff;
-      text-decoration: none;
-      transition: 0.3s;
-    }
-
-    .social-media-item:hover {
-      color: #ffcc00;
-      transform: translateX(10px);
-    }
-
-    .social-media-item i {
-      font-size: 20px;
-      width: 30px;
-      margin-right: 15px;
-    }
-
-    .menu-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.5);
-      z-index: 1999;
-      display: none;
-    }
-
-    /* Movie Sections and Search Results */
-    .section-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      padding: 0px 20px;
-    }
-
-    .section-title {
-      font-weight: 700;
-      font-size: 1.2rem;
-      color: var(--text-color);
-      display: flex;
-      gap: 10px;
-    }
-
-    .view-all-btn {
-      background: #ffcc00;
-      color: #000;
-      border: none;
-      padding: 6px 10px;
-      border-radius: 20px;
-      cursor: pointer;
-      font-weight: 600;
-      transition: all 0.3s ease;
-    }
-
-    .view-all-btn:hover {
-      opacity: 0.9;
-    }
-
-    .card-row {
-      display: flex;
-      overflow-x: auto;      
-      gap: 15px;
-      padding: 0px 20px;
-      scrollbar-width: thin;
-      scrollbar-color: #363636 transparent;
-    }
-
-    .card-row::-webkit-scrollbar {
-      display: none;
-    }
-
-    .card-row.grid-view {
-      display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(80px, 1fr));
-      overflow-x: hidden;
-    }
-
-    .movie-card {
-      background: var(--card-bg);
-      border-radius: 16px;
-      overflow: hidden;
-      text-decoration: none;
-      color: inherit;
-      transition: transform 0.2s ease;
-      border: 1px solid #363636;
-      min-width: 80px;
-      flex-shrink: 0;
-    }
-
-    .grid-view .movie-card {
-      min-width: auto;
-    }
-
-    .movie-card:hover {
-      transform: translateY(-5px);
-    }
-
-    .movie-card img {
-      width: 100%;
-      height: 180px;
-      object-fit: cover;
-      border-bottom: 2px solid #363636;
-    }
-
-    .movie-info {
-      padding: 10px;
-      position: relative;
-    }
-
-    .movie-title {
-      font-weight: 600;
-      margin-bottom: 5px;
-      font-size: 0.65rem;
-      color: var(--text-color);
-    }
-
-    .provider-tag {
-      position: absolute;
-      bottom: 10px;
-      left: 10px;
-      background: rgba(0, 0, 0, 0.6);
-      padding: 4px 8px;
-      border-radius: 6px;
-      font-size: 0.7rem;
-      backdrop-filter: blur(4px);
-    }
-
-    .favorite-btn {
-      position: absolute;
-      top: 10px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.6);
-      border: none;
-      color: white;
-      width: 30px;
-      height: 30px;
-      border-radius: 50%;
-      cursor: pointer;
-      backdrop-filter: blur(4px);
-      transition: all 0.2s ease;
-    }
-
-    .favorite-btn:hover {
-      color: var(--primary-green);
-    }
-
-    /* History Styles */
-    .history-icon {
-      font-size: 20px;
-      cursor: pointer;
-      color: #ccc;
-    }
-
-    .history-icon:hover {
-      color: #ffcc00;
-    }
-
-    .history-modal {
-      display: none;
-      position: fixed;
-      top: 80px;
-      right: 10px;
-      width: 320px;
-      background-color: #121212;
-      border-radius: 8px;
-      box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-      z-index: 1000;
-      padding: 10px;
-    }
-
-    .history-modal.open {
-      display: block;
-    }
-
-    .history-modal-header {
-      display: flex;
-      justify-content: space-between;
-      align-items: center;
-      margin-bottom: 10px;
-    }
-
-    .history-modal-header h3 {
-      font-size: 16px;
-      margin: 0;
-      color: #fff;
-    }
-
-    .history-modal-header button {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 16px;
-      cursor: pointer;
-    }
-
-    .history-list {
-      max-height: 300px;
-      overflow-y: auto;
-    }
-
-    .history-item {
-      display: flex;
-      align-items: center;
-      gap: 10px;
-      padding: 10px;
-      border-bottom: 1px solid #333;
-    }
-
-    .history-item img {
-      width: 80px;
-      height: 100px;
-      object-fit: cover;
-      border-radius: 5px;
-    }
-
-    .history-item .content {
-      flex: 1;
-    }
-
-    .history-item h4 {
-      font-size: 11px;
-      margin: 0;
-      color: #fff;
-      cursor: pointer;
-    }
-
-    .history-item p {
-      font-size: 12px;
-      margin: 0;
-      color: #fff;
-    }
-
-    .watch-button {
-      background-color: #ffcc00;
-      color: #000;
-      border: 1px solid #ccc;
-      padding: 5px;
-      border-radius: 8px;
-      cursor: pointer;
-      font-size: 9px;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    .clear-history-button {
-      width: 100%;
-      background-color: #ffcc00;
-      color: #000;
-      border: none;
-      padding: 10px;
-      border-radius: 8px;
-      cursor: pointer;
-      margin-top: 10px;
-    }
-
-    @media (max-width: 768px) {
-      .card-row.grid-view {
-        grid-template-columns: 1fr 1fr;
-      }
-    }
-
-    /* Carousel Styles */
-    .carousel-container {
-      width: 100%;  
-      max-width: 600px;  
-      height: 209px;  
-      overflow: hidden;
-      position: relative;
-      border-radius: 10px;
-      touch-action: pan-y;
-    }
-
-    .carousel {
-      display: flex;
-      transition: transform 0.4s ease-in-out;
-      will-change: transform;
-    }
-
-    .slide {
-      min-width: 100%;
-      height: 100%;
-      position: relative;
-      user-select: none;
-    }
-
-    .slide img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover; 
-      border-radius: 10px;
-    }
-
-    .overlay {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 40%;
-      background: linear-gradient(to top, rgba(0, 0, 0, 0.9), transparent);
-      border-radius: 10px;
-    }
-
-    .video-title {
-      position: absolute;
-      bottom: 16px;
-      left: 15px;
-      font-size: 18px;
-      font-weight: bold;
-    }
-
-    .download-btn {
-      position: absolute;
-      bottom: 15px;
-      right: 15px;
-      background: #ffcc00;
-      color: black;
-      font-size: 12px;
-      padding: 8px 10px;
-      border-radius: 8px;
-      border: none;
-      cursor: pointer;
-      display: flex;
-      align-items: center;
-      gap: 5px;
-    }
-
-    .download-btn img {
-      width: 14px;
-      height: 14px;
-    }
-
-    .dots {
-      position: absolute;
-      bottom: 5px;
-      left: 50%;
-      transform: translateX(-50%);
-      display: flex;
-      gap: 5px;
-    }
-
-    .dot {
-      width: 8px;
-      height: 8px;
-      background-color: gray;
-      border-radius: 50%;
-      cursor: pointer;
-      transition: 0.3s;
-    }
-
-    .dot.active {
-      background-color: #ffcc00;
-    }
-
-    /* Search Results */
-    .search-results {
-      margin: 20px;
-      color: #fff;
-    }
-
-    .search-results h3 {
-      margin-bottom: 10px;
-      font-size: 1.2rem;
-    }
-
-    .search-results ul {
-      list-style-type: none;
-      padding: 0;
-    }
-
-    .search-results li {
-      margin-bottom: 10px;
-    }
-
-    .search-results li a {
-      color: #ffcc00;
-      text-decoration: none;
-      font-size: 1.2rem;
-    }
-
-    .search-results li a:hover {
-      text-decoration: underline;
-    }
-
-    /* Ad Overlay */
-    .ad-overlay {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      background: rgba(0, 0, 0, 0.3);
-      display: none;
-      align-items: center;
-      justify-content: center;
-      z-index: 999;
-    }
-
-    .ad-popup {
-      position: relative;
-      width: 100%;
-      max-width: 250px;
-      border-radius: 15px;
-      text-align: center;
-      cursor: pointer;
-    }
-
-    .ad-popup img {
-      width: 100%;
-      border-radius: 15px;
-      display: block;
-    }
-
-    .ad-popup .close-btn {
-      position: absolute;
-      top: 7px;
-      right: 10px;
-      background: rgba(0, 0, 0, 0.2);
-      color: white;
-      border: none;
-      padding: 0px;
-      font-size: 20px;
-      cursor: pointer;
-      border-radius: 50%;
-    }
-  </style>
+        .video-item:hover {
+            background: #333;
+        }
+
+        .video-item.active {
+            background: #242424; /* Highlight active video item */
+        }
+
+        /* Ad Overlay */
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+
+        .ad-popup {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+
+        .ad-popup img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+
+        .ad-popup .close-btn {
+            position: absolute;
+            top: 7px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border: none;
+            padding: 0px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+    </style>
 </head>
 <body>
 
-<div class="sticky-container">
-  <header class="header">
-    <div class="logo-container">
-            <!-- Replace with your image URL -->
-            <img src="https://images.sftcdn.net/images/t_app-icon-m/p/2c20b462-825b-463a-954b-ac0f4f24f579/1514922571/northflix-logo" alt="Movie Gram Logo" class="logo" /><span>iPlex</span>
+    <!-- Video Container -->
+    <div class="video-container">
+        <iframe id="videoPlayer" src="https://www.youtube.com/embed/MN4hHqWWpwU" allowfullscreen></iframe>
+    </div>
+
+    <!-- Scrollable Number Navigation -->
+    <div class="scroll-container" id="numberScroll"></div>
+
+    <!-- Scrollable Logos -->
+    <div class="logo-container" id="logoScroll">
+        <div class="logo-item" onclick="visitURL('https://example.com/logo1')">
+            <img src="https://short-link.me/QSiT" alt="Logo 1">
+            <span>ALAQA</span>
         </div>
-    <div class="header-icons" role="navigation">
-      <div class="search" role="search">
-        <i class="fas fa-search"></i>
-        <input type="text" id="searchInput" placeholder="Search..." aria-label="Search Movies" />
-      </div>
-      <i class="fas fa-history history-icon" id="historyButton"></i>
-      <button id="menu-toggle" aria-label="Open Menu"><i class="fas fa-bars"></i></button>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo2')">
+            <img src="https://short-link.me/TsCr" alt="Logo 2">
+            <span>GIDAN SARAUTA</span>
+        </div>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo3')">
+            <img src="https://short-link.me/TsDp" alt="Logo 3">
+            <span>LABARINA</span>
+        </div>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo4')">
+            <img src="https://short-link.me/TsEy" alt="Logo 4">
+            <span>ZAFIN NEMA</span>
+        </div>
+        <div class="logo-item" onclick="visitURL('https://example.com/logo5')">
+            <img src="https://via.placeholder.com/50" alt="Logo 5">
+            <span>Logo 5</span>
+        </div>
     </div>
-  </header>
-</div>
 
-<!-- Sidebar Menu -->
-<div class="sidebar-menu" id="sidebar">
-  <div class="menu-header">
-    <h2></h2>
-    <span class="close-menu" id="close-menu">×</span>
-  </div>
-  <ul class="social-media-list">
-    <li><a href="#" class="social-media-item"><i class="fab fa-facebook"></i>Facebook</a></li>
-    <li><a href="#" class="social-media-item"><i class="fab fa-twitter"></i>Twitter</a></li>
-    <li><a href="#" class="social-media-item"><i class="fab fa-instagram"></i>Instagram</a></li>
-    <li><a href="#" class="social-media-item"><i class="fab fa-youtube"></i>YouTube</a></li>
-  </ul>
-</div>
-<div class="menu-overlay" id="overlay"></div>
+    <!-- Video List -->
+    <div class="video-list" id="videoList"></div>
 
-<!-- History Modal -->
-<div class="history-modal" id="historyModal">
-  <div class="history-modal-header">
-    <h3>Watch History</h3>
-    <button id="closeHistoryModal">×</button>
-  </div>
-  <div class="history-list" id="historyList"></div>
-  <button class="clear-history-button" id="clearHistory">Clear All History</button>
-</div>
-
-<div class="carousel-container">
-  <div class="carousel" id="carousel"></div>
-  <div class="dots" id="dots"></div>
-</div>
-
-<div class="search-results" id="searchResults" style="display: none;">
-  <h3>Search Results:</h3>
-  <ul id="resultsList"></ul>
-</div>
-
-<main>
-  <!-- Featured Movies Section -->
-  <div class="section-header">
-    <div class="section-title" aria-labelledby="featured">
-      <h2 id="featured">Featured</h2>
+    <!-- Ad Overlay -->
+    <div class="ad-overlay" id="adOverlay">
+        <div class="ad-popup">
+            <button class="close-btn" onclick="closeAd()" aria-label="Close ad">✖</button>
+            <img id="adImage" src="" alt="Ad Image" onclick="goToAdLink()">
+        </div>
     </div>
-    <button class="view-all-btn" data-section="featured-movies">All<i class="fas fa-chevron-right"></i></button>
-  </div>
-  <div class="card-row" id="featured-movies"></div>
 
-  <!-- Popular Movies Section -->
-  <div class="section-header">
-    <div class="section-title" aria-labelledby="popular">
-      <h2 id="popular">Popular</h2>
-    </div>
-    <button class="view-all-btn" data-section="popular-movies">All<i class="fas fa-chevron-right"></i></button>
-  </div>
-  <div class="card-row" id="popular-movies"></div>
+    <script>
+        // Video Data (Simulated YouTube Links with unlimited videos per season)
+        const videoData = {
+            1: [
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
+                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/kJQP7kiw5Fk/0.jpg", id: "kJQP7kiw5Fk" },
+                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/abc12345/0.jpg", id: "abc12345" } // Add more as needed
+            ],
+            2: [
+                { title: "Season 9 Episode 1", thumb: "https://img.youtube.com/vi/abcd1234/sddefault.jpg", id: "abcd1234" },
+                { title: "Season 9 Episode 2", thumb: "https://img.youtube.com/vi/efgh5678/sddefault.jpg", id: "efgh5678" },
+                { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" },
+                
+            ],
+            3: [
+                { title: "Funny Scene 3", thumb: "https://img.youtube.com/vi/V-_O7nl0Ii0/0.jpg", id: "V-_O7nl0Ii0" },
+                { title: "Funny Scene 4", thumb: "https://img.youtube.com/vi/mnop1213/0.jpg", id: "mnop1213" }
+            ],
+            // Add more seasons and their corresponding video arrays as needed
+        };
 
-  <!-- New Releases Section -->
-  <div class="section-header">
-    <div class="section-title" aria-labelledby="new-releases">
-      <h2 id="new-releases">New Releases</h2>
-    </div>
-    <button class="view-all-btn" data-section="new-releases-movies">All<i class="fas fa-chevron-right"></i></button>
-  </div>
-  <div class="card-row" id="new-releases-movies"></div>
-</main>
-
-<!-- Ad Overlay -->
-<div class="ad-overlay" id="adOverlay">
-  <div class="ad-popup">
-    <button class="close-btn" onclick="closeAd()" aria-label="Close ad">✖</button>
-    <img id="adImage" src="" alt="Ad Image" onclick="goToAdLink()">
-  </div>
-</div>
-
-<script>
-  const moviesData = {
-    featured: [
-      {
-        title: "ALAQA",
-        year: 2010,
-        img: "https://short-link.me/QSiT",
-        provider: "",
-        link: "https://short-link.me/TsCr"
-      },
-      {
-        title: "GIDAN SARAUTA",
-        year: 2014,
-        img: "https://short-link.me/TsCr",
-        provider: "",
-        link: "#"
-      },
-      {
-        title: "The Dark Knight",
-        year: 2008,
-        img: "https://m.media-amazon.com/images/I/91KkWf50SoL._SL1500_.jpg",
-        provider: "",
-        link: "#"
-      },
-      {
-        title: "Pulp Fiction",
-        year: 1994,
-        img: "https://m.media-amazon.com/images/I/71c05lTE03L._SL1500_.jpg",
-        provider: "",
-        link: "#"
-      }
-    ],
-    popular: [
-      {
-        title: "The Shawshank",
-        year: 1994,
-        img: "https://short-link.me/TsCr",
-        provider: "",
-        link: "#"
-      },
-      {
-        title: "The Godfather",
-        year: 1972,
-        img: "https://m.media-amazon.com/images/I/91KkWf50SoL._SL1500_.jpg",
-        provider: "",
-        link: "#"
-      },
-      {
-        title: "Forrest Gump",
-        year: 1994,
-        img: "https://m.media-amazon.com/images/I/61FQCSP7ZVL._SL1000_.jpg",
-        provider: "",
-        link: "#"
-      },
-      {
-        title: "Fight Club",
-        year: 1999,
-        img: "https://m.media-amazon.com/images/I/71YFoZiv-9L._SL1500_.jpg",
-        provider: "",
-        link: "#"
-      }
-    ],
-    newReleases: [
-      {
-        title: "Dune",
-        year: 2021,
-        img: "https://m.media-amazon.com/images/I/91KkWf50SoL._SL1500_.jpg",
-        provider: "",
-        link: "#"
-      },
-      {
-        title: "No Time to Die",
-        year: 2021,
-        img: "https://m.media-amazon.com/images/I/91KkWf50SoL._SL1500_.jpg",
-        provider: "",
-        link: "#"
-      },
-      {
-        title: "Spider-Man: No Way Home",
-        year: 2021,
-        img: "https://m.media-amazon.com/images/I/71VrNJc1YtL._SL1500_.jpg",
-        provider: "Sony Pictures",
-        link: "#"
-      },
-      {
-        title: "The Batman",
-        year: 2022,
-        img: "https://m.media-amazon.com/images/I/71UwEne3eqL._SL1500_.jpg",
-        provider: "Warner Bros",
-        link: "#"
-      }
-    ]
-  };
-
-  // Ad System
-  const ads = [
-      {
-          image: "https://bit.ly/4gHMJHL",  // Replace this with a valid ad link from your ad provider
-          link: "https://true-click.pro/a/44J1UBOggfxOkx",
-          buttonTitle: "Chat Now"
-      },
-      {
-          image: "https://bit.ly/49TAXap",  // Replace this with a valid ad link from your ad provider
-          link: "https://true-click.pro/a/44J1UBOggfxOkx",
-          buttonTitle: "Chat Now"
-      }
-  ];
-  let currentAdIndex = 0;
-        const firstPopupDelay = 1000; // 15 seconds
-        const popupInterval = 35000; // 30 seconds
+        // Ad System
+        const ads = [
+            {
+                image: "https://bit.ly/4gHMJHL",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx",
+                buttonTitle: "Chat Now"
+            },
+            {
+                image: "https://bit.ly/49TAXap",
+                link: "https://true-click.pro/a/44J1UBOggfxOkx",
+                buttonTitle: "Chat Now"
+            }
+        ];
+        let currentAdIndex = 0;
+        const firstPopupDelay = 15000; // 15 seconds
+        const popupInterval = 300000; // 30 seconds
         let adsEnabled = true;
 
-  function showAd() {
-      const adOverlay = document.getElementById("adOverlay");
-      const lastPopupTime = localStorage.getItem('lastPopupTime');
-      const currentTime = Date.now();
+        function showAd() {
+            if (!adsEnabled) return; // Only show ads if enabled
 
-      if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
-          updateAdContent();
-          localStorage.setItem('lastPopupTime', currentTime);
-      }
-  }
+            const lastPopupTime = localStorage.getItem('lastPopupTime');
+            const currentTime = Date.now();
 
-  function updateAdContent() {
-      const adOverlay = document.getElementById("adOverlay");
-      const adImage = document.getElementById("adImage");
-
-      // Update ad content
-      adImage.src = ads[currentAdIndex].image;
-
-      // Show the ad overlay
-      adOverlay.style.display = "flex";
-
-      // Move to the next ad
-      currentAdIndex = (currentAdIndex + 1) % ads.length;
-  }
-
-  function closeAd() {
-      const adOverlay = document.getElementById("adOverlay");
-      adOverlay.style.display = "none";
-  }
-
-  function goToAdLink() {
-      window.open(ads[currentAdIndex].link, "_blank"); // Open ad link in a new tab
-  }
-
-  // Render Movies
-  function createMovieCard(movie) {
-    return `
-      <div class="movie-card" data-title="${movie.title}" data-link="${movie.link}">
-        <button class="favorite-btn" aria-label="Add to favorites">
-          <i class="far fa-heart"></i>
-        </button>
-        <img src="${movie.img}" alt="${movie.title} Poster">
-        <div class="provider-tag">${movie.provider}</div>
-        <div class="movie-info">
-          <div class="movie-title">${movie.title} (${movie.year})</div>
-        </div>
-      </div>
-    `;
-  }
-
-  function renderMovies() {
-    document.getElementById('featured-movies').innerHTML = moviesData.featured.map(createMovieCard).join('');
-    document.getElementById('popular-movies').innerHTML = moviesData.popular.map(createMovieCard).join('');
-    document.getElementById('new-releases-movies').innerHTML = moviesData.newReleases.map(createMovieCard).join('');
-  }
-
-  // Menu Functionality
-  const menuToggle = document.getElementById('menu-toggle');
-  const sidebar = document.getElementById('sidebar');
-  const overlay = document.getElementById('overlay');
-  const closeMenuBtn = document.getElementById('close-menu');
-
-  menuToggle.addEventListener('click', () => {
-    sidebar.classList.add('active');
-    overlay.style.display = 'block';
-  });
-
-  closeMenuBtn.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.style.display = 'none';
-  });
-
-  overlay.addEventListener('click', () => {
-    sidebar.classList.remove('active');
-    overlay.style.display = 'none';
-  });
-
-  // History Functionality
-  let watchHistory = JSON.parse(localStorage.getItem('watchHistory')) || [];
-  const historyModal = document.getElementById('historyModal');
-  const historyList = document.getElementById('historyList');
-
-  function updateHistoryUI() {
-    historyList.innerHTML = watchHistory.map(item => `
-      <div class="history-item">
-        <img src="${item.img}" alt="${item.title}">
-        <div class="content">
-          <h4 onclick="window.open('${item.link}', '_blank')">${item.title}</h4>
-          <p>Viewed: ${new Date(item.timestamp).toLocaleString()}</p>
-        </div>
-        <a href="${item.link}" class="watch-button">Watch</a>
-      </div>
-    `).join('');
-  }
-
-  function addToHistory(title, img, link) {
-    const movie = { title, img, link, timestamp: Date.now() };
-
-    // Remove the movie from history if it already exists
-    watchHistory = watchHistory.filter(item => item.title !== movie.title);
-    
-    // Add the new movie to the beginning of the history
-    watchHistory.unshift(movie);
-    
-    // Limit the history to 10 items
-    if (watchHistory.length > 10) watchHistory.pop();
-    
-    // Save to local storage
-    localStorage.setItem('watchHistory', JSON.stringify(watchHistory));
-    updateHistoryUI();
-  }
-
-  // Adding click event to movie cards
-  document.addEventListener('click', function(event) {
-    const movieCard = event.target.closest('.movie-card');
-    if (movieCard) {
-      const title = movieCard.getAttribute('data-title');
-      const img = movieCard.querySelector('img').src;
-      const link = movieCard.getAttribute('data-link');
-      
-      // Open the link in a new tab
-      window.open(link, '_blank');
-
-      // Add to history after opening the link
-      addToHistory(title, img, link);
-    }
-  });
-
-  document.getElementById('historyButton').addEventListener('click', () => {
-    historyModal.classList.toggle('open');
-    updateHistoryUI();  // Refresh UI when opening history
-  });
-
-  document.getElementById('closeHistoryModal').addEventListener('click', () => {
-    historyModal.classList.remove('open');
-  });
-
-  document.getElementById('clearHistory').addEventListener('click', () => {
-    watchHistory = [];
-    localStorage.removeItem('watchHistory'); // Remove history from local storage
-    updateHistoryUI(); // Update UI
-  });
-
-  document.addEventListener('click', (e) => {
-    if (!e.target.closest('.history-modal') && !e.target.closest('#historyButton')) {
-      historyModal.classList.remove('open');
-    }
-  });
-
-  // View All Functionality
-  document.querySelectorAll('.view-all-btn').forEach(button => {
-    button.addEventListener('click', (e) => {
-      const section = document.getElementById(e.target.dataset.section);
-      const isGrid = section.classList.contains('grid-view');
-      section.classList.toggle('grid-view', !isGrid);
-      e.target.innerHTML = isGrid ? 'All<i class="fas fa-chevron-right"></i>' : 'Collapse';
-      if (!isGrid) section.scrollIntoView({ behavior: 'smooth' });
-    });
-  });
-
-  // Carousel Initialization
-  const videos = [
-    { 
-        img: "https://vhx.imgix.net/arewa24/assets/deb52668-4e72-4c8f-bb16-4d28a25b4cb8.jpg?auto=format%2Ccompress&fit=crop&h=360&q=70&w=640", 
-        title: "Reacher Season 3", 
-        buttonTitle: "Free Download", 
-        link: "https://short-link.me/QSiT"
-    },
-    { 
-        img: "https://vhx.imgix.net/arewa24/assets/29762585-db42-4abd-83ac-dd4d8a6c2314.jpg?auto=format%2Ccompress&fit=crop&h=360&q=70&w=640", 
-        title: "Fast & Furious 10", 
-        buttonTitle: "Watch Now", 
-        link: "https://example.com/fast10"
-    },
-    { 
-        img: "https://vhx.imgix.net/arewa24/assets/29762585-db42-4abd-83ac-dd4d8a6c2314.jpg?auto=format%2Ccompress&fit=crop&h=360&q=70&w=640", 
-        title: "Avatar 2", 
-        buttonTitle: "Stream Now", 
-        link: "https://example.com/avatar2"
-    },
-    { 
-        img: "https://vhx.imgix.net/arewa24/assets/29762585-db42-4abd-83ac-dd4d8a6c2314.jpg?auto=format%2Ccompress&fit=crop&h=360&q=70&w=640", 
-        title: "Mission Impossible 7", 
-        buttonTitle: "Download", 
-        link: "https://example.com/mi7"
-    }
-  ];
-
-  const carousel = document.getElementById("carousel");
-  const dotsContainer = document.getElementById("dots");
-
-  let currentIndex = 0;
-  let startX = 0;
-  let moveX = 0;
-  let isDragging = false;
-
-  function createSlides() {
-    videos.forEach((video, index) => {
-      const slide = document.createElement("div");
-      slide.className = "slide";
-      slide.innerHTML = `
-        <a href="${video.link}" target="_blank" style="display: block; height: 100%;">
-          <img src="${video.img}" alt="${video.title}">
-        </a>
-        <div class="overlay"></div>
-        <div class="video-title">${video.title}</div>
-        <button class="download-btn" onclick="window.open('${video.link}', '_blank'); event.stopPropagation();">
-          <img src="https://cdn-icons-png.flaticon.com/128/3874/3874990.png" alt="Download">
-          ${video.buttonTitle}
-        </button>
-      `;
-      carousel.appendChild(slide);
-
-      const dot = document.createElement("div");
-      dot.className = "dot";
-      if (index === 0) dot.classList.add("active");
-      dot.addEventListener("click", () => goToSlide(index));
-      dotsContainer.appendChild(dot);
-    });
-  }
-
-  function updateCarousel() {
-    carousel.style.transform = `translateX(-${currentIndex * 100}%)`;
-    document.querySelectorAll(".dot").forEach((dot, index) => {
-      dot.classList.toggle("active", index === currentIndex);
-    });
-  }
-
-  function goToSlide(index) {
-    currentIndex = index;
-    updateCarousel();
-  }
-
-  function nextSlide() {
-    currentIndex = (currentIndex + 1) % videos.length;
-    updateCarousel();
-  }
-
-  function prevSlide() {
-    currentIndex = (currentIndex - 1 + videos.length) % videos.length;
-    updateCarousel();
-  }
-
-  function handleTouchStart(e) {
-    startX = e.touches[0].clientX;
-    isDragging = true;
-  }
-
-  function handleTouchMove(e) {
-    if (!isDragging) return;
-    moveX = e.touches[0].clientX - startX;
-  }
-
-  function handleTouchEnd() {
-    isDragging = false;
-    if (moveX > 50) {
-      prevSlide();
-    } else if (moveX < -50) {
-      nextSlide();
-    }
-  }
-
-  function handleMouseDown(e) {
-    startX = e.clientX;
-    isDragging = true;
-  }
-
-  function handleMouseMove(e) {
-    if (!isDragging) return;
-    moveX = e.clientX - startX;
-  }
-
-  function handleMouseUp() {
-    isDragging = false;
-    if (moveX > 50) {
-      prevSlide();
-    } else if (moveX < -50) {
-      nextSlide();
-    }
-  }
-
-  carousel.addEventListener("touchstart", handleTouchStart);
-  carousel.addEventListener("touchmove", handleTouchMove);
-  carousel.addEventListener("touchend", handleTouchEnd);
-
-  carousel.addEventListener("mousedown", handleMouseDown);
-  carousel.addEventListener("mousemove", handleMouseMove);
-  carousel.addEventListener("mouseup", handleMouseUp);
-  carousel.addEventListener("mouseleave", handleMouseUp);
-
-  createSlides();
-  setInterval(nextSlide, 5000);
-
-  // Search Functionality
-  document.getElementById('searchInput').addEventListener('input', (e) => {
-    const searchTerm = e.target.value.toLowerCase();
-    const movieCards = document.querySelectorAll('.movie-card');
-    const searchResults = document.getElementById('searchResults');
-    const resultsList = document.getElementById('resultsList');
-
-    // Check if search input is empty
-    if (searchTerm === '') {
-      // Reset the movie cards and hide search results
-      searchResults.style.display = 'none';
-      movieCards.forEach(card => {
-        card.style.display = 'block';
-      });
-      document.querySelector('.carousel-container').style.display = 'block'; // Show carousel again
-      return;
-    }
-
-    // Clear search results
-    resultsList.innerHTML = '';
-
-    // Hide the carousel and movie cards
-    movieCards.forEach(card => {
-      card.style.display = 'none';
-    });
-    document.querySelector('.carousel-container').style.display = 'none';
-
-    // Search for matching movies
-    Object.values(moviesData).forEach(section => {
-      section.forEach(movie => {
-        if (movie.title.toLowerCase().includes(searchTerm)) {
-          const resultItem = document.createElement('li');
-          resultItem.innerHTML = `<a href="${movie.link}" target="_blank">${movie.title} (${movie.year})</a>`;
-          resultsList.appendChild(resultItem);
+            if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
+                updateAdContent();
+                localStorage.setItem('lastPopupTime', currentTime);
+            }
         }
-      });
-    });
 
-    // If any results found, display the search results
-    if (resultsList.childElementCount > 0) {
-      searchResults.style.display = 'block';
-    } else {
-      searchResults.style.display = 'none';
-    }
-  });
+        function updateAdContent() {
+            const adOverlay = document.getElementById("adOverlay");
+            const adImage = document.getElementById("adImage");
 
-  // Initialize
-  renderMovies();
-  updateHistoryUI();
+            // Update ad content
+            adImage.src = ads[currentAdIndex].image;
 
-  // Show Ad periodically
-  setInterval(showAd, popupInterval);
-</script>
+            // Show the ad overlay
+            adOverlay.style.display = "flex";
 
+            // Move to the next ad
+            currentAdIndex = (currentAdIndex + 1) % ads.length;
+        }
+
+        function closeAd() {
+            const adOverlay = document.getElementById("adOverlay");
+            adOverlay.style.display = "none";
+        }
+
+        function goToAdLink() {
+            window.open(ads[currentAdIndex].link, "_blank"); // Open ad link in a new tab
+        }
+
+        // Dynamically generate season buttons
+        function generateSeasonButtons() {
+            const numberScroll = document.getElementById("numberScroll");
+            for (let season in videoData) {
+                const numberButton = document.createElement("div");
+                numberButton.classList.add("number");
+                numberButton.innerText = `Season ${season}`;
+                numberButton.onclick = () => loadVideos(season);
+                numberScroll.appendChild(numberButton);
+            }
+            // Set the first season's video list by default
+            loadVideos(Object.keys(videoData)[0]);
+        }
+
+        // Load videos based on number selection
+        function loadVideos(num) {
+            const videoList = document.getElementById("videoList");
+            videoList.innerHTML = "";
+            videoData[num]?.forEach(video => {
+                const videoItem = document.createElement("div");
+                videoItem.classList.add("video-item");
+                videoItem.innerHTML = `<img src="${video.thumb}" alt="Thumbnail"><span>${video.title}</span>`;
+                videoItem.onclick = () => playVideo(video.id, videoItem);
+                videoList.appendChild(videoItem);
+            });
+
+            // Update active number
+            document.querySelectorAll(".number").forEach(el => el.classList.remove("active"));
+            document.querySelectorAll(".number")[Object.keys(videoData).indexOf(num)].classList.add("active");
+        }
+
+        // Play video in container and highlight the active video item
+        function playVideo(videoId, videoItem) {
+            document.getElementById("videoPlayer").src = `https://www.youtube.com/embed/${videoId}`;
+
+            // Reset previous active item
+            const videoItems = document.querySelectorAll(".video-item");
+            videoItems.forEach(item => item.classList.remove("active"));
+
+            // Set current item as active
+            videoItem.classList.add("active");
+        }
+
+        // Enable horizontal scroll with drag
+        function enableScrollDrag(scrollContainer) {
+            let isDown = false;
+            let startX;
+            let scrollLeft;
+
+            scrollContainer.addEventListener("mousedown", (e) => {
+                isDown = true;
+                startX = e.pageX - scrollContainer.offsetLeft;
+                scrollLeft = scrollContainer.scrollLeft;
+            });
+
+            scrollContainer.addEventListener("mouseleave", () => isDown = false);
+            scrollContainer.addEventListener("mouseup", () => isDown = false);
+
+            scrollContainer.addEventListener("mousemove", (e) => {
+                if (!isDown) return;
+                e.preventDefault();
+                const x = e.pageX - scrollContainer.offsetLeft;
+                const walk = (x - startX) * 2; // Scroll-fast
+                scrollContainer.scrollLeft = scrollLeft - walk;
+            });
+        }
+
+        // Enable scrolling for numbers & logos
+        enableScrollDrag(document.getElementById("numberScroll"));
+        enableScrollDrag(document.getElementById("logoScroll"));
+
+        // Load seasons and videos on page load
+        window.onload = () => {
+            generateSeasonButtons();
+            setTimeout(showAd, firstPopupDelay); // Show first ad after the delay
+            setInterval(showAd, popupInterval); // Show ads at the defined interval
+        };
+    </script>
 </body>
 </html>
