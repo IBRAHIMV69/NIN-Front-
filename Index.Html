@@ -27,7 +27,7 @@
       top: 0;
       left: 0;
       right: 0;
-      padding: 10px 20px;
+      padding: 11px 20px;
       background-color: rgba(30, 30, 30, 0.95);
       z-index: 1000;
       display: flex;
@@ -36,7 +36,7 @@
     }
 
     .logo {
-      font-size: 1.8rem;
+      font-size: 1.6rem;
       font-weight: 800;
       margin-right: 10px;
       background: linear-gradient(45deg, #00ff88, #00ccff);
@@ -92,6 +92,7 @@
       justify-content: space-between;
       align-items: center;
       padding: 0px 15px;
+      border-radius: 50px;
       background-color: #ff3300;
     }
 
@@ -160,7 +161,7 @@
       background: var(--primary-green);
       color: #000;
       border: none;
-      padding: 8px 20px;
+      padding: 6px 10px;
       border-radius: 20px;
       cursor: pointer;
       font-weight: 600;
@@ -175,7 +176,7 @@
       display: flex;
       overflow-x: auto;      
       gap: 15px;
-      padding: 0 20px 20px;
+      padding: 0px 20px;
       scrollbar-width: thin;
       scrollbar-color: #363636 transparent;
     }
@@ -379,7 +380,7 @@
 
 <div class="sticky-container">
   <header class="header">
-    <div class="logo">KANNY</div>
+    <div class="logo">iTUBE</div>
     <div class="header-icons" role="navigation">
       <div class="search" role="search">
         <i class="fas fa-search"></i>
@@ -394,7 +395,7 @@
 <!-- Sidebar Menu -->
 <div class="sidebar-menu" id="sidebar">
   <div class="menu-header">
-    <h2>Menu</h2>
+    <h2></h2>
     <span class="close-menu" id="close-menu">×</span>
   </div>
   <ul class="social-media-list">
@@ -438,7 +439,7 @@
   <!-- New Releases Section -->
   <div class="section-header">
     <div class="section-title" aria-labelledby="new-releases">
-      <h2 id="new-releases"><i class="fas fa-rocket"></i> New Releases</h2>
+      <h2 id="new-releases">New Releases</h2>
     </div>
     <button class="view-all-btn" data-section="new-releases-movies">All<i class="fas fa-chevron-right"></i></button>
   </div>
@@ -660,7 +661,7 @@
       const section = document.getElementById(e.target.dataset.section);
       const isGrid = section.classList.contains('grid-view');
       section.classList.toggle('grid-view', !isGrid);
-      e.target.textContent = isGrid ? 'All' : 'Collapse';
+      e.target.innerHTML = isGrid ? 'All<i class="fas fa-chevron-right"></i>' : 'Collapse';
       if (!isGrid) section.scrollIntoView({ behavior: 'smooth' });
     });
   });
