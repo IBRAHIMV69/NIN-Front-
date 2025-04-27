@@ -37,7 +37,7 @@
             white-space: nowrap;
             padding: 10px;
             background: #000;
-            border: 1px solid #ccc;
+            border: 1px solid #555;
             scrollbar-width: none;
             -ms-overflow-style: none;
         }
@@ -57,8 +57,8 @@
         }
 
         .number.active {
-            background: #00b300;
-            color: white;
+            background: #ffcc00;
+            color: black;
         }
 
         /* Scrollable Logos with Names */
@@ -99,7 +99,7 @@
 
         /* Scrollable Video List */
         .video-list {
-            max-height: 300px;
+            max-height: 800px;
             overflow-y: auto;
             text-align: left;
             padding: 10px;
@@ -117,8 +117,8 @@
         }
 
         .video-item img {
-            width: 80px;
-            height: 45px;
+            width: 100px;
+            height: 60px;
             border-radius: 5px;
         }
 
@@ -127,7 +127,7 @@
         }
 
         .video-item.active {
-            background: #242424; /* Highlight active video item */
+            background: #333; /* Highlight active video item */
         }
 
         /* Ad Overlay */
@@ -221,7 +221,7 @@
     <script>
         // Video Data (Simulated YouTube Links with unlimited videos per season)
         const videoData = {
-            1: [
+            3: [
                 { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
                 { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/kJQP7kiw5Fk/0.jpg", id: "kJQP7kiw5Fk" },
                 { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/abc12345/0.jpg", id: "abc12345" } // Add more as needed
@@ -232,9 +232,13 @@
                 { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" },
                 
             ],
-            3: [
-                { title: "Funny Scene 3", thumb: "https://img.youtube.com/vi/V-_O7nl0Ii0/0.jpg", id: "V-_O7nl0Ii0" },
-                { title: "Funny Scene 4", thumb: "https://img.youtube.com/vi/mnop1213/0.jpg", id: "mnop1213" }
+            1: [
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
+                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
+                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" },
+                { title: "GIDAN SARAUTA EPISODE 4", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
+                { title: "GIDAN SARAUTA EPISODE 5", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
+                { title: "GIDAN SARAUTA EPISODE 6", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" }
             ],
             // Add more seasons and their corresponding video arrays as needed
         };
