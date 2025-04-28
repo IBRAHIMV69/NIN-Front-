@@ -72,6 +72,7 @@
             overflow-y: auto; /* Enable vertical scrolling */
             text-align: left;
             padding: 10px;
+            font-size: 15px;
             background: #1a1a1a;
             margin: 20px auto; /* Center the video list with margin */
             width: 100%;
@@ -90,8 +91,8 @@
         }
 
         .video-item img {
-            width: 100px; /* Fixed thumbnail width */
-            height: 60px; /* Fixed thumbnail height */
+            width: 90px; /* Fixed thumbnail width */
+            height: 65px; /* Fixed thumbnail height */
             border-radius: 5px;
         }
 
@@ -242,7 +243,7 @@
 
     <!-- Video Container -->
     <div class="video-container">
-        <iframe id="videoPlayer" src="https://www.youtube.com/embed/MN4hHqWWpwU" allowfullscreen></iframe>
+        <iframe id="videoPlayer" src="https://www.youtube.com/embed/UHkue_HukXU" allowfullscreen></iframe>
     </div>
 
     <!-- Scrollable Number Navigation -->
@@ -360,8 +361,8 @@
         ];
 
         let currentOverlayAdIndex = 0;
-        const firstPopupDelay = 15000; // 15 seconds
-        const popupInterval = 300000; // 30 seconds
+        const firstPopupDelay = 1500000; // 15 seconds
+        const popupInterval = 30000000; // 30 seconds
 
         function showOverlayAd() {
             const adOverlay = document.getElementById("adOverlay");
@@ -390,17 +391,33 @@
                 { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/abc12345/0.jpg", id: "abc12345" }
             ],
             2: [
-                { title: "Season 9 Episode 1", thumb: "https://img.youtube.com/vi/abcd1234/sddefault.jpg", id: "abcd1234" },
-                { title: "Season 9 Episode 2", thumb: "https://img.youtube.com/vi/efgh5678/sddefault.jpg", id: "efgh5678" },
-                { title: "Season 9 Episode 3", thumb: "https://img.youtube.com/vi/ijkl91011/sddefault.jpg", id: "ijkl91011" },
+                { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/o_mN6ryMRaI/sddefault.jpg", id: "o_mN6ryMRaI" },
+                { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/zCuLHpBwrhw/sddefault.jpg", id: "zCuLHpBwrhw" },
+                { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/z70mri8gupE/sddefault.jpg", id: "z70mri8gupE" },
+                { title: "GIDAN SARAUTA EPISODE 4", thumb: "https://img.youtube.com/vi/Uj1rpn48SGo/sddefault.jpg", id: "Uj1rpn48SGo" },
+                { title: "GIDAN SARAUTA EPISODE 5", thumb: "https://img.youtube.com/vi/0rLC5HPvfTM/sddefault.jpg", id: "0rLC5HPvfTM" },
+                { title: "GIDAN SARAUTA EPISODE 6", thumb: "https://img.youtube.com/vi/6Zldxbkbmw0/sddefault.jpg", id: "6Zldxbkbmw0" },
+                { title: "GIDAN SARAUTA EPISODE 7", thumb: "https://img.youtube.com/vi/7LovUmyLCTA/sddefault.jpg", id: "7LovUmyLCTA" },
+                { title: "GIDAN SARAUTA EPISODE 8", thumb: "https://img.youtube.com/vi/XxeEYlUdoEs/sddefault.jpg", id: "XxeEYlUdoEs" },
+                { title: "GIDAN SARAUTA EPISODE 9", thumb: "https://img.youtube.com/vi/zHW6mUMzyok/sddefault.jpg", id: "zHW6mUMzyok" },
+                { title: "GIDAN SARAUTA EPISODE 10", thumb: "https://img.youtube.com/vi/gMtdGqRikTM/sddefault.jpg", id: "gMtdGqRikTM" },
+                { title: "GIDAN SARAUTA EPISODE 11", thumb: "https://img.youtube.com/vi/KREgvjyAnCw/sddefault.jpg", id: "KREgvjyAnCw" },
+                { title: "GIDAN SARAUTA EPISODE 12", thumb: "https://img.youtube.com/vi/n7894aGx1g8/sddefault.jpg", id: "n7894aGx1g8" },
+                { title: "GIDAN SARAUTA EPISODE 13", thumb: "https://img.youtube.com/vi/K6NSRPd3xr4/sddefault.jpg", id: "K6NSRPd3xr4" },
             ],
             1: [
                 { title: "GIDAN SARAUTA EPISODE 1", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
                 { title: "GIDAN SARAUTA EPISODE 2", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
                 { title: "GIDAN SARAUTA EPISODE 3", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" },
-                { title: "GIDAN SARAUTA EPISODE 4", thumb: "https://img.youtube.com/vi/MN4hHqWWpwU/sddefault.jpg", id: "MN4hHqWWpwU" },
-                { title: "GIDAN SARAUTA EPISODE 5", thumb: "https://img.youtube.com/vi/fMBf5OemK-0/0.jpg", id: "fMBf5OemK-0" },
-                { title: "GIDAN SARAUTA EPISODE 6", thumb: "https://img.youtube.com/vi/mR7X7W7QuGM/0.jpg", id: "mR7X7W7QuGM" }
+                { title: "GIDAN SARAUTA EPISODE 4", thumb: "https://img.youtube.com/vi/tPyQz1G_EMw/sddefault.jpg", id: "tPyQz1G_EMw" },
+                { title: "GIDAN SARAUTA EPISODE 5", thumb: "https://img.youtube.com/vi/Hey-Y3GWg1I/0.jpg", id: "Hey-Y3GWg1I" },
+                { title: "GIDAN SARAUTA EPISODE 6", thumb: "https://img.youtube.com/vi/_gL9-LOzEjY/0.jpg", id: "_gL9-LOzEjY" },
+                { title: "GIDAN SARAUTA EPISODE 7", thumb: "https://img.youtube.com/vi/vSDsL2lI_58/sddefault.jpg", id: "vSDsL2lI_58" },
+                { title: "GIDAN SARAUTA EPISODE 8", thumb: "https://img.youtube.com/vi/Nl6q0_qSNuc/0.jpg", id: "Nl6q0_qSNuc" },
+                { title: "GIDAN SARAUTA EPISODE 9", thumb: "https://img.youtube.com/vi/o5GT4TM_ilU/0.jpg", id: "o5GT4TM_ilU" },
+                { title: "GIDAN SARAUTA EPISODE 10", thumb: "https://img.youtube.com/vi/HuquZyylKmc/sddefault.jpg", id: "HuquZyylKmc" },
+                { title: "GIDAN SARAUTA EPISODE 11", thumb: "https://img.youtube.com/vi/unb-zU-9fLE/0.jpg", id: "unb-zU-9fLE" },
+                { title: "GIDAN SARAUTA EPISODE 12", thumb: "https://img.youtube.com/vi/riMDxMz9JQA/0.jpg", id: "riMDxMz9JQA" }
             ],
         };
 
