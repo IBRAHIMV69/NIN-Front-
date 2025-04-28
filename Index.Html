@@ -6,12 +6,17 @@
     <title>Amazing Video Page with Ads</title>
     <style>
         /* General Styles */
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
         body {
             font-family: Arial, sans-serif;
             background: #1a1a1a;
-            margin: 0;
-            padding: 0;
-            text-align: center;
+            color: #fff;
+            overflow-x: hidden; /* Prevent horizontal scrolling */
         }
 
         /* Video Container */
@@ -48,7 +53,7 @@
 
         .number {
             padding: 8px 20px;
-            background: #ccc;
+            background: #333;
             border-radius: 8px;
             cursor: pointer;
             font-weight: bold;
@@ -64,14 +69,14 @@
         /* Scrollable Video List */
         .video-list {
             max-height: 400px; /* Set a maximum height */
-            overflow-y: auto;   /* Enable vertical scrolling */
+            overflow-y: auto; /* Enable vertical scrolling */
             text-align: left;
             padding: 10px;
             background: #1a1a1a;
-            color: #fff;
-            margin: 0 auto; /* Center the video list */
+            margin: 20px auto; /* Center the video list with margin */
             width: 100%;
             max-width: 800px; /* Match max width with video container */
+            border-radius: 8px; /* Rounded corners */
         }
 
         .video-item {
@@ -80,17 +85,18 @@
             gap: 10px;
             padding: 10px;
             cursor: pointer;
-            border-bottom: 1px solid #333;
+            border-bottom: 1px solid #333; /* Divider */
+            transition: background 0.3s; /* Smooth hover transition */
         }
 
         .video-item img {
-            width: 100px;
-            height: 60px;
+            width: 100px; /* Fixed thumbnail width */
+            height: 60px; /* Fixed thumbnail height */
             border-radius: 5px;
         }
 
         .video-item:hover {
-            background: #333;
+            background: #333; /* Highlight on hover */
         }
 
         .video-item.active {
@@ -105,7 +111,7 @@
             width: 100%;
             height: 100%;
             background: rgba(0, 0, 0, 0.3);
-            display: none;
+            display: none; /* Hidden by default */
             align-items: center;
             justify-content: center;
             z-index: 999;
@@ -114,15 +120,15 @@
         .ad-popup {
             position: relative;
             width: 100%;
-            max-width: 250px;
+            max-width: 250px; /* Fixed popup width */
             border-radius: 15px;
             text-align: center;
             cursor: pointer;
         }
 
         .ad-popup img {
-            width: 100%;
-            border-radius: 15px;
+            width: 100%; /* Full width images */
+            border-radius: 15px; /* Rounded corners */
             display: block;
         }
 
@@ -130,7 +136,7 @@
             position: absolute;
             top: 7px;
             right: 10px;
-            background: rgba(0, 0, 0, 0.2);
+            background: rgba(0, 0, 0, 0.5);
             color: white;
             border: none;
             padding: 0px;
@@ -145,8 +151,9 @@
             bottom: 0;
             width: 100%;
             background: #fff;
+            border: 1px solid #ccc;
             box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
-            padding: 10px;
+            padding: 8px;
             display: flex;
             align-items: center;
             justify-content: space-between;
@@ -162,8 +169,8 @@
         }
 
         .app-icon {
-            width: 50px;
-            height: 50px;
+            width: 50px; /* Fixed icon size */
+            height: 50px; /* Fixed icon size */
             border-radius: 12px;
             overflow: hidden;
             margin-right: 10px;
@@ -171,8 +178,8 @@
         }
 
         .app-icon img {
-            width: 100%;
-            height: 100%;
+            width: 100%; /* Full width */
+            height: 100%; /* Full height */
             object-fit: cover;
         }
 
@@ -185,16 +192,17 @@
         .app-name {
             font-weight: bold;
             font-size: 16px;
+            color: #333;
             white-space: nowrap;
             overflow: hidden;
             text-overflow: ellipsis;
-            max-width: 200px; /* Limit width so button stays */
+            max-width: 200px; /* Limit width to fit */
             margin-bottom: 4px;
         }
 
         .ad-meta {
             font-size: 14px;
-            color: #555;
+            color: #555; /* Text color */
             white-space: nowrap;
         }
 
@@ -207,7 +215,7 @@
             font-weight: bold;
             cursor: pointer;
             text-decoration: none;
-            margin-right: 40px;
+            margin-left: 10px;
             flex-shrink: 0;
         }
 
@@ -217,7 +225,7 @@
 
         .sponsored {
             font-size: 12px;
-            color: #777;
+            color: #777; /* Color for sponsored text */
             margin-right: 5px;
         }
 
@@ -227,6 +235,7 @@
             flex: 1;
             overflow: hidden;
         }
+
     </style>
 </head>
 <body>
@@ -259,23 +268,40 @@
     </div>
 
     <script>
+        // Function to show or hide the ad container based on the scroll position
+        function handleScroll() {
+            const videoList = document.getElementById('videoList');
+            const adContainer = document.getElementById('adContainer');
+
+            const isAtBottom = videoList.scrollHeight - videoList.scrollTop === videoList.clientHeight;
+
+            if (isAtBottom) {
+                adContainer.style.display = 'none'; // Hide ad container when scrolled to bottom
+            } else {
+                adContainer.style.display = 'flex'; // Show ad container when not at bottom
+            }
+        }
+
+        // Add event listener to handle scroll on the video list
+        document.getElementById('videoList').addEventListener('scroll', handleScroll);
+
         // App data for ads
         const apps = [
             {
                 name: "Cheelee: Short Videos f...",
-                icon: "https://via.placeholder.com/50",
+                icon: "https://images.sftcdn.net/images/t_app-icon-m/p/2c20b462-825b-463a-954b-ac0f4f24f579/1514922571/northflix-logo",
                 rating: "4.6",
                 link: "https://play.google.com/store/apps/details?id=com.cheelee.app"
             },
             {
                 name: "CoolApp",
-                icon: "https://via.placeholder.com/50",
+                icon: "https://images.sftcdn.net/images/t_app-icon-m/p/2c20b462-825b-463a-954b-ac0f4f24f579/1514922571/northflix-logo",
                 rating: "4.8",
                 link: "https://play.google.com/store/apps/details?id=com.coolapp.earn"
             },
             {
                 name: "FunGame: Battle Arena Online Multiplayer",
-                icon: "https://via.placeholder.com/50",
+                icon: "https://images.sftcdn.net/images/t_app-icon-m/p/2c20b462-825b-463a-954b-ac0f4f24f579/1514922571/northflix-logo",
                 rating: "4.5",
                 link: "https://play.google.com/store/apps/details?id=com.fungame.battle"
             }
@@ -435,7 +461,7 @@
                 if (!isDown) return;
                 e.preventDefault();
                 const x = e.pageX - scrollContainer.offsetLeft;
-                const walk = (x - startX) * 2;
+                const walk = (x - startX) * 2; // Scroll-fast
                 scrollContainer.scrollLeft = scrollLeft - walk;
             });
         }
