@@ -133,7 +133,7 @@
 .ad-popup img#adImage {
   width: 100%;
   height: auto;
-  border-radius: 8px;
+  border-radius: 12px;
   display: block;
 }
 
@@ -164,7 +164,7 @@
 
 /* Timer */
 #adTimer {
-  background: rgba(0, 0, 0, 0.7);
+  background: rgba(0, 0, 0, 0.6);
   color: white;
   padding: 6px 12px;
   margin-top: 8px;
@@ -175,9 +175,10 @@
 /* Buttons */
 #skipButton,
 #visitButton {
-  padding: 6px 12px;
+  padding: 8px 15px;
   border: none;
   border-radius: 8px;
+  border: 1px solid #333;
   cursor: pointer;
   font-weight: bold;
   margin: 5px 5px 0;
@@ -190,7 +191,7 @@
 }
 
 #visitButton {
-  background: #00bfff;
+  background: #00b300;
   color: white;
   display: none;
 }
@@ -314,10 +315,10 @@
       style="display: none;"
     ></iframe>
 
-    <div id="adTimer">Ad • 5 Seconds</div>
+    <div id="adTimer">Ad • 5 </div>
     <div style="display: flex; justify-content: center; gap: 10px; margin-top: 10px;">
       <button id="skipButton" onclick="closeAd(event)">Skip Ad</button>
-      <button id="visitButton" onclick="visitAd(event)" style="display: none;">Visit</button>
+      <button id="visitButton" onclick="visitAd(event)" style="display: none;">Visit Ad</button>
     </div>
   </div>
 </div>
@@ -423,7 +424,7 @@
 ];
 
 let currentOverlayAdIndex = localStorage.getItem('currentAdIndex') ? parseInt(localStorage.getItem('currentAdIndex')) : 0;
-const popupInterval = 30000;
+const popupInterval = 3000000;
 const skipDelay = 15;
 
 function showOverlayAd() {
