@@ -241,14 +241,32 @@
       padding: 10px;
     }
 
-    /* Grid for explore */
-    #explore-grid {
+    /* Grid for explore and genre videos */
+    #explore-grid, #genre-videos {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 10px;
     }
 
-    /* Explore video items in grid */
+    /* List in history (actual videos) */
+    #history-grid {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 10px;
+      padding: 10px;
+    }
+
+    /* Video thumbnails in history grid */
+    #history-grid video {
+      width: 150px;
+      height: auto;
+      border-radius: 8px;
+      cursor: pointer;
+      box-shadow: 0 2px 8px rgba(0,0,0,0.3);
+      display: block;
+    }
+
+    /* Explore and genre video item styles */
     .grid-item {
       background: #111;
       border-radius: 8px;
@@ -310,8 +328,8 @@
       display: flex;
     }
     #videoModal video {
-      max-width: 90%;
-      max-height: 80%;
+      max-width: 100%;
+      max-height: 38%;
     }
     /* Style for the back arrow button inside modal */
     #videoModalClose {
@@ -366,7 +384,7 @@
     const sharedLink = 'https://auto-button-1.netlify.app/';
     const videoData = [
       {
-        src: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
         name: 'Jessica Miller',
         description: 'Dancing through life 💃✨ #dance #vibes',
@@ -378,7 +396,7 @@
         tags: ['dance', 'vibes']
       },
       {
-        src: 'https://ucarecdn.com/5552ca5b-c1ec-4c68-b5d3-6bb5617cdf3a/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
         name: 'Sophia Wilson',
         description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
@@ -390,7 +408,7 @@
         tags: ['travel', 'adventure']
       },
       {
-        src: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar1.jpg',
         name: 'Emma Johnson',
         description: 'Fitness motivation 💪🔥 #fitness #healthyliving',
@@ -403,7 +421,7 @@
       }
     ];
 
-    // Helper to save viewed videos
+    // Save viewed videos to localStorage
     function saveHistory(videoSrc) {
       let history = JSON.parse(localStorage.getItem('viewedVideos')) || [];
       if (!history.includes(videoSrc)) {
@@ -413,7 +431,6 @@
       }
     }
 
-    // Initialize sections
     const sections = {
       home: document.getElementById('video-wrapper'),
       explore: document.getElementById('explore-section'),
@@ -421,278 +438,283 @@
       genre: document.getElementById('genre-section')
     };
 
-    // Utility to switch sections
-function showSection(name) {
-  for (const key in sections) {
-    sections[key].classList.toggle('active', key === name);
-  }
-  document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
-  if (name === 'home') document.getElementById('homeBtn').classList.add('active');
-  if (name === 'explore') document.getElementById('exploreBtn').classList.add('active');
-  if (name === 'history') document.getElementById('historyBtn').classList.add('active');
-  if (name === 'genre') document.getElementById('genreBtn').classList.add('active');
+    function showSection(name) {
+      for (const key in sections) {
+        sections[key].classList.toggle('active', key === name);
+      }
+      document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
+      if (name === 'home') document.getElementById('homeBtn').classList.add('active');
+      if (name === 'explore') document.getElementById('exploreBtn').classList.add('active');
+      if (name === 'history') document.getElementById('historyBtn').classList.add('active');
+      if (name === 'genre') document.getElementById('genreBtn').classList.add('active');
 
-  if (name === 'explore') loadExplore();
-  if (name === 'history') loadHistory();
-  if (name === 'genre') loadGenre();
-}
+      if (name === 'explore') loadExplore();
+      if (name === 'history') loadHistory();
+      if (name === 'genre') loadGenre();
+    }
 
-// Bottom nav button handlers
-document.getElementById('homeBtn').onclick = () => showSection('home');
-document.getElementById('exploreBtn').onclick = () => showSection('explore');
-document.getElementById('historyBtn').onclick = () => showSection('history');
-document.getElementById('genreBtn').onclick = () => showSection('genre');
+    document.getElementById('homeBtn').onclick = () => showSection('home');
+    document.getElementById('exploreBtn').onclick = () => showSection('explore');
+    document.getElementById('historyBtn').onclick = () => showSection('history');
+    document.getElementById('genreBtn').onclick = () => showSection('genre');
 
-// ----------------------------------
-// Home (Video Scroll)
-const homeContainer = sections.home;
-const homeVideos = [];
+    // =========================
+    // Home (Video Scroll)
+    const homeContainer = sections.home;
+    const homeVideos = [];
 
-function createHomeSlide(data) {
-  const slide = document.createElement('div');
-  slide.className = 'video-slide';
+    function createHomeSlide(data) {
+      const slide = document.createElement('div');
+      slide.className = 'video-slide';
 
-  slide.innerHTML = `
-    <div class="video-container">
-      <video src="${data.src}" playsinline muted></video>
-    </div>
-    <div class="overlay">
-      <div class="logo"></div>
-      
-      <div class="user-info">
-        <div class="profile-section">
-          <div class="profile-logo">
-            <img src="${data.profileImg}" alt="Profile" />
+      slide.innerHTML = `
+        <div class="video-container">
+          <video src="${data.src}" playsinline muted></video>
+        </div>
+        <div class="overlay">
+          <div class="logo"></div>
+          
+          <div class="user-info">
+            <div class="profile-section">
+              <div class="profile-logo">
+                <img src="${data.profileImg}" alt="Profile" />
+              </div>
+              <div class="name-follow-container">
+                <div class="username">${data.name}</div>
+                <button class="follow-btn" data-url="${sharedLink}">Follow</button>
+              </div>
+            </div>
+            <div class="description">${data.description}</div>
           </div>
-          <div class="name-follow-container">
-            <div class="username">${data.name}</div>
-            <button class="follow-btn" data-url="${sharedLink}">Follow</button>
+
+          <div class="actions">
+            <div class="action-item like-btn" aria-label="Like">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
+              <span>${data.likes}</span>
+            </div>
+            <div class="action-item comment-btn" aria-label="Comment">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
+              <span>${data.comments}</span>
+            </div>
+            <div class="action-item share-btn" aria-label="Share">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
+              <span>Share</span>
+            </div>
+            <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
+              <span>Download</span>
+            </div>
           </div>
         </div>
-        <div class="description">${data.description}</div>
-      </div>
-
-      <div class="actions">
-        <div class="action-item like-btn" aria-label="Like">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
-          <span>${data.likes}</span>
-        </div>
-        <div class="action-item comment-btn" aria-label="Comment">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
-          <span>${data.comments}</span>
-        </div>
-        <div class="action-item share-btn" aria-label="Share">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
-          <span>Share</span>
-        </div>
-        <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
-          <span>Download</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // Event handlers
-  slide.querySelector('.follow-btn').onclick = () => {
-    window.location.href = data.profileUrl || sharedLink;
-  };
-  slide.querySelector('.download-btn').onclick = () => {
-    const a = document.createElement('a');
-    a.href = data.src;
-    a.download = 'video.mp4';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-  slide.querySelector('.share-btn').onclick = () => {
-    const shareUrl = 'https://bit.ly/3ENxGyn';
-    if (navigator.share) {
-      navigator.share({title:'Check out this video!', url: shareUrl}).catch(() => {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied!'));
-    } else {
-      prompt('Copy this link:', shareUrl);
-    }
-  };
-  // Like & Comment
-  slide.querySelector('.like-btn').onclick = () => {
-    window.location.href = sharedLink;
-  };
-  slide.querySelector('.comment-btn').onclick = () => {
-    window.location.href = sharedLink;
-  };
-
-  // Mute/unmute on click
-  const video = slide.querySelector('video');
-  video.onclick = () => { video.muted = !video.muted; };
-
-  // Save viewed videos when playing
-  video.onplay = () => { saveHistory(data.src); };
-
-  homeContainer.appendChild(slide);
-  homeVideos.push(video);
-}
-videoData.forEach(createHomeSlide);
-
-let activeVideo = null;
-
-// Auto-play control
-function handleFirstInteraction() {
-  homeVideos.forEach(v => v.play().catch(() => {}));
-  window.removeEventListener('click', handleFirstInteraction);
-  window.removeEventListener('touchstart', handleFirstInteraction);
-}
-window.addEventListener('click', handleFirstInteraction);
-window.addEventListener('touchstart', handleFirstInteraction);
-
-// Intersection Observer for auto-play
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const video = entry.target;
-    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-      if (activeVideo && activeVideo !== video) activeVideo.pause();
-      activeVideo = video;
-      video.muted = false;
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  });
-}, { threshold: 0.5 });
-
-homeVideos.forEach(v => {
-  observer.observe(v);
-});
-
-// ----------------------------------
-// Explore (Grid view)
-function loadExplore() {
-  const container = document.getElementById('explore-section');
-  container.innerHTML = '<h2 style="padding:10px;">Explore Videos</h2><div id="explore-grid"></div>';
-  const grid = document.getElementById('explore-grid');
-  grid.innerHTML = '';
-
-  // Show all videos in grid
-  videoData.forEach((video, index) => {
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.dataset.src = video.src; // store src for playback
-    item.innerHTML = `
-      <img src="${video.profileImg}" alt="${video.name}">
-      <div style="margin-top:5px;">${video.name}</div>
-    `;
-    item.onclick = () => {
-      openVideoModal(video.src);
-    };
-    grid.appendChild(item);
-  });
-}
-
-// ----------------------------------
-// View history from localStorage
-function loadHistory() {
-  const container = document.getElementById('history-section');
-  container.innerHTML = '<h2 style="padding:10px;">Viewed Videos</h2><ul id="history-list"></ul>';
-  const list = document.getElementById('history-list');
-  list.innerHTML = '';
-
-  const history = JSON.parse(localStorage.getItem('viewedVideos')) || [];
-  if (history.length === 0) {
-    list.innerHTML = '<li>No viewed videos yet.</li>';
-    return;
-  }
-
-  history.forEach(src => {
-    const li = document.createElement('li');
-    li.textContent = src;
-    li.onclick = () => {
-      openVideoModal(src);
-    };
-    list.appendChild(li);
-  });
-}
-
-// ----------------------------------
-// Genre filtering
-function loadGenre() {
-  const container = document.getElementById('genre-section');
-  container.innerHTML = '<h2 style="padding:10px;">Filter by Genre</h2><div id="genre-tags"></div><div id="genre-videos" style="margin-top:10px;"></div>';
-
-  const genreDiv = document.getElementById('genre-tags');
-  const videosDiv = document.getElementById('genre-videos');
-
-  // Collect unique tags
-  const tagsSet = new Set();
-  videoData.forEach(v => v.tags.forEach(t => tagsSet.add(t)));
-  const tags = Array.from(tagsSet);
-
-  // Create genre buttons
-  tags.forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'genre-btn';
-    btn.textContent = tag;
-    btn.onclick = () => {
-      showVideosByGenre(tag);
-    };
-    genreDiv.appendChild(btn);
-  });
-
-  function showVideosByGenre(tag) {
-    videosDiv.innerHTML = '';
-    const filtered = videoData.filter(v => v.tags.includes(tag));
-    if (filtered.length === 0) {
-      videosDiv.innerHTML = 'No videos for this genre.';
-      return;
-    }
-    filtered.forEach(v => {
-      const item = document.createElement('div');
-      item.className = 'grid-item';
-      item.dataset.src = v.src; // store src
-      item.onclick = () => {
-        openVideoModal(v.src);
-      };
-      item.innerHTML = `
-        <img src="${v.profileImg}" alt="${v.name}">
-        <div style="margin-top:5px;">${v.name}</div>
       `;
-      videosDiv.appendChild(item);
+
+      // Event handlers
+      slide.querySelector('.follow-btn').onclick = () => {
+        window.location.href = data.profileUrl || sharedLink;
+      };
+      slide.querySelector('.download-btn').onclick = () => {
+        const a = document.createElement('a');
+        a.href = data.src;
+        a.download = 'video.mp4';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      };
+      slide.querySelector('.share-btn').onclick = () => {
+        const shareUrl = 'https://bit.ly/3ENxGyn';
+        if (navigator.share) {
+          navigator.share({title:'Check out this video!', url:shareUrl}).catch(() => {});
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied!'));
+        } else {
+          prompt('Copy this link:', shareUrl);
+        }
+      };
+      // Like & Comment
+      slide.querySelector('.like-btn').onclick = () => {
+        window.location.href = sharedLink;
+      };
+      slide.querySelector('.comment-btn').onclick = () => {
+        window.location.href = sharedLink;
+      };
+
+      // Mute/unmute on click
+      const video = slide.querySelector('video');
+      video.onclick = () => { video.muted = !video.muted; };
+
+      // Save viewed videos when playing
+      video.onplay = () => { saveHistory(data.src); };
+
+      homeContainer.appendChild(slide);
+      homeVideos.push(video);
+    }
+
+    // Populate home slides
+    videoData.forEach(createHomeSlide);
+
+    // Auto-play control
+    const handleFirstInteraction = () => {
+      homeVideos.forEach(v => v.play().catch(() => {}));
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    };
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+
+    // Intersection Observer for auto-play
+    const observer = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          if (activeVideo && activeVideo !== video) activeVideo.pause();
+          activeVideo = video;
+          video.muted = false;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+    let activeVideo = null;
+    homeVideos.forEach(v => {
+      observer.observe(v);
     });
-  }
-}
 
-// Function to open video modal
-function openVideoModal(src) {
-  const modal = document.getElementById('videoModal');
-  const video = modal.querySelector('video');
-  video.src = src;
-  video.play().catch(() => {});
-  modal.classList.add('active');
-}
+    // =========================
+    // Explore (Grid view)
+    function loadExplore() {
+      const container = document.getElementById('explore-section');
+      container.innerHTML = '<h2 style="padding:10px;">Explore Videos</h2><div id="explore-grid"></div>';
+      const grid = document.getElementById('explore-grid');
+      grid.innerHTML = '';
 
-// Close modal on click outside video or on back arrow button
-const modal = document.getElementById('videoModal');
-const video = modal.querySelector('video');
-const modalCloseBtn = document.getElementById('videoModalClose');
+      // Show all videos in grid
+      videoData.forEach((video, index) => {
+        const item = document.createElement('div');
+        item.className = 'grid-item';
+        item.dataset.src = video.src; // store src for playback
+        item.innerHTML = `
+          <img src="${video.profileImg}" alt="${video.name}">
+          <div style="margin-top:5px;">${video.name}</div>
+        `;
+        item.onclick = () => {
+          openVideoModal(video.src);
+        };
+        grid.appendChild(item);
+      });
+    }
 
-modalCloseBtn.onclick = () => {
-  closeVideoModal();
-};
+    // =========================
+    // View history from localStorage with video thumbnails
+    function loadHistory() {
+      const container = document.getElementById('history-section');
+      container.innerHTML = '<h2 style="padding:10px;">Viewed Videos</h2><div id="history-grid"></div>';
+      const grid = document.getElementById('history-grid');
+      grid.innerHTML = '';
 
-modal.onclick = (e) => {
-  if (e.target.id === 'videoModal') {
-    closeVideoModal();
-  }
-};
+      const history = JSON.parse(localStorage.getItem('viewedVideos')) || [];
+      if (history.length === 0) {
+        grid.innerHTML = '<p style="padding:10px;">No videos viewed yet.</p>';
+        return;
+      }
 
-function closeVideoModal() {
-  video.pause();
-  video.src = '';
-  modal.classList.remove('active');
-}
+      // Create video thumbnails
+      history.forEach(src => {
+        const thumb = document.createElement('video');
+        thumb.src = src;
+        thumb.muted = true;
+        thumb.controls = false;
+        thumb.style.width = '150px';
+        thumb.style.borderRadius = '8px';
+        thumb.style.cursor = 'pointer';
+        thumb.style.boxShadow = '0 2px 8px rgba(0,0,0,0.3)';
+        thumb.onclick = () => {
+          openVideoModal(src);
+        };
+        grid.appendChild(thumb);
+      });
+    }
 
-// Initialize default view
-showSection('home');
-</script>
+    // =========================
+    // Genre filtering
+    function loadGenre() {
+      const container = document.getElementById('genre-section');
+      container.innerHTML = '<h2 style="padding:10px;">Filter by Genre</h2><div id="genre-tags"></div><div id="genre-videos" style="margin-top:10px;"></div>';
+
+      const genreDiv = document.getElementById('genre-tags');
+      const videosDiv = document.getElementById('genre-videos');
+
+      // Collect unique tags
+      const tagsSet = new Set();
+      videoData.forEach(v => v.tags.forEach(t => tagsSet.add(t)));
+      const tags = Array.from(tagsSet);
+
+      // Create genre buttons
+      tags.forEach(tag => {
+        const btn = document.createElement('button');
+        btn.className = 'genre-btn';
+        btn.textContent = tag;
+        btn.onclick = () => {
+          showVideosByGenre(tag);
+        };
+        genreDiv.appendChild(btn);
+      });
+
+      function showVideosByGenre(tag) {
+        videosDiv.innerHTML = '';
+        const filtered = videoData.filter(v => v.tags.includes(tag));
+        if (filtered.length === 0) {
+          videosDiv.innerHTML = 'No videos for this genre.';
+          return;
+        }
+        filtered.forEach(v => {
+          const item = document.createElement('div');
+          item.className = 'grid-item';
+          item.dataset.src = v.src; // store src
+          item.onclick = () => {
+            openVideoModal(v.src);
+          };
+          item.innerHTML = `
+            <img src="${v.profileImg}" alt="${v.name}">
+            <div style="margin-top:5px;">${v.name}</div>
+          `;
+          videosDiv.appendChild(item);
+        });
+      }
+    }
+
+    // Function to open video modal
+    function openVideoModal(src) {
+      const modal = document.getElementById('videoModal');
+      const video = modal.querySelector('video');
+      video.src = src;
+      video.play().catch(() => {});
+      modal.classList.add('active');
+    }
+
+    // Close modal on click outside video or on back arrow button
+    const modal = document.getElementById('videoModal');
+    const video = modal.querySelector('video');
+    const modalCloseBtn = document.getElementById('videoModalClose');
+
+    modalCloseBtn.onclick = () => {
+      closeVideoModal();
+    };
+
+    modal.onclick = (e) => {
+      if (e.target.id === 'videoModal') {
+        closeVideoModal();
+      }
+    };
+
+    function closeVideoModal() {
+      video.pause();
+      video.src = '';
+      document.querySelector('#videoModal').classList.remove('active');
+    }
+
+    // Initialize default view
+    showSection('home');
+  </script>
 </body>
 </html>
