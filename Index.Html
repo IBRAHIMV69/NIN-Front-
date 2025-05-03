@@ -94,20 +94,15 @@
       aspect-ratio: 9 / 18;
       background: #000;
     }
-    .video-container video, .video-container iframe {
+    video {
       position: absolute;
       top: 50%;
       left: 50%;
       width: 100%;
       height: 100%;
-      object-fit: cover; /* object-fit applies to video, iframe might behave differently */
+      object-fit: cover;
       transform: translate(-50%, -50%);
     }
-     /* Ensure iframe content fits */
-    .video-container iframe {
-        object-fit: contain; /* Use contain for iframes to avoid stretching */
-    }
-
 
     /* Overlay styles */
     .overlay {
@@ -266,7 +261,7 @@
     }
     .grid-item .cover-img {
       width: 100%;
-      aspect-ratio: 16/ 9; /* Use the video aspect ratio for the cover */
+      aspect-ratio: 9/16; /* Use the video aspect ratio for the cover */
       object-fit: cover;
     }
 
@@ -309,7 +304,7 @@
       position: fixed;
       top:0; left:0;
       width:100%; height:100%;
-      background: rgba(0,0,0,0.9);
+      background: rgba(0,0,0,0.1);
       display: none;
       justify-content: center;
       align-items: center;
@@ -319,24 +314,16 @@
     #videoModal.active {
       display: flex;
     }
-    #videoModal video, #videoModal iframe {
-      position: relative;
-      width: 100%;
-      max-width: 1280px;
-      aspect-ratio: 9 / 18;
-      background: #000;
+    #videoModal video {
+      max-width: 100%;
+      max-height: 100%;
     }
-     /* Ensure iframe content fits in modal */
-    #videoModal iframe {
-        object-fit: contain;
-    }
-
     /* Style for the back arrow button inside modal */
     #videoModalClose {
       position: fixed;
       top: 20px;
       right: 20px;
-      background: #ccc;
+      background: rgba(0,0,0,0.6);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -351,7 +338,7 @@
       background: rgba(255,255,255,0.3);
     }
     #videoModalClose i {
-      color: #000;
+      color: #fff;
       font-size: 20px;
     }
   </style>
@@ -377,7 +364,7 @@
   <!-- Modal for video playback with close button -->
   <div id="videoModal">
     <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
-    <!-- Video element will be dynamically added here -->
+    <video controls></video>
   </div>
 
   <!-- Scripts -->
@@ -396,12 +383,11 @@
         likes: 887,
         comments: 221,
         shares: 229,
-        tags: ['dance', 'vibes'],
-        type: 'video' // 'video' for standard <video> tag
+        tags: ['dance', 'vibes']
       },
       {
-        src: 'https://ucarecdn.com/5552ca5b-c1ec-4c68-b5d3-6bb5617cdf3a/',
-        cover: 'https://ucarecdn.com/5552ca5b-c1ec-4c68-b5d3-6bb5617cdf3a/-/preview/500x800/',
+        src: 'https://ucarecdn.com/e3e67ba4-62e3-44b4-9212-108dee1d5800/',
+        cover: 'https://urlc.net/TTWf',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
         name: 'Sophia Wilson',
         description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
@@ -410,8 +396,7 @@
         likes: 1234,
         comments: 456,
         shares: 78,
-        tags: ['travel', 'adventure'],
-        type: 'video'
+        tags: ['travel', 'adventure']
       },
       {
         src: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/',
@@ -424,22 +409,7 @@
         likes: 987,
         comments: 654,
         shares: 321,
-        tags: ['fitness', 'health'],
-        type: 'video'
-      },
-      {
-        src: 'https://www.xvideos.com/embedframe/khdleuv0d6e',
-        cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169poster/a3/d9/ee/a3d9ee7b6cbf4d3c7db8371803345f5a/a3d9ee7b6cbf4d3c7db8371803345f5a.7.jpg', // Example cover for xvideos embed
-        profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar2.jpg', // Example profile img
-        name: 'PURGATORYX', // Example name
-        description: 'Check out this embedded video!', // Example description
-        followers: 'N/A',
-        following: false,
-        likes: 0,
-        comments: 0,
-        shares: 0,
-        tags: ['adult', 'embed'], // Example tags
-        type: 'iframe' // 'iframe' for embedded content
+        tags: ['fitness', 'health']
       }
       // Add more video data here if needed
     ];
@@ -477,22 +447,15 @@
     // ----------------------------------
     // Home (Video Scroll)
     const homeContainer = sections.home;
-    const homeVideos = []; // Array to hold <video> elements for play/pause control
+    const homeVideos = [];
 
     function createHomeSlide(data) {
       const slide = document.createElement('div');
       slide.className = 'video-slide';
 
-      let mediaElement;
-      if (data.type === 'iframe') {
-        mediaElement = `<iframe src="${data.src}" frameborder="0" allowfullscreen></iframe>`;
-      } else {
-        mediaElement = `<video src="${data.src}" playsinline muted loop></video>`;
-      }
-
       slide.innerHTML = `
         <div class="video-container">
-          ${mediaElement}
+          <video src="${data.src}" playsinline muted></video>
         </div>
         <div class="overlay">
           <div class="logo"></div>
@@ -536,17 +499,12 @@
         window.location.href = data.profileUrl || sharedLink;
       };
       slide.querySelector('.download-btn').onclick = () => {
-        // Downloading embedded content is not directly supported via a simple link
-        if (data.type === 'iframe') {
-           alert('Downloading embedded videos is not possible.');
-        } else {
-            const a = document.createElement('a');
-            a.href = data.src;
-            a.download = 'video.mp4';
-            document.body.appendChild(a);
-            a.click();
-            document.body.removeChild(a);
-        }
+        const a = document.createElement('a');
+        a.href = data.src;
+        a.download = 'video.mp4';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
       };
       slide.querySelector('.share-btn').onclick = () => {
         const shareUrl = 'https://bit.ly/3ENxGyn'; // Replace with your actual share URL if different
@@ -566,21 +524,18 @@
         window.location.href = sharedLink;
       };
 
-      // Mute/unmute on click (only applies to <video>)
-      const videoElement = slide.querySelector('video');
-      if (videoElement) {
-          videoElement.onclick = () => { videoElement.muted = !videoElement.muted; };
-          homeVideos.push(videoElement); // Add only <video> elements to the list for autoplay control
-      }
-
+      // Mute/unmute on click
+      const video = slide.querySelector('video');
+      video.onclick = () => { video.muted = !video.muted; };
 
       homeContainer.appendChild(slide);
+      homeVideos.push(video);
     }
     videoData.forEach(createHomeSlide);
 
     let activeVideo = null;
 
-    // Auto-play control for <video> elements
+    // Auto-play control
     function handleFirstInteraction() {
       homeVideos.forEach(v => v.play().catch(() => {}));
       window.removeEventListener('click', handleFirstInteraction);
@@ -589,10 +544,10 @@
     window.addEventListener('click', handleFirstInteraction);
     window.addEventListener('touchstart', handleFirstInteraction);
 
-    // Intersection Observer for auto-play of <video> elements
+    // Intersection Observer for auto-play
     const observer = new IntersectionObserver((entries) => {
       entries.forEach(entry => {
-        const video = entry.target; // This will be a <video> element
+        const video = entry.target;
         if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
           if (activeVideo && activeVideo !== video) activeVideo.pause();
           activeVideo = video;
@@ -614,7 +569,7 @@
     // Explore (Grid view)
     function loadExplore() {
       const container = sections.explore;
-      container.innerHTML = '<h2 style="padding:10px;">Explore Videos</h2><div id="explore-grid"></div>';
+      container.innerHTML = '<h2 style="padding:10px;"></h2><div id="explore-grid"></div>';
       const grid = document.getElementById('explore-grid');
       grid.innerHTML = '';
 
@@ -623,13 +578,12 @@
         const item = document.createElement('div');
         item.className = 'grid-item';
         item.dataset.src = video.src; // store src for playback
-        item.dataset.type = video.type; // store type for playback
         item.innerHTML = `
           <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover">
           <div style="margin-top:5px; text-align: center; font-size: 12px;">${video.name}</div>
         `;
         item.onclick = () => {
-          openVideoModal(video.src, video.type);
+          openVideoModal(video.src);
         };
         grid.appendChild(item);
       });
@@ -640,7 +594,7 @@
     function loadSearch() {
       const container = sections.search;
       container.innerHTML = `
-        <h2 style="padding:10px;">Search Users</h2>
+        <h2 style="padding:10px;"></h2>
         <div style="padding: 0 10px;">
           <input type="text" id="searchInput" placeholder="Search Users...">
         </div>
@@ -675,13 +629,12 @@
           const item = document.createElement('div');
           item.className = 'grid-item'; // Reuse grid-item styling
           item.dataset.src = video.src;
-          item.dataset.type = video.type;
           item.innerHTML = `
             <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover">
             <div style="margin-top:5px; text-align: center; font-size: 12px;">${video.name}</div>
           `;
           item.onclick = () => {
-            openVideoModal(video.src, video.type);
+            openVideoModal(video.src);
           };
           searchResultsGrid.appendChild(item);
         });
@@ -698,7 +651,7 @@
     // Genre filtering
     function loadGenre() {
       const container = sections.genre;
-      container.innerHTML = '<h2 style="padding:10px;">Browse by Genre</h2><div id="genre-tags" style="padding: 0 10px;"></div><div id="genre-videos" style="margin-top:10px; padding: 0 10px;"></div>';
+      container.innerHTML = '<h2 style="padding:10px;"></h2><div id="genre-tags" style="padding: 0 10px;"></div><div id="genre-videos" style="margin-top:10px; padding: 0 10px;"></div>';
 
       const genreDiv = document.getElementById('genre-tags');
       const videosDiv = document.getElementById('genre-videos');
@@ -731,9 +684,8 @@
           const item = document.createElement('div');
           item.className = 'grid-item';
           item.dataset.src = v.src; // store src
-          item.dataset.type = v.type; // store type
           item.onclick = () => {
-            openVideoModal(v.src, v.type);
+            openVideoModal(v.src);
           };
           item.innerHTML = `
             <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover">
@@ -745,34 +697,19 @@
     }
 
     // Function to open video modal
-    function openVideoModal(src, type) {
+    function openVideoModal(src) {
       const modal = document.getElementById('videoModal');
-      // Clear previous content
-      modal.querySelectorAll('video, iframe').forEach(el => el.remove());
-
-      let mediaElement;
-      if (type === 'iframe') {
-        mediaElement = document.createElement('iframe');
-        mediaElement.src = src;
-        mediaElement.setAttribute('frameborder', '0');
-        mediaElement.setAttribute('allowfullscreen', '');
-      } else {
-        mediaElement = document.createElement('video');
-        mediaElement.src = src;
-        mediaElement.setAttribute('controls', '');
-        mediaElement.setAttribute('playsinline', '');
-        mediaElement.setAttribute('autoplay', ''); // Autoplay in modal
-      }
-
-      modal.appendChild(mediaElement);
+      const video = modal.querySelector('video');
+      video.src = src;
+      video.play().catch(() => {});
       modal.classList.add('active');
-
       // Pause background videos when modal opens
       homeVideos.forEach(v => v.pause());
     }
 
     // Close modal on click outside video or on back arrow button
     const modal = document.getElementById('videoModal');
+    const video = modal.querySelector('video');
     const modalCloseBtn = document.getElementById('videoModalClose');
 
     modalCloseBtn.onclick = () => {
@@ -780,26 +717,15 @@
     };
 
     modal.onclick = (e) => {
-       // Only close if the click is directly on the modal background, not the video/iframe or close button
-      const mediaElement = modal.querySelector('video, iframe');
+       // Only close if the click is directly on the modal background, not the video or close button
       if (e.target === modal) {
         closeVideoModal();
       }
     };
 
     function closeVideoModal() {
-      const mediaElement = modal.querySelector('video, iframe');
-      if (mediaElement) {
-          if (mediaElement.tagName === 'VIDEO') {
-              mediaElement.pause();
-          } else if (mediaElement.tagName === 'IFRAME') {
-              // Stopping an iframe video requires more complex methods or reloading
-              // For simplicity, we just hide it and clear the src
-              mediaElement.src = ''; // Clearing src might stop some embeds
-          }
-          mediaElement.remove(); // Remove the element from the modal
-      }
-
+      video.pause();
+      video.src = ''; // Clear the source
       modal.classList.remove('active');
       // Resume the currently active home video if on home screen
       if (sections.home.classList.contains('active') && activeVideo) {
