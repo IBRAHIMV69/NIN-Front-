@@ -28,7 +28,7 @@
     }
 
     /* Sections for different views */
-    #video-wrapper, #explore-section, #search-section, #genre-section { /* Changed #history-section to #search-section */
+    #video-wrapper, #explore-section, #search-section, #genre-section {
       position: absolute;
       top: 0; left: 0;
       width: 100%;
@@ -38,7 +38,7 @@
     }
     #video-wrapper.active,
     #explore-section.active,
-    #search-section.active, /* Changed #history-section to #search-section */
+    #search-section.active,
     #genre-section.active {
       display: block;
     }
@@ -65,7 +65,7 @@
       background: none;
       border: none;
       color: #fff;
-      font-size: 20px;
+      font-size: 25px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -91,7 +91,7 @@
       position: relative;
       width: 100%;
       max-width: 1280px;
-      aspect-ratio: 9 / 18;
+      aspect-ratio: 16 / 9;
       background: #000;
     }
     video {
@@ -242,13 +242,13 @@
     }
 
     /* Grid for explore and search results */
-    #explore-grid, #search-results-grid, #genre-videos { /* Added #genre-videos */
+    #explore-grid, #search-results-grid, #genre-videos {
       display: grid;
       grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
       gap: 10px;
     }
 
-    /* Explore/Search/Genre video items in grid */
+    /* Explore/Search video items in grid */
     .grid-item {
       background: #111;
       border-radius: 8px;
@@ -259,20 +259,11 @@
       flex-direction: column;
       align-items: center;
     }
-     .grid-item video { /* Style for video in grid */
-      position: static; /* Override absolute positioning */
-      transform: none; /* Override transform */
+    .grid-item .cover-img {
       width: 100%;
-      aspect-ratio: 9/18; /* Maintain portrait aspect ratio */
+      aspect-ratio: 16/ 9; /* Use the video aspect ratio for the cover */
       object-fit: cover;
-      display: block; /* Ensure it takes up space */
     }
-    .grid-item .grid-item-info { /* Container for name/info below video */
-        margin-top: 5px;
-        text-align: center;
-        width: 100%; /* Ensure info takes full width */
-    }
-
 
     /* Search input styling */
     #search-section input[type="text"] {
@@ -293,7 +284,6 @@
     /* Genre tags styling */
     #genre-tags {
       margin-top: 10px;
-      padding: 0 10px; /* Added padding */
     }
     .genre-btn {
       display: inline-block;
@@ -314,7 +304,7 @@
       position: fixed;
       top:0; left:0;
       width:100%; height:100%;
-      background: rgba(0,0,0,0.1);
+      background: #000;
       display: none;
       justify-content: center;
       align-items: center;
@@ -326,14 +316,14 @@
     }
     #videoModal video {
       max-width: 100%;
-      max-height: 100%;
+      max-height: 30%;
     }
     /* Style for the back arrow button inside modal */
     #videoModalClose {
       position: fixed;
       top: 20px;
       right: 20px;
-      background: rgba(0,0,0,0.6);
+      background: #fff;
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -348,7 +338,7 @@
       background: rgba(255,255,255,0.3);
     }
     #videoModalClose i {
-      color: #fff;
+      color: #000;
       font-size: 20px;
     }
   </style>
@@ -367,7 +357,7 @@
   <div id="bottom-nav">
     <button id="homeBtn" class="active" title="Home"><i class="fas fa-home"></i></button>
     <button id="exploreBtn" title="Explore"><i class="fas fa-compass"></i></button>
-    <button id="searchBtn" title="Search"><i class="fas fa-search"></i></button> <!-- Changed ID, title, and icon -->
+    <button id="searchBtn" title="Search"><i class="fas fa-search"></i></button>
     <button id="genreBtn" title="Genre"><i class="fas fa-tags"></i></button>
   </div>
 
@@ -383,7 +373,8 @@
     const sharedLink = '#';
     const videoData = [
       {
-        src: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+        cover: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/-/preview/500x800/', // Use a preview/cover if available
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
         name: 'Jessica Miller',
         description: 'Dancing through life 💃✨ #dance #vibes',
@@ -395,7 +386,8 @@
         tags: ['dance', 'vibes']
       },
       {
-        src: 'https://ucarecdn.com/5552ca5b-c1ec-4c68-b5d3-6bb5617cdf3a/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+        cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/87/e8/7d/87e87d35f853ae538a536c5d14451712/87e87d35f853ae538a536c5d14451712.21.jpg',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
         name: 'Sophia Wilson',
         description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
@@ -407,7 +399,8 @@
         tags: ['travel', 'adventure']
       },
       {
-        src: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+        cover: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/-/preview/500x800/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar1.jpg',
         name: 'Emma Johnson',
         description: 'Fitness motivation 💪🔥 #fitness #healthyliving',
@@ -421,21 +414,11 @@
       // Add more video data here if needed
     ];
 
-    // Helper to save viewed videos (Keeping this function, though not used by the new Search)
-    function saveHistory(videoSrc) {
-      let history = JSON.parse(localStorage.getItem('viewedVideos')) || [];
-      if (!history.includes(videoSrc)) {
-        history.unshift(videoSrc);
-        if (history.length > 20) history.pop();
-        localStorage.setItem('viewedVideos', JSON.stringify(history));
-      }
-    }
-
     // Initialize sections
     const sections = {
       home: document.getElementById('video-wrapper'),
       explore: document.getElementById('explore-section'),
-      search: document.getElementById('search-section'), // Changed history to search
+      search: document.getElementById('search-section'),
       genre: document.getElementById('genre-section')
     };
 
@@ -447,18 +430,18 @@
       document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
       if (name === 'home') document.getElementById('homeBtn').classList.add('active');
       if (name === 'explore') document.getElementById('exploreBtn').classList.add('active');
-      if (name === 'search') document.getElementById('searchBtn').classList.add('active'); // Changed historyBtn to searchBtn
+      if (name === 'search') document.getElementById('searchBtn').classList.add('active');
       if (name === 'genre') document.getElementById('genreBtn').classList.add('active');
 
       if (name === 'explore') loadExplore();
-      if (name === 'search') loadSearch(); // Changed loadHistory to loadSearch
+      if (name === 'search') loadSearch();
       if (name === 'genre') loadGenre();
     }
 
     // Bottom nav button handlers
     document.getElementById('homeBtn').onclick = () => showSection('home');
     document.getElementById('exploreBtn').onclick = () => showSection('explore');
-    document.getElementById('searchBtn').onclick = () => showSection('search'); // Changed historyBtn to searchBtn
+    document.getElementById('searchBtn').onclick = () => showSection('search');
     document.getElementById('genreBtn').onclick = () => showSection('genre');
 
     // ----------------------------------
@@ -545,9 +528,6 @@
       const video = slide.querySelector('video');
       video.onclick = () => { video.muted = !video.muted; };
 
-      // Save viewed videos when playing (Optional: Can remove if history is gone)
-      // video.onplay = () => { saveHistory(data.src); };
-
       homeContainer.appendChild(slide);
       homeVideos.push(video);
     }
@@ -588,7 +568,7 @@
     // ----------------------------------
     // Explore (Grid view)
     function loadExplore() {
-      const container = sections.explore; // Use sections object
+      const container = sections.explore;
       container.innerHTML = '<h2 style="padding:10px;"></h2><div id="explore-grid"></div>';
       const grid = document.getElementById('explore-grid');
       grid.innerHTML = '';
@@ -599,12 +579,9 @@
         item.className = 'grid-item';
         item.dataset.src = video.src; // store src for playback
         item.innerHTML = `
-           <video src="${video.src}" playsinline muted loop></video>
-           <div class="grid-item-info">${video.name}</div>
+          <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover">
+          <div style="margin-top:5px; text-align: center; font-size: 12px;">${video.name}</div>
         `;
-        const gridVideo = item.querySelector('video');
-        gridVideo.onmouseover = () => { gridVideo.play().catch(() => {}); };
-        gridVideo.onmouseout = () => { gridVideo.pause(); };
         item.onclick = () => {
           openVideoModal(video.src);
         };
@@ -615,7 +592,7 @@
     // ----------------------------------
     // Search by Username
     function loadSearch() {
-      const container = sections.search; // Use sections object
+      const container = sections.search;
       container.innerHTML = `
         <h2 style="padding:10px;"></h2>
         <div style="padding: 0 10px;">
@@ -635,7 +612,6 @@
         searchResultsGrid.innerHTML = ''; // Clear previous results
 
         if (query.length === 0) {
-          // Optionally display a message or recent searches if query is empty
           searchResultsGrid.innerHTML = '<p style="text-align: center; padding: 20px;">Start typing a username to search.</p>';
           return;
         }
@@ -654,12 +630,9 @@
           item.className = 'grid-item'; // Reuse grid-item styling
           item.dataset.src = video.src;
           item.innerHTML = `
-            <video src="${video.src}" playsinline muted loop></video>
-            <div class="grid-item-info">${video.name}</div>
+            <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover">
+            <div style="margin-top:5px; text-align: center; font-size: 12px;">${video.name}</div>
           `;
-          const gridVideo = item.querySelector('video');
-          gridVideo.onmouseover = () => { gridVideo.play().catch(() => {}); };
-          gridVideo.onmouseout = () => { gridVideo.pause(); };
           item.onclick = () => {
             openVideoModal(video.src);
           };
@@ -677,8 +650,8 @@
     // ----------------------------------
     // Genre filtering
     function loadGenre() {
-      const container = sections.genre; // Use sections object
-      container.innerHTML = '<h2 style="padding:10px;"></h2><div id="genre-tags"></div><div id="genre-videos" style="margin-top:10px; padding: 0 10px;"></div>'; // Added padding
+      const container = sections.genre;
+      container.innerHTML = '<h2 style="padding:10px;"></h2><div id="genre-tags" style="padding: 0 10px;"></div><div id="genre-videos" style="margin-top:10px; padding: 0 10px;"></div>';
 
       const genreDiv = document.getElementById('genre-tags');
       const videosDiv = document.getElementById('genre-videos');
@@ -706,11 +679,6 @@
           videosDiv.innerHTML = '<p style="text-align: center; padding: 20px;">No videos for this genre.</p>';
           return;
         }
-        // Reuse grid-item styling for genre results
-        videosDiv.style.display = 'grid';
-        videosDiv.style.gridTemplateColumns = 'repeat(auto-fit, minmax(150px, 1fr))';
-        videosDiv.style.gap = '10px';
-
 
         filtered.forEach(v => {
           const item = document.createElement('div');
@@ -720,12 +688,9 @@
             openVideoModal(v.src);
           };
           item.innerHTML = `
-            <video src="${v.src}" playsinline muted loop></video>
-            <div class="grid-item-info">${v.name}</div>
+            <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover">
+            <div style="margin-top:5px; text-align: center; font-size: 12px;">${v.name}</div>
           `;
-          const gridVideo = item.querySelector('video');
-          gridVideo.onmouseover = () => { gridVideo.play().catch(() => {}); };
-          gridVideo.onmouseout = () => { gridVideo.pause(); };
           videosDiv.appendChild(item);
         });
       }
@@ -773,8 +738,7 @@
              activeVideo = visibleVideos[0];
              activeVideo.play().catch(() => {});
          } else {
-            // If no video is perfectly visible, find the closest one or the one previously playing
-            // For simplicity here, just try to play the last activeVideo
+            // If no video is perfectly visible, try to play the last activeVideo
              if (activeVideo) activeVideo.play().catch(() => {});
          }
       }
