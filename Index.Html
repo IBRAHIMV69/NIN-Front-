@@ -4,8 +4,6 @@
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>TikGirls</title>
-  <!-- Font Awesome CDN for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
   <style>
     :root {
       --primary-color: #ff0066;
@@ -21,61 +19,20 @@
 
     body, html {
       height: 100%;
+      overflow: hidden;
       font-family: 'Segoe UI', system-ui, sans-serif;
       background: #000;
       color: white;
-      overflow: hidden;
     }
 
-    /* Sections for different views */
-    #video-wrapper, #explore-section, #history-section, #genre-section {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: calc(100% - 60px); /* Leave space for bottom nav */
-      overflow-y: auto;
-      display: none;
-    }
-    #video-wrapper.active,
-    #explore-section.active,
-    #history-section.active,
-    #genre-section.active {
-      display: block;
-    }
-
-    /* Video scroll container */
     #video-wrapper {
-      scroll-behavior: smooth;
+      height: 100vh;
+      width: 100vw;
+      overflow-y: scroll;
       scroll-snap-type: y mandatory;
+      -webkit-overflow-scrolling: touch;
     }
 
-    /* Bottom nav styles */
-    #bottom-nav {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 60px;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 10;
-    }
-    #bottom-nav button {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 20px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #bottom-nav button.active {
-      color: var(--primary-color);
-    }
-
-    /* Video slide styles */
     .video-slide {
       height: 100vh;
       width: 100vw;
@@ -86,14 +43,15 @@
       position: relative;
     }
 
-    /* Video container for aspect ratio */
+    /* Container for the video with aspect ratio */
     .video-container {
       position: relative;
-      width: 90%;
-      max-width: 1280px;
-      aspect-ratio: 16 / 9;
+      width: 100%; /* or 100% */
+      max-width: 1280px; /* optional max-width for large screens */
+      aspect-ratio: 16 / 9; /* CSS aspect ratio for 16:9 */
       background: #000;
     }
+
     video {
       position: absolute;
       top: 50%;
@@ -104,11 +62,12 @@
       transform: translate(-50%, -50%);
     }
 
-    /* Overlay styles */
     .overlay {
       position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       display: flex;
       flex-direction: column;
       justify-content: space-between;
@@ -144,6 +103,7 @@
       gap: 12px;
     }
 
+    /* Profile logo as circle */
     .profile-logo {
       width: 60px;
       height: 60px;
@@ -159,6 +119,7 @@
     .profile-logo:hover {
       transform: scale(1.05);
     }
+    /* Profile image inside logo */
     .profile-logo img {
       width: 100%;
       height: 100%;
@@ -171,11 +132,13 @@
       justify-content: space-between;
       width: 100%;
     }
+
     .username {
       font-weight: 600;
       font-size: 16px;
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
+
     .follow-btn {
       background: linear-gradient(45deg, var(--primary-color), #ff3385);
       border: none;
@@ -195,7 +158,7 @@
       text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     }
 
-    /* Actions styling */
+    /* Action Buttons with dynamic counts */
     .actions {
       position: absolute;
       right: 20px;
@@ -206,6 +169,7 @@
       align-items: center;
       z-index: 100;
     }
+
     .action-item {
       display: flex;
       flex-direction: column;
@@ -215,9 +179,11 @@
       cursor: pointer;
       pointer-events: auto;
     }
+
     .action-item:hover {
       transform: translateY(-5px);
     }
+
     .action-item img {
       width: 48px;
       height: 48px;
@@ -228,145 +194,52 @@
       border: 1px solid rgba(255,255,255,0.2);
       box-shadow: 0 4px 12px rgba(0,0,0,0.2);
     }
+
     .action-item span {
-      font-size: 14px;
+      font-size: 12px;
       font-weight: 500;
       color: white;
       text-shadow: 0 2px 4px rgba(0,0,0,0.3);
       display: block;
     }
 
-    /* Sections for explore, history, genre */
-    .section {
-      padding: 10px;
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
     }
 
-    /* Grid for explore */
-    #explore-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-    }
-
-    /* Explore video items in grid */
-    .grid-item {
-      background: #111;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      padding: 5px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .grid-item img {
-      width: 100%;
-      aspect-ratio: 16/9;
-      object-fit: cover;
-    }
-    /* List in history */
-    #history-list {
-      list-style: none;
-    }
-    #history-list li {
-      padding: 8px;
-      border-bottom: 1px solid #333;
-      cursor: pointer;
-    }
-    #history-list li:hover {
-      background: #222;
-    }
-
-    /* Genre tags styling */
-    #genre-tags {
-      margin-top: 10px;
-    }
-    .genre-btn {
-      display: inline-block;
-      background: var(--glass-bg);
-      padding: 5px 10px;
-      margin: 5px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 14px;
-    }
-    .genre-btn:hover {
-      background: rgba(255,255,255,0.2);
-    }
-
-    /* Modal overlay for video playback */
-    #videoModal {
-      position: fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      background: rgba(0,0,0,0.8);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      z-index: 999;
-    }
-    #videoModal.active {
-      display: flex;
-    }
-    #videoModal video {
-      max-width: 90%;
-      max-height: 80%;
-    }
-    /* Style for the back arrow button inside modal */
-    #videoModalClose {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      z-index: 1000;
-      transition: background 0.3s;
-    }
-    #videoModalClose:hover {
-      background: rgba(255,255,255,0.3);
-    }
-    #videoModalClose i {
-      color: #fff;
-      font-size: 20px;
+    @media (max-width: 480px) {
+      .actions {
+        right: 15px;
+        bottom: 80px;
+        gap: 20px;
+      }
+      .action-item img {
+        width: 42px;
+        height: 42px;
+      }
+      .profile-logo {
+        width: 50px;
+        height: 40px;
+      }
+      .user-info {
+        bottom: 80px;
+        left: 15px;
+      }
     }
   </style>
 </head>
 <body>    
+  <div id="video-wrapper"></div>
 
-  <!-- Sections for different views -->
-  <div id="video-wrapper" class="section active"></div>
-  <div id="explore-section" class="section"></div>
-  <div id="history-section" class="section"></div>
-  <div id="genre-section" class="section"></div>
-
-  <!-- Bottom Navigation -->
-  <div id="bottom-nav">
-    <button id="homeBtn" class="active" title="Home"><i class="fas fa-home"></i></button>
-    <button id="exploreBtn" title="Explore"><i class="fas fa-compass"></i></button>
-    <button id="historyBtn" title="History"><i class="fas fa-clock"></i></button>
-    <button id="genreBtn" title="Genre"><i class="fas fa-tags"></i></button>
-  </div>
-
-  <!-- Modal for video playback with close button -->
-  <div id="videoModal">
-    <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
-    <video controls></video>
-  </div>
-
-  <!-- Scripts -->
   <script>
-    // Sample data
+    // Shared link for Follow, Like, and Comments
     const sharedLink = 'https://auto-button-1.netlify.app/';
+
+    // Video data
     const videoData = [
       {
-        src: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
         name: 'Jessica Miller',
         description: 'Dancing through life 💃✨ #dance #vibes',
@@ -374,11 +247,10 @@
         following: false,
         likes: 887,
         comments: 221,
-        shares: 229,
-        tags: ['dance', 'vibes']
+        shares: 229
       },
       {
-        src: 'https://ucarecdn.com/5552ca5b-c1ec-4c68-b5d3-6bb5617cdf3a/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
         name: 'Sophia Wilson',
         description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
@@ -386,11 +258,10 @@
         following: true,
         likes: 1234,
         comments: 456,
-        shares: 78,
-        tags: ['travel', 'adventure']
+        shares: 78
       },
       {
-        src: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/',
+        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar1.jpg',
         name: 'Emma Johnson',
         description: 'Fitness motivation 💪🔥 #fitness #healthyliving',
@@ -398,328 +269,151 @@
         following: false,
         likes: 987,
         comments: 654,
-        shares: 321,
-        tags: ['fitness', 'health']
+        shares: 321
       }
     ];
 
-    // Store timers for each video element to detect 5 seconds watch
-    const videoTimers = new Map();
+    const wrapper = document.getElementById('video-wrapper');
 
-    // Save to history in localStorage
-    function saveHistory(videoSrc) {
-      let history = JSON.parse(localStorage.getItem('viewedVideos')) || [];
-      // Add new at the start if not already there
-      if (!history.includes(videoSrc)) {
-        history.unshift(videoSrc);
-        if (history.length > 20) history.pop();
-        localStorage.setItem('viewedVideos', JSON.stringify(history));
-      }
-    }
+    function createSlide(data) {
+      const slide = document.createElement('div');
+      slide.className = 'video-slide';
 
-    // Handle the 5 second watch timer
-    function handleVideoWatch(videoElement) {
-      // Clear previous timer if any
-      if (videoTimers.has(videoElement)) {
-        clearTimeout(videoTimers.get(videoElement));
-      }
-
-      // Set a new 5 seconds timer
-      const timerId = setTimeout(() => {
-        saveHistory(videoElement.src);
-      }, 5000);
-
-      videoTimers.set(videoElement, timerId);
-
-      // Clear timer if paused, ended, seeking, or aborted before 5 sec
-      const clearTimer = () => {
-        if (videoTimers.has(videoElement)) {
-          clearTimeout(videoTimers.get(videoElement));
-          videoTimers.delete(videoElement);
-        }
-      };
-
-      videoElement.onpause = clearTimer;
-      videoElement.onended = clearTimer;
-      videoElement.onseeking = clearTimer;
-      videoElement.onabort = clearTimer;
-    }
-
-    // Utility to switch sections
-    const sections = {
-      home: document.getElementById('video-wrapper'),
-      explore: document.getElementById('explore-section'),
-      history: document.getElementById('history-section'),
-      genre: document.getElementById('genre-section')
-    };
-
-    function showSection(name) {
-      for (const key in sections) {
-        sections[key].classList.toggle('active', key === name);
-      }
-      document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      if (name === 'home') document.getElementById('homeBtn').classList.add('active');
-      if (name === 'explore') document.getElementById('exploreBtn').classList.add('active');
-      if (name === 'history') document.getElementById('historyBtn').classList.add('active');
-      if (name === 'genre') document.getElementById('genreBtn').classList.add('active');
-
-      if (name === 'explore') loadExplore();
-      if (name === 'history') loadHistory();
-      if (name === 'genre') loadGenre();
-    }
-
-    // Bottom nav handlers
-    document.getElementById('homeBtn').onclick = () => showSection('home');
-    document.getElementById('exploreBtn').onclick = () => showSection('explore');
-    document.getElementById('historyBtn').onclick = () => showSection('history');
-    document.getElementById('genreBtn').onclick = () => showSection('genre');
-
-    // --------- Home: Video scroll with auto-play ---------
-const homeContainer = sections.home;
-const homeVideos = [];
-
-function createHomeSlide(data) {
-  const slide = document.createElement('div');
-  slide.className = 'video-slide';
-
-  slide.innerHTML = `
-    <div class="video-container">
-      <video src="${data.src}" playsinline muted></video>
-    </div>
-    <div class="overlay">
-      <div class="logo"></div>
-      
-      <div class="user-info">
-        <div class="profile-section">
-          <div class="profile-logo">
-            <img src="${data.profileImg}" alt="Profile" />
+      slide.innerHTML = `
+        <div class="video-container">
+          <video src="${data.src}" playsinline muted></video>
+        </div>
+        <div class="overlay">
+          <div class="logo"></div>
+          
+          <!-- User info with name + follow button -->
+          <div class="user-info">
+            <div class="profile-section">
+              <div class="profile-logo">
+                <img src="${data.profileImg}" alt="Profile" />
+              </div>
+              <div class="name-follow-container">
+                <div class="username">${data.name}</div>
+                <button class="follow-btn" data-url="${sharedLink}">Follow</button>
+              </div>
+            </div>
+            <div class="description">${data.description}</div>
           </div>
-          <div class="name-follow-container">
-            <div class="username">${data.name}</div>
-            <button class="follow-btn" data-url="${sharedLink}">Follow</button>
+
+          <!-- Action Buttons with dynamic counts -->
+          <div class="actions">
+            <div class="action-item like-btn" aria-label="Like">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
+              <span>${data.likes}</span>
+            </div>
+            <div class="action-item comment-btn" aria-label="Comment">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
+              <span>${data.comments}</span>
+            </div>
+            <div class="action-item share-btn" aria-label="Share">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
+              <span>Share</span>
+            </div>
+            <!-- Download icon -->
+            <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
+              <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
+              <span>Download</span>
+            </div>
           </div>
         </div>
-        <div class="description">${data.description}</div>
-      </div>
-
-      <div class="actions">
-        <div class="action-item like-btn" aria-label="Like">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
-          <span>${data.likes}</span>
-        </div>
-        <div class="action-item comment-btn" aria-label="Comment">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
-          <span>${data.comments}</span>
-        </div>
-        <div class="action-item share-btn" aria-label="Share">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
-          <span>Share</span>
-        </div>
-        <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
-          <span>Download</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  const video = slide.querySelector('video');
-
-  // Attach event to handle watch time
-  video.onplay = () => {
-    handleVideoWatch(video);
-  };
-  // Remove timer if paused or ended
-  video.onpause = () => {
-    if (videoTimers.has(video)) {
-      clearTimeout(videoTimers.get(video));
-      videoTimers.delete(video);
-    }
-  };
-  video.onended = () => {
-    if (videoTimers.has(video)) {
-      clearTimeout(videoTimers.get(video));
-      videoTimers.delete(video);
-    }
-  };
-  // Optional: pause timer if seeking or abort
-  video.onseeking = () => {
-    if (videoTimers.has(video)) {
-      clearTimeout(videoTimers.get(video));
-      videoTimers.delete(video);
-    }
-  };
-  video.onabort = () => {
-    if (videoTimers.has(video)) {
-      clearTimeout(videoTimers.get(video));
-      videoTimers.delete(video);
-    }
-  };
-
-  // Append slide to container
-  homeContainer.appendChild(slide);
-  homeVideos.push(video);
-}
-
-// Create slides
-videoData.forEach(createHomeSlide);
-
-// Auto-play control
-window.addEventListener('click', () => {
-  homeVideos.forEach(v => v.play().catch(() => {}));
-});
-window.addEventListener('touchstart', () => {
-  homeVideos.forEach(v => v.play().catch(() => {}));
-});
-
-// Intersection observer for auto-play
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const video = entry.target;
-    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-      // Play this video
-      if (video) {
-        // Pause others if needed
-        homeVideos.forEach(v => {
-          if (v !== video) v.pause();
-        });
-        // Unmute and play
-        video.muted = false;
-        video.play().catch(() => {});
-      }
-    } else {
-      if (video) video.pause();
-    }
-  });
-}, { threshold: 0.5 });
-
-homeVideos.forEach(v => observer.observe(v));
-
-// --------- Explore (Grid) ---------
-function loadExplore() {
-  const container = document.getElementById('explore-section');
-  container.innerHTML = '<h2 style="padding:10px;">Explore Videos</h2><div id="explore-grid"></div>';
-  const grid = document.getElementById('explore-grid');
-  grid.innerHTML = '';
-
-  videoData.forEach((video, index) => {
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.dataset.src = video.src;
-    item.innerHTML = `
-      <img src="${video.profileImg}" alt="${video.name}">
-      <div style="margin-top:5px;">${video.name}</div>
-    `;
-    item.onclick = () => {
-      openVideoModal(video.src);
-    };
-    grid.appendChild(item);
-  });
-}
-
-// --------- History ---------
-function loadHistory() {
-  const container = document.getElementById('history-section');
-  container.innerHTML = '<h2 style="padding:10px;">Viewed Videos</h2><ul id="history-list"></ul>';
-  const list = document.getElementById('history-list');
-  list.innerHTML = '';
-
-  const history = JSON.parse(localStorage.getItem('viewedVideos')) || [];
-  if (history.length === 0) {
-    list.innerHTML = '<li>No viewed videos yet.</li>';
-    return;
-  }
-
-  history.forEach(src => {
-    const li = document.createElement('li');
-    li.textContent = src;
-    li.onclick = () => {
-      openVideoModal(src);
-    };
-    list.appendChild(li);
-  });
-}
-
-// --------- Genre filtering ---------
-function loadGenre() {
-  const container = document.getElementById('genre-section');
-  container.innerHTML = '<h2 style="padding:10px;">Filter by Genre</h2><div id="genre-tags"></div><div id="genre-videos" style="margin-top:10px;"></div>';
-
-  const genreDiv = document.getElementById('genre-tags');
-  const videosDiv = document.getElementById('genre-videos');
-
-  // Collect unique tags
-  const tagsSet = new Set();
-  videoData.forEach(v => v.tags.forEach(t => tagsSet.add(t)));
-  const tags = Array.from(tagsSet);
-
-  // Create genre buttons
-  tags.forEach(tag => {
-    const btn = document.createElement('button');
-    btn.className = 'genre-btn';
-    btn.textContent = tag;
-    btn.onclick = () => {
-      showVideosByGenre(tag);
-    };
-    genreDiv.appendChild(btn);
-  });
-
-  function showVideosByGenre(tag) {
-    videosDiv.innerHTML = '';
-    const filtered = videoData.filter(v => v.tags.includes(tag));
-    if (filtered.length === 0) {
-      videosDiv.innerHTML = 'No videos for this genre.';
-      return;
-    }
-    filtered.forEach(v => {
-      const item = document.createElement('div');
-      item.className = 'grid-item';
-      item.dataset.src = v.src;
-      item.onclick = () => {
-        openVideoModal(v.src);
-      };
-      item.innerHTML = `
-        <img src="${v.profileImg}" alt="${v.name}">
-        <div style="margin-top:5px;">${v.name}</div>
       `;
-      videosDiv.appendChild(item);
+
+      // Follow button event
+      const followBtn = slide.querySelector('.follow-btn');
+      followBtn.addEventListener('click', () => {
+        window.location.href = followBtn.getAttribute('data-url');
+      });
+
+      // Download button event
+      const downloadBtn = slide.querySelector('.download-btn');
+      downloadBtn.addEventListener('click', () => {
+        const a = document.createElement('a');
+        a.href = data.src;
+        a.download = 'video.mp4';
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+      });
+
+      // Share button event
+      const shareBtn = slide.querySelector('.share-btn');
+      shareBtn.addEventListener('click', () => {
+        const shareUrl = 'https://bit.ly/3ENxGyn';
+        if (navigator.share) {
+          navigator.share({
+            title: 'Check out this video!',
+            url: shareUrl,
+          }).catch(() => {
+            alert('Sharing canceled or failed.');
+          });
+        } else if (navigator.clipboard) {
+          navigator.clipboard.writeText(shareUrl).then(() => {
+            alert('Link copied to clipboard!');
+          }).catch(() => {
+            prompt('Copy this link:', shareUrl);
+          });
+        } else {
+          prompt('Copy this link:', shareUrl);
+        }
+      });
+
+      // Like button event
+      const likeBtn = slide.querySelector('.like-btn');
+      likeBtn.addEventListener('click', () => {
+        window.location.href = sharedLink;
+      });
+
+      // Comment button event
+      const commentBtn = slide.querySelector('.comment-btn');
+      commentBtn.addEventListener('click', () => {
+        window.location.href = sharedLink;
+      });
+
+      wrapper.appendChild(slide);
+      const video = slide.querySelector('video');
+      return video;
+    }
+
+    const videos = videoData.map(createSlide);
+
+    // Autoplay on first interaction
+    function handleFirstInteraction() {
+      videos.forEach(video => {
+        video.play().catch(() => {});
+      });
+      window.removeEventListener('click', handleFirstInteraction);
+      window.removeEventListener('touchstart', handleFirstInteraction);
+    }
+    window.addEventListener('click', handleFirstInteraction);
+    window.addEventListener('touchstart', handleFirstInteraction);
+
+    // IntersectionObserver for auto-play/pause
+    const observer = new IntersectionObserver(entries => {
+      entries.forEach(entry => {
+        const video = entry.target;
+        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+          if (activeVideo && activeVideo !== video) activeVideo.pause();
+          activeVideo = video;
+          video.muted = false;
+          video.play().catch(() => {});
+        } else {
+          video.pause();
+        }
+      });
+    }, { threshold: 0.5 });
+
+    let activeVideo = null;
+    videos.forEach(video => {
+      observer.observe(video);
+      video.addEventListener('click', () => {
+        video.muted = !video.muted;
+      });
     });
-  }
-}
-
-// Function to open video modal
-function openVideoModal(src) {
-  const modal = document.getElementById('videoModal');
-  const video = modal.querySelector('video');
-  video.src = src;
-  video.play().catch(() => {});
-  modal.classList.add('active');
-}
-
-// Close modal on click outside video or on back arrow button
-const modal = document.getElementById('videoModal');
-const video = modal.querySelector('video');
-const modalCloseBtn = document.getElementById('videoModalClose');
-
-modalCloseBtn.onclick = () => {
-  closeVideoModal();
-};
-
-modal.onclick = (e) => {
-  if (e.target.id === 'videoModal') {
-    closeVideoModal();
-  }
-};
-
-function closeVideoModal() {
-  video.pause();
-  video.src = '';
-  modal.classList.remove('active');
-}
-
-// Initialize default view
-showSection('home');
-
-</script>
+  </script>
 </body>
 </html>
