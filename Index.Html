@@ -65,7 +65,7 @@
       background: none;
       border: none;
       color: #fff;
-      font-size: 25px;
+      font-size: 26px;
       cursor: pointer;
       display: flex;
       flex-direction: column;
@@ -91,7 +91,7 @@
       position: relative;
       width: 100%;
       max-width: 1280px;
-      aspect-ratio: 16 / 9;
+      aspect-ratio: 9 / 18;
       background: #000;
     }
     video {
@@ -104,7 +104,7 @@
       transform: translate(-50%, -50%);
     }
 
-    /* Overlay styles (Original, for video background) */
+    /* Overlay styles */
     .overlay {
       position: absolute;
       top: 0; left: 0;
@@ -261,7 +261,7 @@
     }
     .grid-item .cover-img {
       width: 100%;
-      aspect-ratio: 16/ 9; /* Use the video aspect ratio for the cover */
+      aspect-ratio: 9/16; /* Use the video aspect ratio for the cover */
       object-fit: cover;
     }
 
@@ -304,7 +304,7 @@
       position: fixed;
       top:0; left:0;
       width:100%; height:100%;
-      background: #000;
+      background: rgba(0,0,0,0.1);
       display: none;
       justify-content: center;
       align-items: center;
@@ -316,14 +316,14 @@
     }
     #videoModal video {
       max-width: 100%;
-      max-height: 30%;
+      max-height: 100%;
     }
     /* Style for the back arrow button inside modal */
     #videoModalClose {
       position: fixed;
       top: 20px;
       right: 20px;
-      background: #fff;
+      background: rgba(0,0,0,0.6);
       border-radius: 50%;
       width: 40px;
       height: 40px;
@@ -338,109 +338,9 @@
       background: rgba(255,255,255,0.3);
     }
     #videoModalClose i {
-      color: #000;
+      color: #fff;
       font-size: 20px;
     }
-
-    /* Notification Bar Styles */
-    .notification-bar {
-        position: fixed;
-        bottom: 80px;
-        left: 50%;
-        transform: translateX(-50%);
-        width: 90%;
-        max-width: 400px;
-        background: linear-gradient(to right, #004d00, #00b300);
-        color: white;
-        padding: 10px;
-        border-radius: 8px;
-        display: flex;
-        align-items: center;
-        justify-content: space-between;
-        opacity: 0;
-        transition: opacity 0.5s ease-in-out;
-        z-index: 1000;
-    }
-    .notification-bar img {
-        width: 50px;
-        height: 50px;
-        border-radius: 8px;
-        margin-right: 10px;
-    }
-    .notification-text {
-        flex: 1;
-        font-size: 12px;
-        text-align: left;
-    }
-    .notification-button {
-        background: #ccff00;
-        color: #000;
-        padding: 5px 15px;
-        border-radius: 20px;
-        font-weight: bold;
-        cursor: pointer;
-        border: none;
-    }
-    .close-button {
-        background: none;
-        border: none;
-        color: white;
-        font-size: 18px;
-        cursor: pointer;
-        margin-left: 10px;
-    }
-
-    /* Ad Popup Overlay Styles (NEW) */
-    #adOverlay { /* Using the ID from your HTML */
-        position: fixed;
-        top: 0;
-        left: 0;
-        width: 100%;
-        height: 100%;
-        background: rgba(0, 0, 0, 0.1);
-        backdrop-filter: blur(5px);
-        display: none; /* Initially hidden */
-        justify-content: center;
-        align-items: center;
-        z-index: 1000;
-    }
-    .popup {
-        background: rgba(0, 0, 0, 0.6);
-        padding: 20px;
-        border-radius: 10px;
-        text-align: center;
-        width: 98%;
-        max-width: 400px;
-    }
-    .popup h2 {
-        font-size: 18px;
-        color: white;
-        margin-bottom: 20px;
-    }
-    .button-group {
-        display: flex;
-        justify-content: space-around;
-        margin-top: 10px;
-    }
-    .button {
-        padding: 12px 20px;
-        border-radius: 30px;
-        border: none;
-        cursor: pointer;
-        font-size: 12px;
-        font-weight: bold;
-        flex: 1;
-        margin: 0 10px;
-    }
-    .watch-ads {
-        background: #00b300;
-        color: white;
-    }
-    .activate-vip {
-        background: #f5b58a;
-        color: black;
-    }
-
   </style>
 </head>
 <body>
@@ -452,24 +352,6 @@
     <!-- Content will be loaded by JavaScript -->
   </div>
   <div id="genre-section" class="section"></div>
-
-  <!-- Ad Popup -->
-    <div id="adOverlay"> <!-- Corrected ID usage -->
-        <div class="popup">
-            <h2>Watch the ad to continue</h2>
-            <div class="button-group">
-                <button class="button watch-ads" onclick="showAdPage('https://www.profitablecpmrate.com/f9z72jat9s?key=fb6ef61efc0589cd3f5c869f9e3a5a18')">Watch Ads</button>
-                <button class="button activate-vip" onclick="showAdPage('https://www.profitablecpmrate.com/vuq0mnejn?key=7241c685c3c694f609c9eebacbd85a50')">Activate VIP</button>
-            </div>
-        </div>
-    </div>
-
-    <div class="notification-bar" id="notification-bar">
-        <img src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/web-logo.apJjVir2.svg" alt="App Logo">
-        <div class="notification-text">Enjoy more unparalleled movies download Moviebox.</div>
-        <button class="notification-button" onclick="window.open('https://ucarecdn.com/82947fa9-98e5-4948-89ec-8fedd32b4be4/', '_blank')">OPEN</button>
-        <button class="close-button" onclick="closeNotification()">✖</button>
-    </div>
 
   <!-- Bottom Navigation -->
   <div id="bottom-nav">
@@ -487,12 +369,11 @@
 
   <!-- Scripts -->
   <script>
-    // Your JavaScript code here
     // Sample data
     const sharedLink = '#';
     const videoData = [
       {
-        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+        src: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/',
         cover: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/-/preview/500x800/', // Use a preview/cover if available
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
         name: 'Jessica Miller',
@@ -505,8 +386,8 @@
         tags: ['dance', 'vibes']
       },
       {
-        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
-        cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/87/e8/7d/87e87d35f853ae538a536c5d14451712/87e87d35f853ae538a536c5d14451712.21.jpg',
+        src: 'https://ucarecdn.com/e3e67ba4-62e3-44b4-9212-108dee1d5800/',
+        cover: 'https://ucarecdn.com/e3e67ba4-62e3-44b4-9212-108dee1d5800/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
         name: 'Sophia Wilson',
         description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
@@ -518,7 +399,7 @@
         tags: ['travel', 'adventure']
       },
       {
-        src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+        src: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/',
         cover: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/-/preview/500x800/',
         profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar1.jpg',
         name: 'Emma Johnson',
@@ -715,7 +596,7 @@
       container.innerHTML = `
         <h2 style="padding:10px;"></h2>
         <div style="padding: 0 10px;">
-          <input type="text" id="searchInput" placeholder="Search Users...">
+          <input type="text" id="searchInput" placeholder="Search users...">
         </div>
         <div id="search-results-grid" style="padding: 0 10px;">
           <!-- Search results will be displayed here -->
@@ -748,13 +629,13 @@
           const item = document.createElement('div');
           item.className = 'grid-item'; // Reuse grid-item styling
           item.dataset.src = video.src;
-          item.onclick = () => {
-            openVideoModal(video.src);
-          };
           item.innerHTML = `
             <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover">
             <div style="margin-top:5px; text-align: center; font-size: 12px;">${video.name}</div>
           `;
+          item.onclick = () => {
+            openVideoModal(video.src);
+          };
           searchResultsGrid.appendChild(item);
         });
       }
@@ -814,47 +695,6 @@
         });
       }
     }
-
-    // Notification bar logic
-    setTimeout(() => {
-        document.getElementById('notification-bar').style.opacity = '1';
-    }, 400); // Show after 400ms
-
-    function closeNotification() {
-        document.getElementById('notification-bar').style.opacity = '0';
-    }
-
-    // Ad popup logic
-    const firstPopupDelay = 15000; // 100 seconds delay after page load
-    const popupInterval = 5000;   // 500 seconds between popups
-
-    function showAd() {
-        const lastPopupTime = localStorage.getItem('lastPopupTime');
-        const currentTime = Date.now();
-
-        if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
-            document.getElementById('adOverlay').style.display = 'flex';
-            localStorage.setItem('lastPopupTime', currentTime); // Save the current time
-        } else {
-            // If less than popupInterval has passed, schedule the next popup
-            const remainingTime = popupInterval - (currentTime - lastPopupTime);
-            setTimeout(showAd, remainingTime);
-        }
-    }
-
-    function showAdPage(url) {
-        window.open(url, '_blank'); // Open ad in a new tab
-        closeAd();
-    }
-
-    function closeAd() {
-        document.getElementById('adOverlay').style.display = 'none';
-        setTimeout(showAd, popupInterval); // Schedule the next popup after the interval
-    }
-
-    // Start the first popup after the initial delay
-    setTimeout(showAd, firstPopupDelay);
-
 
     // Function to open video modal
     function openVideoModal(src) {
