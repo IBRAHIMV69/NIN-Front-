@@ -47,6 +47,7 @@
   #video-wrapper {
     scroll-behavior: smooth;
     scroll-snap-type: y mandatory;
+    color: black;
   }
 
   /* Bottom nav styles */
@@ -799,11 +800,14 @@ function closeVideoModal() {
   }
 }
 
-// ----------- Notification bar -----------
+// Notification bar logic
+    setTimeout(() => {
+        document.getElementById('notification-bar').style.opacity = '1';
+    }, 400); // Show after 400ms
 
-function closeNotification() {
-  document.getElementById('notification-bar').style.opacity = '0';
-}
+    function closeNotification() {
+        document.getElementById('notification-bar').style.opacity = '0';
+    }
 
 // ----------- Ad popup -----------
 
