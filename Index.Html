@@ -1,751 +1,885 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-  <title>TikGirls</title>
-  <!-- Font Awesome CDN for icons -->
-  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-  <style>
-    :root {
-      --primary-color: #ff0066;
-      --secondary-color: #25F4EE;
-      --glass-bg: rgba(255, 255, 255, 0.1);
-    }
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+<title>TikGirls</title>
+<!-- Font Awesome CDN for icons -->
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<style>
+  :root {
+    --primary-color: #ff0066;
+    --secondary-color: #25F4EE;
+    --glass-bg: rgba(255, 255, 255, 0.1);
+  }
 
-    * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-    }
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+  }
 
-    body, html {
-      height: 100%;
-      font-family: 'Segoe UI', system-ui, sans-serif;
-      background: #000;
-      color: white;
-      overflow: hidden;
-    }
+  body, html {
+    height: 100%;
+    font-family: 'Segoe UI', system-ui, sans-serif;
+    background: #000;
+    color: white;
+    overflow: hidden;
+  }
 
-    /* Sections for different views */
-    #video-wrapper, #explore-section, #search-section, #genre-section {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%;
-      height: calc(100% - 60px); /* Leave space for bottom nav */
-      overflow-y: auto;
-      display: none;
-    }
-    #video-wrapper.active,
-    #explore-section.active,
-    #search-section.active,
-    #genre-section.active {
-      display: block;
-    }
+  /* Sections for different views */
+  #video-wrapper, #explore-section, #search-section, #genre-section {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%;
+    height: calc(100% - 60px);
+    overflow-y: auto;
+    display: none;
+  }
+  #video-wrapper.active,
+  #explore-section.active,
+  #search-section.active,
+  #genre-section.active {
+    display: block;
+  }
 
-    /* Video scroll container */
-    #video-wrapper {
-      scroll-behavior: smooth;
-      scroll-snap-type: y mandatory;
-    }
+  /* Video scroll container */
+  #video-wrapper {
+    scroll-behavior: smooth;
+    scroll-snap-type: y mandatory;
+  }
 
-    /* Bottom nav styles */
-    #bottom-nav {
-      position: absolute;
-      bottom: 0;
-      width: 100%;
-      height: 60px;
-      background: rgba(0,0,0,0.7);
-      display: flex;
-      justify-content: space-around;
-      align-items: center;
-      z-index: 10;
-    }
-    #bottom-nav button {
-      background: none;
-      border: none;
-      color: #fff;
-      font-size: 26px;
-      cursor: pointer;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    #bottom-nav button.active {
-      color: var(--primary-color);
-    }
+  /* Bottom nav styles */
+  #bottom-nav {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+    height: 60px;
+    background: rgba(0,0,0,0.7);
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    z-index: 10;
+  }
+  #bottom-nav button {
+    background: none;
+    border: none;
+    color: #fff;
+    font-size: 25px;
+    cursor: pointer;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  #bottom-nav button.active {
+    color: var(--primary-color);
+  }
 
-    /* Video slide styles */
-    .video-slide {
-      height: 100vh;
-      width: 95vw;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-      scroll-snap-align: start;
-      position: relative;
-    }
+  /* Video slide styles */
+  .video-slide {
+    height: 100vh;
+    width: 95vw;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    scroll-snap-align: start;
+    position: relative;
+  }
 
-    /* Video container for aspect ratio */
-    .video-container {
-      position: relative;
-      width: 100%;
-      max-width: 1280px;
-      aspect-ratio: 9 / 18;
-      background: #000;
-    }
-    video {
-      position: absolute;
-      top: 50%;
-      left: 50%;
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-      transform: translate(-50%, -50%);
-    }
+  /* Video container for aspect ratio */
+  .video-container {
+    position: relative;
+    width: 100%;
+    max-width: 1280px;
+    aspect-ratio: 16 / 9;
+    background: #000;
+  }
+  video {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    transform: translate(-50%, -50%);
+  }
 
-    /* Overlay styles */
-    .overlay {
-      position: absolute;
-      top: 0; left: 0;
-      width: 100%; height: 100%;
-      display: flex;
-      flex-direction: column;
-      justify-content: space-between;
-      padding: 20px;
-      pointer-events: none;
-      background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.6));
-      z-index: 2;
-    }
+  /* Overlay styles (video background overlay) */
+  .overlay {
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    display: flex;
+    flex-direction: column;
+    justify-content: space-between;
+    padding: 20px;
+    pointer-events: none;
+    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.6));
+    z-index: 2;
+  }
 
-    .logo {
-      font-size: 28px;
-      font-weight: 800;
-      background: linear-gradient(45deg, var(--secondary-color), var(--primary-color));
-      -webkit-background-clip: text;
-      -webkit-text-fill-color: transparent;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.2);
-      letter-spacing: -0.5px;
-    }
+  /* Logo image styling */
+  .logo img {
+    height: 40px;
+    object-fit: contain;
+    pointer-events: auto;
+    cursor: pointer;
+  }
 
-    /* User info styles */
-    .user-info {
-      position: absolute;
-      left: 20px;
-      bottom: 100px;
-      max-width: 70%;
-      z-index: 100;
-      pointer-events: auto;
-    }
+  /* User info styles */
+  .user-info {
+    position: absolute;
+    left: 20px;
+    bottom: 100px;
+    max-width: 70%;
+    z-index: 100;
+    pointer-events: auto;
+  }
 
-    .profile-section {
-      display: flex;
-      align-items: center;
-      gap: 12px;
-    }
+  .profile-section {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
 
-    .profile-logo {
-      width: 60px;
-      height: 48px;
-      border-radius: 50%;
-      border: 2px solid var(--primary-color);
-      overflow: hidden;
-      box-shadow: 0 0 15px rgba(255, 0, 102, 0.4);
-      transition: transform 0.3s ease;
-      display: flex;
-      align-items: center;
-      justify-content: center;
-    }
-    .profile-logo:hover {
-      transform: scale(1.05);
-    }
-    .profile-logo img {
-      width: 100%;
-      height: 100%;
-      object-fit: cover;
-    }
+  .profile-logo {
+    width: 60px;
+    height: 48px;
+    border-radius: 50%;
+    border: 2px solid var(--primary-color);
+    overflow: hidden;
+    box-shadow: 0 0 15px rgba(255, 0, 102, 0.4);
+    transition: transform 0.3s ease;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    cursor: pointer;
+  }
+  .profile-logo:hover {
+    transform: scale(1.05);
+  }
+  .profile-logo img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
 
-    .name-follow-container {
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      width: 100%;
-    }
-    .username {
-      font-weight: 600;
-      font-size: 13px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
-    .follow-btn {
-      background: linear-gradient(45deg, var(--primary-color), #ff3385);
-      border: none;
-      color: white;
-      padding: 6px 20px;
-      border-radius: 20px;
-      font-weight: 600;
-      cursor: pointer;
-      transition: all 0.3s ease;
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
+  .name-follow-container {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    width: 100%;
+  }
+  .username {
+    font-weight: 600;
+    font-size: 14px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+    cursor: pointer;
+  }
+  .follow-btn {
+    background: linear-gradient(45deg, var(--primary-color), #ff3385);
+    border: none;
+    color: white;
+    padding: 6px 20px;
+    border-radius: 20px;
+    font-weight: 600;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
 
-    .description {
-      font-size: 14px;
-      line-height: 1.4;
-      margin-bottom: 10px;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    }
+  .description {
+    font-size: 14px;
+    line-height: 1.4;
+    margin-bottom: 10px;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
+  }
 
-    /* Actions styling */
-    .actions {
-      position: absolute;
-      right: 2px;
-      bottom: 100px;
-      display: flex;
-      flex-direction: column;
-      gap: 25px;
-      align-items: center;
-      z-index: 100;
-    }
-    .action-item {
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-      gap: 8px;
-      transition: transform 0.3s ease;
-      cursor: pointer;
-      pointer-events: auto;
-    }
-    .action-item:hover {
-      transform: translateY(-5px);
-    }
-    .action-item img {
-      width: 40px;
-      height: 40px;
-      padding: 8px;
-      background: var(--glass-bg);
-      border-radius: 50%;
-      backdrop-filter: blur(10px);
-      border: 1px solid rgba(255,255,255,0.2);
-      box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-    }
-    .action-item span {
-      font-size: 12px;
-      font-weight: 500;
-      color: white;
-      text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-      display: block;
-    }
+  /* Actions styling */
+  .actions {
+    position: absolute;
+    right: 2px;
+    bottom: 100px;
+    display: flex;
+    flex-direction: column;
+    gap: 25px;
+    align-items: center;
+    z-index: 100;
+  }
+  .action-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+    transition: transform 0.3s ease;
+    cursor: pointer;
+    pointer-events: auto;
+  }
+  .action-item:hover {
+    transform: translateY(-5px);
+  }
+  .action-item img {
+    width: 40px;
+    height: 40px;
+    padding: 8px;
+    background: var(--glass-bg);
+    border-radius: 50%;
+    backdrop-filter: blur(10px);
+    border: 1px solid rgba(255,255,255,0.2);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
+  }
+  .action-item span {
+    font-size: 12px;
+    font-weight: 500;
+    color: white;
+    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
+    display: block;
+  }
 
-    /* Sections for explore, search, genre */
-    .section {
-      padding: 10px;
-    }
+  /* Sections for explore, search, genre */
+  .section {
+    padding: 10px;
+  }
 
-    /* Grid for explore and search results */
-    #explore-grid, #search-results-grid, #genre-videos {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-      gap: 10px;
-    }
+  /* Grid for explore and search results */
+  #explore-grid, #search-results-grid, #genre-videos {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+    gap: 10px;
+  }
 
-    /* Explore/Search video items in grid */
-    .grid-item {
-      background: #111;
-      border-radius: 8px;
-      overflow: hidden;
-      cursor: pointer;
-      padding: 5px;
-      display: flex;
-      flex-direction: column;
-      align-items: center;
-    }
-    .grid-item .cover-img {
-      width: 100%;
-      aspect-ratio: 9/16; /* Use the video aspect ratio for the cover */
-      object-fit: cover;
-    }
+  /* Explore/Search video items in grid */
+  .grid-item {
+    background: #111;
+    border-radius: 8px;
+    overflow: hidden;
+    cursor: pointer;
+    padding: 5px;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+  }
+  .grid-item .cover-img {
+    width: 100%;
+    aspect-ratio: 16/ 9;
+    object-fit: cover;
+  }
 
-    /* Search input styling */
-    #search-section input[type="text"] {
-      width: 100%;
-      padding: 10px;
-      margin-bottom: 15px;
-      border: 1px solid #ccc;
-      border-radius: 10px;
-      background: #222;
-      color: white;
-      font-size: 16px;
-      box-sizing: border-box; /* Include padding in width */
-    }
-    #search-section input[type="text"]::placeholder {
-      color: #888;
-    }
+  /* Search input styling */
+  #search-section input[type="text"] {
+    width: 100%;
+    padding: 10px;
+    margin-bottom: 15px;
+    border: 1px solid #ccc;
+    border-radius: 10px;
+    background: #222;
+    color: white;
+    font-size: 16px;
+    box-sizing: border-box;
+  }
+  #search-section input[type="text"]::placeholder {
+    color: #888;
+  }
 
-    /* Genre tags styling */
-    #genre-tags {
-      margin-top: 10px;
-    }
-    .genre-btn {
-      display: inline-block;
-      background: var(--glass-bg);
-      padding: 5px 10px;
-      margin: 5px;
-      border-radius: 15px;
-      cursor: pointer;
-      font-size: 14px;
-      color: #fff;
-    }
-    .genre-btn:hover {
-      background: linear-gradient(45deg, var(--primary-color), #ff3385);
-    }
+  /* Genre tags styling */
+  #genre-tags {
+    margin-top: 10px;
+    display: flex;
+    flex-wrap: wrap;
+  }
+  .genre-btn {
+    display: inline-block;
+    background: var(--glass-bg);
+    padding: 5px 10px;
+    margin: 5px;
+    border-radius: 15px;
+    cursor: pointer;
+    font-size: 14px;
+    color: #fff;
+  }
+  .genre-btn:hover {
+    background: linear-gradient(45deg, var(--primary-color), #ff3385);
+  }
 
-    /* Modal overlay for video playback */
-    #videoModal {
-      position: fixed;
-      top:0; left:0;
-      width:100%; height:100%;
-      background: rgba(0,0,0,0.1);
-      display: none;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      z-index: 999;
-    }
-    #videoModal.active {
-      display: flex;
-    }
-    #videoModal video {
-      max-width: 100%;
-      max-height: 100%;
-    }
-    /* Style for the back arrow button inside modal */
-    #videoModalClose {
-      position: fixed;
-      top: 20px;
-      right: 20px;
-      background: rgba(0,0,0,0.6);
-      border-radius: 50%;
-      width: 40px;
-      height: 40px;
-      display: flex;
-      justify-content: center;
-      align-items: center;
-      cursor: pointer;
-      z-index: 1000;
-      transition: background 0.3s;
-    }
-    #videoModalClose:hover {
-      background: rgba(255,255,255,0.3);
-    }
-    #videoModalClose i {
-      color: #fff;
-      font-size: 20px;
-    }
-  </style>
+  /* Modal overlay for video playback */
+  #videoModal {
+    position: fixed;
+    top:0; left:0;
+    width:100%; height:100%;
+    background: #000;
+    display: none;
+    justify-content: center;
+    align-items: center;
+    padding: 20px;
+    z-index: 999;
+  }
+  #videoModal.active {
+    display: flex;
+  }
+  #videoModal video {
+    max-width: 100%;
+    max-height: 30%;
+  }
+  #videoModalClose {
+    position: fixed;
+    top: 20px;
+    right: 20px;
+    background: #fff;
+    border-radius: 50%;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+    z-index: 1000;
+    transition: background 0.3s;
+  }
+  #videoModalClose:hover {
+    background: rgba(255,255,255,0.3);
+  }
+  #videoModalClose i {
+    color: #000;
+    font-size: 20px;
+  }
+
+  /* Notification Bar Styles */
+  .notification-bar {
+    position: fixed;
+    bottom: 80px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 90%;
+    max-width: 400px;
+    background: linear-gradient(to right, #004d00, #00b300);
+    color: white;
+    padding: 10px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    opacity: 0;
+    transition: opacity 0.5s ease-in-out;
+    z-index: 1000;
+  }
+  .notification-bar img {
+    width: 50px;
+    height: 50px;
+    border-radius: 8px;
+    margin-right: 10px;
+  }
+  .notification-text {
+    flex: 1;
+    font-size: 12px;
+    text-align: left;
+  }
+  .notification-button {
+    background: #ccff00;
+    color: #000;
+    padding: 5px 15px;
+    border-radius: 20px;
+    font-weight: bold;
+    cursor: pointer;
+    border: none;
+  }
+  .close-button {
+    background: none;
+    border: none;
+    color: white;
+    font-size: 18px;
+    cursor: pointer;
+    margin-left: 10px;
+  }
+
+  /* Ad Popup Overlay Styles */
+  #adOverlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0, 0, 0, 0.2);
+    backdrop-filter: blur(5px);
+    display: none; /* Initially hidden */
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+  }
+  .popup {
+    background: rgba(0, 0, 0, 0.6);
+    padding: 20px;
+    border-radius: 10px;
+    text-align: center;
+    width: 98%;
+    max-width: 400px;
+  }
+  .popup h2 {
+    font-size: 18px;
+    color: white;
+    margin-bottom: 20px;
+  }
+  .button-group {
+    display: flex;
+    justify-content: space-around;
+    margin-top: 10px;
+  }
+  .button {
+    padding: 12px 20px;
+    border-radius: 30px;
+    border: none;
+    cursor: pointer;
+    font-size: 12px;
+    font-weight: bold;
+    flex: 1;
+    margin: 0 10px;
+  }
+  .watch-ads {
+    background: #00b300;
+    color: white;
+  }
+  .activate-vip {
+    background: #f5b58a;
+    color: black;
+  }
+</style>
 </head>
 <body>
 
-  <!-- Sections for different views -->
-  <div id="video-wrapper" class="section active"></div>
-  <div id="explore-section" class="section"></div>
-  <div id="search-section" class="section">
-    <!-- Content will be loaded by JavaScript -->
+<!-- Sections for different views -->
+<div id="video-wrapper" class="section active"></div>
+<div id="explore-section" class="section"></div>
+<div id="search-section" class="section"></div>
+<div id="genre-section" class="section"></div>
+
+<!-- Ad Popup -->
+<div id="adOverlay">
+  <div class="popup">
+    <h2>Watch the ad to continue</h2>
+    <div class="button-group">
+      <button class="button watch-ads" onclick="showAdPage('https://www.profitablecpmrate.com/f9z72jat9s?key=fb6ef61efc0589cd3f5c869f9e3a5a18')">Watch Ads</button>
+      <button class="button activate-vip" onclick="showAdPage('https://www.paypal.com/ncp/payment/FRAKR57A5Y364')">Activate VIP</button>
+    </div>
   </div>
-  <div id="genre-section" class="section"></div>
+</div>
 
-  <!-- Bottom Navigation -->
-  <div id="bottom-nav">
-    <button id="homeBtn" class="active" title="Home"><i class="fas fa-home"></i></button>
-    <button id="exploreBtn" title="Explore"><i class="fas fa-compass"></i></button>
-    <button id="searchBtn" title="Search"><i class="fas fa-search"></i></button>
-    <button id="genreBtn" title="Genre"><i class="fas fa-tags"></i></button>
-  </div>
+<!-- Notification Bar -->
+<div class="notification-bar" id="notification-bar">
+  <img src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/web-logo.apJjVir2.svg" alt="App Logo"/>
+  <div class="notification-text">Enjoy more unparalleled movies download Moviebox.</div>
+  <button class="notification-button" onclick="window.open('https://ucarecdn.com/82947fa9-98e5-4948-89ec-8fedd32b4be4/', '_blank')">OPEN</button>
+  <button class="close-button" onclick="closeNotification()">✖</button>
+</div>
 
-  <!-- Modal for video playback with close button -->
-  <div id="videoModal">
-    <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
-    <video controls></video>
-  </div>
+<!-- Bottom Navigation -->
+<div id="bottom-nav">
+  <button id="homeBtn" class="active" title="Home"><i class="fas fa-home"></i></button>
+  <button id="exploreBtn" title="Explore"><i class="fas fa-compass"></i></button>
+  <button id="searchBtn" title="Search"><i class="fas fa-search"></i></button>
+  <button id="genreBtn" title="Genre"><i class="fas fa-tags"></i></button>
+</div>
 
-  <!-- Scripts -->
-  <script>
-    // Sample data
-    const sharedLink = '#';
-    const videoData = [
-      {
-        src: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/',
-        cover: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/-/preview/500x800/', // Use a preview/cover if available
-        profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
-        name: 'Jessica Miller',
-        description: 'Dancing through life 💃✨ #dance #vibes',
-        followers: '1.2M',
-        following: false,
-        likes: 887,
-        comments: 221,
-        shares: 229,
-        tags: ['dance', 'vibes']
-      },
-      {
-        src: 'https://ucarecdn.com/e3e67ba4-62e3-44b4-9212-108dee1d5800/',
-        cover: 'https://ucarecdn.com/e3e67ba4-62e3-44b4-9212-108dee1d5800/',
-        profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
-        name: 'Sophia Wilson',
-        description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
-        followers: '856K',
-        following: true,
-        likes: 1234,
-        comments: 456,
-        shares: 78,
-        tags: ['travel', 'adventure']
-      },
-      {
-        src: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/',
-        cover: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/-/preview/500x800/',
-        profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar1.jpg',
-        name: 'Emma Johnson',
-        description: 'Fitness motivation 💪🔥 #fitness #healthyliving',
-        followers: '2.1M',
-        following: false,
-        likes: 987,
-        comments: 654,
-        shares: 321,
-        tags: ['fitness', 'health']
-      }
-      // Add more video data here if needed
-    ];
+<!-- Modal for video playback -->
+<div id="videoModal">
+  <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
+  <video controls></video>
+</div>
 
-    // Initialize sections
-    const sections = {
-      home: document.getElementById('video-wrapper'),
-      explore: document.getElementById('explore-section'),
-      search: document.getElementById('search-section'),
-      genre: document.getElementById('genre-section')
-    };
+<script>
+const sharedLink = '#';
 
-    // Utility to switch sections
-    function showSection(name) {
-      for (const key in sections) {
-        sections[key].classList.toggle('active', key === name);
-      }
-      document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
-      if (name === 'home') document.getElementById('homeBtn').classList.add('active');
-      if (name === 'explore') document.getElementById('exploreBtn').classList.add('active');
-      if (name === 'search') document.getElementById('searchBtn').classList.add('active');
-      if (name === 'genre') document.getElementById('genreBtn').classList.add('active');
+const videoData = [
+  {
+    src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+    cover: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/-/preview/500x800/',
+    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
+    name: 'Jessica Miller',
+    description: 'Dancing through life 💃✨ #dance #vibes',
+    followers: '1.2M',
+    following: false,
+    likes: 887,
+    comments: 221,
+    shares: 229,
+    tags: ['dance', 'vibes']
+  },
+  {
+    src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+    cover: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/-/preview/500x800/',
+    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
+    name: 'Jessica Miller',
+    description: 'Dancing through life 💃✨ #dance #vibes',
+    followers: '1.2M',
+    following: false,
+    likes: 887,
+    comments: 221,
+    shares: 229,
+    tags: ['dance', 'vibes']
+  },
+  {
+    src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/87/e8/7d/87e87d35f853ae538a536c5d14451712/87e87d35f853ae538a536c5d14451712.21.jpg',
+    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
+    name: 'Sophia Wilson',
+    description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
+    followers: '856K',
+    following: true,
+    likes: 1234,
+    comments: 456,
+    shares: 78,
+    tags: ['travel', 'adventure']
+  },
+  {
+    src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
+    cover: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/-/preview/500x800/',
+    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar1.jpg',
+    name: 'Emma Johnson',
+    description: 'Fitness motivation 💪🔥 #fitness #healthyliving',
+    followers: '2.1M',
+    following: false,
+    likes: 987,
+    comments: 654,
+    shares: 321,
+    tags: ['fitness', 'health']
+  }
+];
 
-      if (name === 'explore') loadExplore();
-      if (name === 'search') loadSearch();
-      if (name === 'genre') loadGenre();
-    }
+const sections = {
+  home: document.getElementById('video-wrapper'),
+  explore: document.getElementById('explore-section'),
+  search: document.getElementById('search-section'),
+  genre: document.getElementById('genre-section')
+};
 
-    // Bottom nav button handlers
-    document.getElementById('homeBtn').onclick = () => showSection('home');
-    document.getElementById('exploreBtn').onclick = () => showSection('explore');
-    document.getElementById('searchBtn').onclick = () => showSection('search');
-    document.getElementById('genreBtn').onclick = () => showSection('genre');
+// Utility to switch sections
+function showSection(name) {
+  for (const key in sections) {
+    sections[key].classList.toggle('active', key === name);
+  }
+  document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
+  if (name === 'home') document.getElementById('homeBtn').classList.add('active');
+  if (name === 'explore') document.getElementById('exploreBtn').classList.add('active');
+  if (name === 'search') document.getElementById('searchBtn').classList.add('active');
+  if (name === 'genre') document.getElementById('genreBtn').classList.add('active');
 
-    // ----------------------------------
-    // Home (Video Scroll)
-    const homeContainer = sections.home;
-    const homeVideos = [];
+  if (name === 'explore') loadExplore();
+  if (name === 'search') loadSearch();
+  if (name === 'genre') loadGenre();
+}
 
-    function createHomeSlide(data) {
-      const slide = document.createElement('div');
-      slide.className = 'video-slide';
+// Bottom nav handlers
+document.getElementById('homeBtn').onclick = () => showSection('home');
+document.getElementById('exploreBtn').onclick = () => showSection('explore');
+document.getElementById('searchBtn').onclick = () => showSection('search');
+document.getElementById('genreBtn').onclick = () => showSection('genre');
 
-      slide.innerHTML = `
-        <div class="video-container">
-          <video src="${data.src}" playsinline muted></video>
-        </div>
-        <div class="overlay">
-          <div class="logo"></div>
 
-          <div class="user-info">
-            <div class="profile-section">
-              <div class="profile-logo">
-                <img src="${data.profileImg}" alt="Profile" />
-              </div>
-              <div class="name-follow-container">
-                <div class="username">${data.name}</div>
-                <button class="follow-btn" data-url="${sharedLink}">Follow</button>
-              </div>
-            </div>
-            <div class="description">${data.description}</div>
+// ----------- Home (Video Scroll) -----------
+const homeContainer = sections.home;
+const homeVideos = [];
+
+function createHomeSlide(data) {
+  const slide = document.createElement('div');
+  slide.className = 'video-slide';
+
+  slide.innerHTML = `
+    <div class="video-container">
+      <video src="${data.src}" playsinline muted></video>
+    </div>
+    <div class="overlay">
+      <div class="logo">
+        <img src="https://static-cdn77.xvideos-cdn.com/v3/img/skins/default/logo/xvideos.black.svg" alt="App Logo" />
+      </div>
+
+      <div class="user-info">
+        <div class="profile-section">
+          <div class="profile-logo clickable-user" style="cursor:pointer;">
+            <img src="${data.profileImg}" alt="Profile" />
           </div>
-
-          <div class="actions">
-            <div class="action-item like-btn" aria-label="Like">
-              <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
-              <span>${data.likes}</span>
-            </div>
-            <div class="action-item comment-btn" aria-label="Comment">
-              <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
-              <span>${data.comments}</span>
-            </div>
-            <div class="action-item share-btn" aria-label="Share">
-              <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
-              <span>Share</span>
-            </div>
-            <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
-              <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
-              <span>Download</span>
-            </div>
+          <div class="name-follow-container">
+            <div class="username clickable-user" style="cursor:pointer;">${data.name}</div>
+            <button class="follow-btn" data-url="${sharedLink}">Follow</button>
           </div>
         </div>
-      `;
+        <div class="description">${data.description}</div>
+      </div>
 
-      // Event handlers
-      slide.querySelector('.follow-btn').onclick = () => {
-        window.location.href = data.profileUrl || sharedLink;
-      };
-      slide.querySelector('.download-btn').onclick = () => {
-        const a = document.createElement('a');
-        a.href = data.src;
-        a.download = 'video.mp4';
-        document.body.appendChild(a);
-        a.click();
-        document.body.removeChild(a);
-      };
-      slide.querySelector('.share-btn').onclick = () => {
-        const shareUrl = 'https://bit.ly/3ENxGyn'; // Replace with your actual share URL if different
-        if (navigator.share) {
-          navigator.share({title:'Check out this video!', url: shareUrl}).catch(() => {});
-        } else if (navigator.clipboard) {
-          navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied!'));
-        } else {
-          prompt('Copy this link:', shareUrl);
-        }
-      };
-      // Like & Comment
-      slide.querySelector('.like-btn').onclick = () => {
-        window.location.href = sharedLink;
-      };
-      slide.querySelector('.comment-btn').onclick = () => {
-        window.location.href = sharedLink;
-      };
-
-      // Mute/unmute on click
-      const video = slide.querySelector('video');
-      video.onclick = () => { video.muted = !video.muted; };
-
-      homeContainer.appendChild(slide);
-      homeVideos.push(video);
-    }
-    videoData.forEach(createHomeSlide);
-
-    let activeVideo = null;
-
-    // Auto-play control
-    function handleFirstInteraction() {
-      homeVideos.forEach(v => v.play().catch(() => {}));
-      window.removeEventListener('click', handleFirstInteraction);
-      window.removeEventListener('touchstart', handleFirstInteraction);
-    }
-    window.addEventListener('click', handleFirstInteraction);
-    window.addEventListener('touchstart', handleFirstInteraction);
-
-    // Intersection Observer for auto-play
-    const observer = new IntersectionObserver((entries) => {
-      entries.forEach(entry => {
-        const video = entry.target;
-        if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-          if (activeVideo && activeVideo !== video) activeVideo.pause();
-          activeVideo = video;
-          video.muted = false; // Unmute when visible
-          video.play().catch(() => {});
-        } else {
-          video.pause();
-          // video.currentTime = 0; // Optional: reset video position when scrolled away
-        }
-      });
-    }, { threshold: 0.5 }); // Trigger when 50% of the video is visible
-
-    homeVideos.forEach(v => {
-      observer.observe(v);
-    });
-
-
-    // ----------------------------------
-    // Explore (Grid view)
-    function loadExplore() {
-      const container = sections.explore;
-      container.innerHTML = '<h2 style="padding:10px;"></h2><div id="explore-grid"></div>';
-      const grid = document.getElementById('explore-grid');
-      grid.innerHTML = '';
-
-      // Show all videos in grid
-      videoData.forEach((video, index) => {
-        const item = document.createElement('div');
-        item.className = 'grid-item';
-        item.dataset.src = video.src; // store src for playback
-        item.innerHTML = `
-          <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover">
-          <div style="margin-top:5px; text-align: center; font-size: 12px;">${video.name}</div>
-        `;
-        item.onclick = () => {
-          openVideoModal(video.src);
-        };
-        grid.appendChild(item);
-      });
-    }
-
-    // ----------------------------------
-    // Search by Username
-    function loadSearch() {
-      const container = sections.search;
-      container.innerHTML = `
-        <h2 style="padding:10px;"></h2>
-        <div style="padding: 0 10px;">
-          <input type="text" id="searchInput" placeholder="Search users...">
+      <div class="actions">
+        <div class="action-item like-btn" aria-label="Like">
+          <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
+          <span>${data.likes}</span>
         </div>
-        <div id="search-results-grid" style="padding: 0 10px;">
-          <!-- Search results will be displayed here -->
+        <div class="action-item comment-btn" aria-label="Comment">
+          <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
+          <span>${data.comments}</span>
         </div>
-      `;
+        <div class="action-item share-btn" aria-label="Share">
+          <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
+          <span>Share</span>
+        </div>
+        <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
+          <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
+          <span>Download</span>
+        </div>
+      </div>
+    </div>
+  `;
 
-      const searchInput = document.getElementById('searchInput');
-      const searchResultsGrid = document.getElementById('search-results-grid');
+  // Attach click handlers to profile image and username
+  const profileImgElem = slide.querySelector('.profile-logo');
+  const usernameElem = slide.querySelector('.username');
 
-      // Function to perform search and display results
-      function performSearch() {
-        const query = searchInput.value.toLowerCase().trim();
-        searchResultsGrid.innerHTML = ''; // Clear previous results
+  profileImgElem.onclick = () => { loadUserVideos(data.name); };
+  usernameElem.onclick = () => { loadUserVideos(data.name); };
 
-        if (query.length === 0) {
-          searchResultsGrid.innerHTML = '<p style="text-align: center; padding: 20px;">Start typing a username to search.</p>';
-          return;
-        }
-
-        const filteredVideos = videoData.filter(video =>
-          video.name.toLowerCase().includes(query)
-        );
-
-        if (filteredVideos.length === 0) {
-          searchResultsGrid.innerHTML = '<p style="text-align: center; padding: 20px;">No videos found for this username.</p>';
-          return;
-        }
-
-        filteredVideos.forEach(video => {
-          const item = document.createElement('div');
-          item.className = 'grid-item'; // Reuse grid-item styling
-          item.dataset.src = video.src;
-          item.innerHTML = `
-            <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover">
-            <div style="margin-top:5px; text-align: center; font-size: 12px;">${video.name}</div>
-          `;
-          item.onclick = () => {
-            openVideoModal(video.src);
-          };
-          searchResultsGrid.appendChild(item);
-        });
-      }
-
-      // Add event listener to the input field
-      searchInput.addEventListener('input', performSearch);
-
-      // Initial display prompt
-      searchResultsGrid.innerHTML = '<p style="text-align: center; padding: 20px;">Start typing a username to search.</p>';
+  // Event handlers for follow, share, download
+  slide.querySelector('.follow-btn').onclick = () => {
+    window.location.href = data.profileUrl || sharedLink;
+  };
+  slide.querySelector('.download-btn').onclick = () => {
+    const a = document.createElement('a');
+    a.href = data.src;
+    a.download = 'video.mp4';
+    document.body.appendChild(a);
+    a.click();
+    document.body.removeChild(a);
+  };
+  slide.querySelector('.share-btn').onclick = () => {
+    const shareUrl = 'https://bit.ly/3ENxGyn';
+    if (navigator.share) {
+      navigator.share({title:'Check out this video!', url:shareUrl}).catch(() => {});
+    } else if (navigator.clipboard) {
+      navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied!'));
+    } else {
+      prompt('Copy this link:', shareUrl);
     }
+  };
 
-    // ----------------------------------
-    // Genre filtering
-    function loadGenre() {
-      const container = sections.genre;
-      container.innerHTML = '<h2 style="padding:10px;"></h2><div id="genre-tags" style="padding: 0 10px;"></div><div id="genre-videos" style="margin-top:10px; padding: 0 10px;"></div>';
+  // Mute/unmute on click
+  const video = slide.querySelector('video');
+  video.onclick = () => { video.muted = !video.muted; };
 
-      const genreDiv = document.getElementById('genre-tags');
-      const videosDiv = document.getElementById('genre-videos');
+  homeContainer.appendChild(slide);
+  homeVideos.push(video);
+}
+videoData.forEach(createHomeSlide);
 
-      // Collect unique tags
-      const tagsSet = new Set();
-      videoData.forEach(v => v.tags.forEach(t => tagsSet.add(t)));
-      const tags = Array.from(tagsSet);
+let activeVideo = null;
+function handleFirstInteraction() {
+  homeVideos.forEach(v => v.play().catch(() => {}));
+  window.removeEventListener('click', handleFirstInteraction);
+  window.removeEventListener('touchstart', handleFirstInteraction);
+}
+window.addEventListener('click', handleFirstInteraction);
+window.addEventListener('touchstart', handleFirstInteraction);
 
-      // Create genre buttons
-      tags.forEach(tag => {
-        const btn = document.createElement('button');
-        btn.className = 'genre-btn';
-        btn.textContent = tag;
-        btn.onclick = () => {
-          showVideosByGenre(tag);
-        };
-        genreDiv.appendChild(btn);
-      });
-
-      function showVideosByGenre(tag) {
-        videosDiv.innerHTML = '';
-        const filtered = videoData.filter(v => v.tags.includes(tag));
-        if (filtered.length === 0) {
-          videosDiv.innerHTML = '<p style="text-align: center; padding: 20px;">No videos for this genre.</p>';
-          return;
-        }
-
-        filtered.forEach(v => {
-          const item = document.createElement('div');
-          item.className = 'grid-item';
-          item.dataset.src = v.src; // store src
-          item.onclick = () => {
-            openVideoModal(v.src);
-          };
-          item.innerHTML = `
-            <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover">
-            <div style="margin-top:5px; text-align: center; font-size: 12px;">${v.name}</div>
-          `;
-          videosDiv.appendChild(item);
-        });
-      }
-    }
-
-    // Function to open video modal
-    function openVideoModal(src) {
-      const modal = document.getElementById('videoModal');
-      const video = modal.querySelector('video');
-      video.src = src;
+const observer = new IntersectionObserver((entries) => {
+  entries.forEach(entry => {
+    const video = entry.target;
+    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
+      if (activeVideo && activeVideo !== video) activeVideo.pause();
+      activeVideo = video;
+      video.muted = false;
       video.play().catch(() => {});
-      modal.classList.add('active');
-      // Pause background videos when modal opens
-      homeVideos.forEach(v => v.pause());
-    }
-
-    // Close modal on click outside video or on back arrow button
-    const modal = document.getElementById('videoModal');
-    const video = modal.querySelector('video');
-    const modalCloseBtn = document.getElementById('videoModalClose');
-
-    modalCloseBtn.onclick = () => {
-      closeVideoModal();
-    };
-
-    modal.onclick = (e) => {
-       // Only close if the click is directly on the modal background, not the video or close button
-      if (e.target === modal) {
-        closeVideoModal();
-      }
-    };
-
-    function closeVideoModal() {
+    } else {
       video.pause();
-      video.src = ''; // Clear the source
-      modal.classList.remove('active');
-      // Resume the currently active home video if on home screen
-      if (sections.home.classList.contains('active') && activeVideo) {
-         // Find the currently visible video again after modal closes
-         const visibleVideos = homeVideos.filter(v => {
-             const rect = v.getBoundingClientRect();
-             return rect.top >= 0 && rect.bottom <= window.innerHeight;
-         });
-         if (visibleVideos.length > 0) {
-             activeVideo = visibleVideos[0];
-             activeVideo.play().catch(() => {});
-         } else {
-            // If no video is perfectly visible, try to play the last activeVideo
-             if (activeVideo) activeVideo.play().catch(() => {});
-         }
-      }
     }
+  });
+}, { threshold: 0.5 });
+homeVideos.forEach(v => observer.observe(v));
 
-    // Initialize default view
-    showSection('home');
-  </script>
+// ----------- Explore (Grid view) -----------
+function loadExplore() {
+  const container = sections.explore;
+  container.innerHTML = '<h2 style="padding:10px;"></h2><div id="explore-grid"></div>';
+  const grid = document.getElementById('explore-grid');
+  grid.innerHTML = '';
+  videoData.forEach((video, index) => {
+    const item = document.createElement('div');
+    item.className = 'grid-item';
+    item.dataset.src = video.src;
+    item.onclick = () => { openVideoModal(video.src); };
+    item.innerHTML = `
+      <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover" />
+      <div style="margin-top:5px; text-align:center; font-size:12px;">${video.name}</div>
+    `;
+    grid.appendChild(item);
+  });
+}
+
+// ----------- Search by Username -----------
+function loadSearch() {
+  const container = sections.search;
+  container.innerHTML = `
+    <h2 style="padding:10px;"></h2>
+    <input type="text" id="searchInput" placeholder="Search..."/>
+    <div id="search-results-grid" style="padding: 0 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:10px;"></div>
+  `;
+  const searchInput = document.getElementById('searchInput');
+  const resultsGrid = document.getElementById('search-results-grid');
+
+  function performSearch() {
+    const query = searchInput.value.toLowerCase().trim();
+    resultsGrid.innerHTML = '';
+    if (query.length === 0) {
+      resultsGrid.innerHTML = '<p style="text-align:center;">Start typing a username to search.</p>';
+      return;
+    }
+    const filtered = videoData.filter(v => v.name.toLowerCase().includes(query));
+    if (filtered.length === 0) {
+      resultsGrid.innerHTML = '<p style="text-align:center;">No videos found for this user.</p>';
+      return;
+    }
+    filtered.forEach(v => {
+      const item = document.createElement('div');
+      item.className = 'grid-item';
+      item.dataset.src = v.src;
+      item.onclick = () => { openVideoModal(v.src); };
+      item.innerHTML = `
+        <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
+        <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
+      `;
+      resultsGrid.appendChild(item);
+    });
+  }
+  searchInput.addEventListener('input', performSearch);
+  // initial message
+  resultsGrid.innerHTML = '<p style="text-align:center;">Start typing a username to search.</p>';
+}
+
+// ----------- Load videos by user -----------
+
+function loadUserVideos(username) {
+  showSection('search');
+  const container = sections.search;
+  container.innerHTML = `
+    <h2 style="padding:10px;"> ${username}</h2>
+    <div id="search-results-grid" style="padding: 0 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:15px;"></div>
+  `;
+  const resultsGrid = document.getElementById('search-results-grid');
+  const userVideos = videoData.filter(v => v.name === username);
+  if (userVideos.length === 0) {
+    resultsGrid.innerHTML = '<p style="text-align:center;">No videos found for this user.</p>';
+    return;
+  }
+  userVideos.forEach(v => {
+    const item = document.createElement('div');
+    item.className = 'grid-item';
+    item.dataset.src = v.src;
+    item.onclick = () => { openVideoModal(v.src); };
+    item.innerHTML = `
+      <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
+      <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
+    `;
+    resultsGrid.appendChild(item);
+  });
+}
+
+// ----------- Video modal functions -----------
+
+function openVideoModal(src) {
+  const modal = document.getElementById('videoModal');
+  const video = modal.querySelector('video');
+  video.src = src;
+  video.play().catch(() => {});
+  modal.classList.add('active');
+  // Pause background videos
+  homeVideos.forEach(v => v.pause());
+}
+const modal = document.getElementById('videoModal');
+const videoElement = modal.querySelector('video');
+const modalCloseBtn = document.getElementById('videoModalClose');
+modalCloseBtn.onclick = () => { closeVideoModal(); };
+modal.onclick = (e) => { if (e.target === modal) closeVideoModal(); };
+function closeVideoModal() {
+  videoElement.pause();
+  videoElement.src = '';
+  modal.classList.remove('active');
+  // Resume background video if on home
+  if (sections.home.classList.contains('active') && activeVideo) {
+    activeVideo.play().catch(() => {});
+  }
+}
+
+// ----------- Notification bar -----------
+
+function closeNotification() {
+  document.getElementById('notification-bar').style.opacity = '0';
+}
+
+// ----------- Ad popup -----------
+
+const firstPopupDelay = 15000; // 100 sec
+const popupInterval = 50000; // 500 sec
+function showAd() {
+  const last = localStorage.getItem('lastPopupTime');
+  const now = Date.now();
+  if (!last || now - last >= popupInterval) {
+    document.getElementById('adOverlay').style.display = 'flex';
+    localStorage.setItem('lastPopupTime', now);
+  } else {
+    setTimeout(showAd, popupInterval - (now - last));
+  }
+}
+function showAdPage(url) {
+  window.open(url, '_blank');
+  closeAd();
+}
+function closeAd() {
+  document.getElementById('adOverlay').style.display = 'none';
+  setTimeout(showAd, popupInterval);
+}
+setTimeout(showAd, firstPopupDelay);
+
+// ----------- Genre Functions -----------
+
+function loadGenre() {
+  const container = sections.genre;
+  container.innerHTML = '<h2 style="padding:10px;">Select a Genre</h2>';
+
+  const genres = ['Dance', 'Travel', 'Fitness', 'Comedy', 'Music', 'Cooking'];
+  const tagsContainer = document.createElement('div');
+  tagsContainer.id = 'genre-tags';
+
+  genres.forEach(genre => {
+    const btn = document.createElement('div');
+    btn.className = 'genre-btn';
+    btn.innerText = genre;
+    btn.onclick = () => loadGenreVideos(genre);
+    tagsContainer.appendChild(btn);
+  });
+
+  container.appendChild(tagsContainer);
+}
+
+function loadGenreVideos(genre) {
+  showSection('genre');
+  const container = sections.genre;
+  container.innerHTML = `<h2 style="padding:10px;">Genre: ${genre}</h2><div id="genre-videos"></div>`;
+  const videosContainer = document.getElementById('genre-videos');
+
+  // Filter videos with matching tags
+  const filteredVideos = videoData.filter(v => v.tags && v.tags.includes(genre.toLowerCase()));
+
+  if (filteredVideos.length === 0) {
+    videosContainer.innerHTML = '<p style="text-align:center;">No videos found for this genre.</p>';
+    return;
+  }
+
+  filteredVideos.forEach(v => {
+    const item = document.createElement('div');
+    item.className = 'grid-item';
+    item.dataset.src = v.src;
+    item.onclick = () => { openVideoModal(v.src); };
+    item.innerHTML = `
+      <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
+      <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
+    `;
+    document.getElementById('genre-videos').appendChild(item);
+  });
+}
+
+// Initialize default view
+showSection('home');
+
+</script>
 </body>
 </html>
