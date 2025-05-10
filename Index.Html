@@ -300,7 +300,7 @@
           background: #fff;
           border: 1px solid #ccc;
           box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
-          padding: 8px;
+          padding: 5px;
           display: flex;
           align-items: center;
           justify-content: space-between;
@@ -314,8 +314,8 @@
           overflow: hidden;
         }
         .app-icon {
-          width: 50px;
-          height: 50px;
+          width: 45px;
+          height: 45px;
           border-radius: 12px;
           overflow: hidden;
           margin-right: 10px;
@@ -333,7 +333,7 @@
         }
         .app-name {
           font-weight: bold;
-          font-size: 16px;
+          font-size: 15px;
           color: #333;
           white-space: nowrap;
           overflow: hidden;
@@ -349,7 +349,7 @@
         .install-button {
           background-color: #007bff;
           color: white;
-          padding: 8px 14px;
+          padding: 7px 14px;
           border: none;
           border-radius: 20px;
           font-weight: bold;
@@ -366,6 +366,35 @@
           font-size: 12px;
           color: #777;
           margin-right: 5px;
+        }
+        /* Play In App Button */
+        .play-in-app-container {
+            position: fixed;
+            bottom: 67px;
+            left: 50%;
+            transform: translateX(-50%);
+            text-align: center;
+            z-index: 1000;
+        }
+        .play-in-app-button {
+            background: linear-gradient(to right, #00b300, #008000);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 30px;
+            font-weight: bold;
+            cursor: pointer;
+            border: none;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.2);
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease-in-out;
+        }
+        .play-in-app-button:hover {
+            background: linear-gradient(to right, #008000, #006600);
+            box-shadow: 0 6px 8px rgba(0, 0, 0, 0.3);
+            transform: translateY(-2px);
         }
     </style>
 </head>
@@ -460,6 +489,15 @@
       <button class="get-btn" id="adGetButton">Chat Now</button>
     </div>
   </div>
+  
+  <!-- Play In App Button -->
+    <div class="play-in-app-container">
+        <a href="https://spa.aisports.cc/h5-live/matches">
+            <button class="play-in-app-button" id="play-in-app-button">
+                <i class="fas fa-basketball-ball"></i> Sports
+            </button>
+        </a>
+    </div>
 
   <!-- Ad Container (Bottom Fixed) -->
   <div class="ad-container" id="adContainer">
