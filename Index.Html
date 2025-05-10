@@ -1,888 +1,683 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-<meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>TikGirls</title>
-<!-- Font Awesome CDN for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
-<style>
-  :root {
-    --primary-color: #ff0066;
-    --secondary-color: #25F4EE;
-    --glass-bg: rgba(255, 255, 255, 0.1);
-  }
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>ReelShort</title>
+  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.4/css/all.min.css" rel="stylesheet" />
+  <style>
+    * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: Arial, sans-serif;
+        }
+        body {
+            background: #000;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            overflow: hidden;
+        }
+        
+        /* Header Styles */
+        .header {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 20px;
+            background-color: #000;
+            z-index: 1000;
+        }
+        .logo-container {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+        .logo {
+            font-size: 20px;
+            border: 1px solid #ccc;
+            background-color: rgba(0, 0, 0, 0.9);
+            color: #fff;
+            border-radius: 20px;
+            padding: 5px 5px;
+            font-weight: bold;
+        }
+        .balance-container {
+            display: flex;
+            font-size: 15.5px;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+        }
+        .wallet-icon {
+            font-size: 20px;
+            cursor: pointer;
+            transition: 0.3s;
+            color: #fff;
+        }
+        .header .bars-icon {
+            font-size: 20px;
+            cursor: pointer;
+            color: #fff;
+        }
+        .header .bars-icon:hover {
+            color: #00b300;
+        }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+        /* Ad Toggle Styles */
+        .ad-toggle {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            color: #fff;
+            cursor: pointer;
+            padding: 5px 5px;
+            border-radius: 20px;
+            border: 1px solid #555;
+            background: rgba(255, 255, 255, 0.1);
+            transition: all 0.3s ease;
+        }
+        .ad-toggle:hover {
+            background: rgba(255, 255, 255, 0.2);
+        }
+        .toggle-switch {
+            width: 40px;
+            height: 20px;
+            background: #444;
+            border-radius: 10px;
+            position: relative;
+            transition: 0.3s;
+        }
+        .toggle-knob {
+            width: 16px;
+            height: 16px;
+            background: #ccc;
+            border-radius: 50%;
+            position: absolute;
+            top: 2px;
+            left: 2px;
+            transition: 0.3s;
+        }
+        .ad-toggle.active .toggle-switch {
+            background: #00b300;
+        }
+        .ad-toggle.active .toggle-knob {
+            background: #fff;
+            left: 22px;
+        }
 
-  body, html {
-    height: 100%;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #000;
-    color: white;
-    overflow: hidden;
-  }
+        /* Video Container */
+        .frame-container {
+            width: 100vw;
+            height: 100vh;
+            position: relative;
+        }
+        iframe {
+            width: 100%;
+            height: 100%;
+            border: none;
+            opacity: 1;
+            transition: opacity 0.5s ease-in-out;
+        }
 
-  /* Sections for different views */
-  #video-wrapper, #explore-section, #search-section, #genre-section {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: calc(100% - 60px);
-    overflow-y: auto;
-    display: none;
-  }
-  #video-wrapper.active,
-  #explore-section.active,
-  #search-section.active,
-  #genre-section.active {
-    display: block;
-  }
+        /* Ad Overlay */
+        .ad-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.3);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 999;
+        }
+        .ad-popup {
+            position: relative;
+            width: 100%;
+            max-width: 250px;
+            border-radius: 15px;
+            text-align: center;
+            cursor: pointer;
+        }
+        .ad-popup img {
+            width: 100%;
+            border-radius: 15px;
+            display: block;
+        }
+        .ad-popup .close-btn {
+            position: absolute;
+            top: 7px;
+            right: 10px;
+            background: rgba(0, 0, 0, 0.2);
+            color: white;
+            border: none;
+            padding: 0px;
+            font-size: 20px;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        .ad-popup .get-btn {
+            position: absolute;
+            bottom: 15px;
+            left: 50%;
+            transform: translateX(-50%);
+            background: orange;
+            color: white;
+            padding: 8px 20px;
+            font-size: 17px;
+            border: none;
+            border-radius: 30px;
+            border: 1px solid #ccc;
+            cursor: pointer;
+        }
 
-  /* Video scroll container */
-  #video-wrapper {
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
-  }
+        /* Sidebar Menu */
+        .sidebar-menu {
+            position: fixed;
+            top: 0;
+            right: -300px;
+            width: 250px;
+            height: 100%;
+            background-color: #000;
+            transition: 0.3s;
+            z-index: 2000;
+            padding: 20px;
+            box-shadow: -2px 0 15px rgba(0,0,0,0.2);
+        }
+        .sidebar-menu.active {
+            right: 0;
+        }
+        .menu-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 5px 15px;
+            border-radius: 50px;
+            margin-bottom: 50px;
+            background-color: #ff3300;
+        }
+        .close-menu {
+            background-color: #fff;
+            color: #ff3300;
+            font-size: 28px;
+            padding: 0px 4px;
+            border-radius: 50px;
+            cursor: pointer;
+        }
+        .social-media-list {
+            list-style: none;
+        }
+        .social-media-item {
+            margin: 15px 0;
+            display: flex;
+            align-items: center;
+            color: #fff;
+            text-decoration: none;
+            transition: 0.3s;
+        }
+        .social-media-item:hover {
+            color: #ff3300;
+            transform: translateX(10px);
+        }
+        .social-media-item i {
+            font-size: 20px;
+            width: 30px;
+            margin-right: 15px;
+        }
+        .menu-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.5);
+            z-index: 1999;
+            display: none;
+        }
 
-  /* Bottom nav styles */
-  #bottom-nav {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 60px;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 10;
-  }
-  #bottom-nav button {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 25px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  #bottom-nav button.active {
-    color: var(--primary-color);
-  }
+        /* Wallet Overlay */
+        .wallet-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0,0,0,0.7);
+            display: none;
+            justify-content: center;
+            align-items: center;
+            z-index: 3000;
+        }
+        .wallet-popup {
+            background: #000;
+            padding: 25px;
+            border-radius: 15px;
+            border: 1px solid #ccc;
+            width: 90%;
+            max-width: 400px;
+            text-align: center;
+        }
+        .balance-display {
+            font-size: 2.1rem;
+            color: #fff;
+            margin: 20px 0;
+        }
+        .withdraw-btn {
+            background: #ff5500;
+            color: white;
+            padding: 12px 30px;
+            border: none;
+            border-radius: 25px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: 0.3s;
+        }
+        .withdraw-btn:disabled {
+            background: #555;
+            cursor: not-allowed;
+        }
 
-  /* Video slide styles */
-  .video-slide {
-    height: 100vh;
-    width: 95vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    scroll-snap-align: start;
-    position: relative;
-  }
+        /* Theme Toggle */
+        .theme-toggle {
+            margin-left: 20px;
+        }
 
-  /* Video container for aspect ratio */
-  .video-container {
-    position: relative;
-    width: 100%;
-    max-width: 1280px;
-    aspect-ratio: 16 / 9;
-    background: #000;
-  }
-  video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: translate(-50%, -50%);
-  }
+        /* Additional styles for ads */
+        /* Ad Container Styles */
+        .ad-container {
+          position: fixed;
+          bottom: 0;
+          width: 100%;
+          background: #fff;
+          border: 1px solid #ccc;
+          box-shadow: 0 -2px 8px rgba(0, 0, 0, 0.2);
+          padding: 8px;
+          display: flex;
+          align-items: center;
+          justify-content: space-between;
+          z-index: 1000;
+          display: none; /* Hidden initially */
+        }
+        .ad-content {
+          display: flex;
+          align-items: center;
+          flex-grow: 1;
+          overflow: hidden;
+        }
+        .app-icon {
+          width: 50px;
+          height: 50px;
+          border-radius: 12px;
+          overflow: hidden;
+          margin-right: 10px;
+          flex-shrink: 0;
+        }
+        .app-icon img {
+          width: 100%;
+          height: 100%;
+          object-fit: cover;
+        }
+        .ad-info {
+          display: flex;
+          flex-direction: column;
+          overflow: hidden;
+        }
+        .app-name {
+          font-weight: bold;
+          font-size: 16px;
+          color: #333;
+          white-space: nowrap;
+          overflow: hidden;
+          text-overflow: ellipsis;
+          max-width: 200px;
+          margin-bottom: 4px;
+        }
+        .ad-meta {
+          font-size: 14px;
+          color: #555;
+          white-space: nowrap;
+        }
+        .install-button {
+          background-color: #007bff;
+          color: white;
+          padding: 8px 14px;
+          border: none;
+          border-radius: 20px;
+          font-weight: bold;
+          cursor: pointer;
+          text-decoration: none;
+          margin-left: 10px;
+          flex-shrink: 0;
+        }
+        .install-button:hover {
+          background-color: #0056b3;
+        }
+        /* Optional: style for sponsored label inside ad info */
+        .sponsored {
+          font-size: 12px;
+          color: #777;
+          margin-right: 5px;
+        }
 
-  /* Overlay styles (video background overlay) */
-  .overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    pointer-events: none;
-    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.6));
-    z-index: 2;
-  }
-
-  /* Logo image styling */
-  .logo img {
-    height: 40px;
-    object-fit: contain;
-    pointer-events: auto;
-    cursor: pointer;
-  }
-
-  /* User info styles */
-  .user-info {
-    position: absolute;
-    left: 20px;
-    bottom: 100px;
-    max-width: 70%;
-    z-index: 100;
-    pointer-events: auto;
-  }
-
-  .profile-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
-
-  .profile-logo {
-    width: 60px;
-    height: 48px;
-    border-radius: 50%;
-    border: 2px solid var(--primary-color);
-    overflow: hidden;
-    box-shadow: 0 0 15px rgba(255, 0, 102, 0.4);
-    transition: transform 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .profile-logo:hover {
-    transform: scale(1.05);
-  }
-  .profile-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
-
-  .name-follow-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .username {
-    font-weight: 600;
-    font-size: 14px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    cursor: pointer;
-  }
-  .follow-btn {
-    background: linear-gradient(45deg, var(--primary-color), #ff3385);
-    border: none;
-    color: white;
-    padding: 6px 20px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-
-  .description {
-    font-size: 13px;
-    line-height: 1.4;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  }
-
-  /* Actions styling */
-  .actions {
-    position: absolute;
-    right: 2px;
-    bottom: 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    align-items: center;
-    z-index: 100;
-  }
-  .action-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-    pointer-events: auto;
-  }
-  .action-item:hover {
-    transform: translateY(-5px);
-  }
-  .action-item img {
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-    background: var(--glass-bg);
-    border-radius: 50%;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-  .action-item span {
-    font-size: 12px;
-    font-weight: 500;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    display: block;
-  }
-
-  /* Sections for explore, search, genre */
-  .section {
-    padding: 10px;
-  }
-
-  /* Grid for explore and search results */
-  #explore-grid, #search-results-grid, #genre-videos {
-    display: grid;
-    grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
-    gap: 10px;
-  }
-
-  /* Explore/Search video items in grid */
-  .grid-item {
-    background: #111;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    padding: 5px;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  .grid-item .cover-img {
-    width: 100%;
-    aspect-ratio: 16/ 9;
-    object-fit: cover;
-  }
-
-  /* Search input styling */
-  #search-section input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background: #222;
-    color: white;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
-  #search-section input[type="text"]::placeholder {
-    color: #888;
-  }
-
-  /* Genre tags styling */
-  #genre-tags {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .genre-btn {
-    display: inline-block;
-    background: var(--glass-bg);
-    padding: 5px 10px;
-    margin: 5px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #fff;
-  }
-  .genre-btn:hover {
-    background: linear-gradient(45deg, var(--primary-color), #ff3385);
-  }
-
-  /* Modal overlay for video playback */
-  #videoModal {
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: #000;
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    z-index: 999;
-  }
-  #videoModal.active {
-    display: flex;
-  }
-  #videoModal video {
-    max-width: 100%;
-    max-height: 30%;
-  }
-  #videoModalClose {
-    position: fixed;
-    top: 20px;
-    right: 20px;
-    background: #fff;
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 1000;
-    transition: background 0.3s;
-  }
-  #videoModalClose:hover {
-    background: rgba(255,255,255,0.3);
-  }
-  #videoModalClose i {
-    color: #000;
-    font-size: 20px;
-  }
-
-  /* Notification Bar Styles */
-  .notification-bar {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 400px;
-    background: linear-gradient(to right, #004d00, #00b300);
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    z-index: 1000;
-  }
-  .notification-bar img {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-    margin-right: 10px;
-  }
-  .notification-text {
-    flex: 1;
-    font-size: 12px;
-    text-align: left;
-  }
-  .notification-button {
-    background: #ccff00;
-    color: #000;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-  }
-  .close-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    margin-left: 10px;
-  }
-
-  /* Ad Popup Overlay Styles */
-  #adOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-    display: none; /* Initially hidden */
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  .popup {
-    background: rgba(0, 0, 0, 0.6);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 98%;
-    max-width: 400px;
-  }
-  .popup h2 {
-    font-size: 18px;
-    color: white;
-    margin-bottom: 20px;
-  }
-  .button-group {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
-  }
-  .button {
-    padding: 12px 20px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    flex: 1;
-    margin: 0 10px;
-  }
-  .watch-ads {
-    background: #00b300;
-    color: white;
-  }
-  .activate-vip {
-    background: #f5b58a;
-    color: black;
-  }
-</style>
+    </style>
 </head>
 <body>
-
-<!-- Sections for different views -->
-<div id="video-wrapper" class="section active"></div>
-<div id="explore-section" class="section"></div>
-<div id="search-section" class="section"></div>
-<div id="genre-section" class="section"></div>
-
-<!-- Ad Popup -->
-<div id="adOverlay">
-  <div class="popup">
-    <h2>Watch the ad to continue</h2>
-    <div class="button-group">
-      <button class="button watch-ads" onclick="showAdPage('https://www.profitablecpmrate.com/f9z72jat9s?key=fb6ef61efc0589cd3f5c869f9e3a5a18')">Watch Ads</button>
-      <button class="button activate-vip" onclick="showAdPage('https://www.paypal.com/ncp/payment/FRAKR57A5Y364')">Activate VIP</button>
+  <!-- Wallet Overlay -->
+  <div class="wallet-overlay" id="walletOverlay">
+    <div class="wallet-popup" role="dialog" aria-labelledby="withdrawTitle" aria-modal="true">
+      <div class="menu-header">
+        <h3 id="withdrawTitle" style="color:#fff">Balance</h3>
+        <div class="close-menu" onclick="closeWallet()" aria-label="Close wallet overlay">×</div>
+      </div>
+      <div class="balance-display" id="balanceDisplay">$0.00000</div>
+      <button class="withdraw-btn" id="withdrawBtn" onclick="handleWithdraw()">
+        Withdraw
+      </button>
+      <p style="color: #888; margin-top: 15px; font-size: 11.5px;">
+        (Minimum amount for withdrawal $100). Earn more by visiting ads <i class="fab fa-paypal"></i> PayPal <i class="fab fa-bitcoin"></i> Bitcoin <i class="fab fa-ethereum"></i> Ethereum
+      </p>
     </div>
   </div>
-</div>
 
-<!-- Notification Bar -->
-<div class="notification-bar" id="notification-bar">
-  <img src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/web-logo.apJjVir2.svg" alt="App Logo"/>
-  <div class="notification-text">Enjoy more unparalleled movies download Moviebox.</div>
-  <button class="notification-button" onclick="window.open('https://ucarecdn.com/82947fa9-98e5-4948-89ec-8fedd32b4be4/', '_blank')">OPEN</button>
-  <button class="close-button" onclick="closeNotification()">✖</button>
-</div>
-
-<!-- Bottom Navigation -->
-<div id="bottom-nav">
-  <button id="homeBtn" class="active" title="Home"><i class="fas fa-home"></i></button>
-  <button id="exploreBtn" title="Explore"><i class="fas fa-compass"></i></button>
-  <button id="searchBtn" title="Search"><i class="fas fa-search"></i></button>
-  <button id="genreBtn" title="Genre"><i class="fas fa-tags"></i></button>
-</div>
-
-<!-- Modal for video playback -->
-<div id="videoModal">
-  <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
-  <video controls></video>
-</div>
-
-<script>
-const sharedLink = '#';
-
-const videoData = [
-  {
-    src: 'https://ucarecdn.com/2cc8db97-b8b3-4a76-839b-3d5f176cba24/',
-    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/81/8a/40/818a40f40a1ff831c8e068ec1cd6650f/818a40f40a1ff831c8e068ec1cd6650f.30.jpg',
-    profileImg: 'https://short-link.me/Z0LW',
-    name: 'Sarai Minx',
-    description: 'She loves getting banged real hard by young white dudes #others',
-    followers: '1.2M',
-    following: false,
-    likes: 7954,
-    comments: 201,
-    shares: 229,
-    tags: ['brazzers', 'others']
-  },
-  {
-    src: 'https://ucarecdn.com/eff67f80-ba2f-433a-80ac-8e9a23b1fa4b/',
-    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169poster/74/0e/42/740e420d60d51603208681caf0ab930e/740e420d60d51603208681caf0ab930e.30.jpg',
-    profileImg: 'https://short-link.me/Z0LW',
-    name: 'Sarai Minx',
-    description: 'Fit Babe Sarai Minx Fully Enjoys A Proper Hard Fuck In The Gym - #brazzers',
-    followers: '1.2M',
-    following: false,
-    likes: 8954,
-    comments: 221,
-    shares: 229,
-    tags: ['brazzers', 'brazzers']
-  },
-  {
-    src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
-    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/a3/d9/ee/a3d9ee7b6cbf4d3c7db8371803345f5a/a3d9ee7b6cbf4d3c7db8371803345f5a.7.jpg',
-    profileImg: 'https://short-link.me/1227u',
-    name: 'Demi Sutra',
-    description: 'PURGATORYX The Dentist Vol 1 Part 2 with Demi Sutra #purgatoryx',
-    followers: '856K',
-    following: true,
-    likes: 1234,
-    comments: 456,
-    shares: 78,
-    tags: ['purgatoryx', 'purgatoryx']
-  },
-  {
-    src: 'https://ucarecdn.com/35fa1e4c-8302-454e-bcd8-b92ccddf8c74/',
-    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169poster/c7/eb/9f/c7eb9faa11e97fa2ea841cb03254dea0/c7eb9faa11e97fa2ea841cb03254dea0.28.jpg',
-    profileImg: 'https://short-link.me/Z0LW',
-    name: 'Sarai Minx',
-    description: 'The Hot Stepmom & The Needy Stepson w/ Sarai Minx Intro #Others',
-    followers: '1.2M',
-    following: false,
-    likes: 5954,
-    comments: 281,
-    shares: 229,
-    tags: ['Others', 'others']
-  },      
-];
-
-const sections = {
-  home: document.getElementById('video-wrapper'),
-  explore: document.getElementById('explore-section'),
-  search: document.getElementById('search-section'),
-  genre: document.getElementById('genre-section')
-};
-
-// Utility to switch sections
-function showSection(name) {
-  for (const key in sections) {
-    sections[key].classList.toggle('active', key === name);
-  }
-  document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
-  if (name === 'home') document.getElementById('homeBtn').classList.add('active');
-  if (name === 'explore') document.getElementById('exploreBtn').classList.add('active');
-  if (name === 'search') document.getElementById('searchBtn').classList.add('active');
-  if (name === 'genre') document.getElementById('genreBtn').classList.add('active');
-
-  if (name === 'explore') loadExplore();
-  if (name === 'search') loadSearch();
-  if (name === 'genre') loadGenre();
-}
-
-// Bottom nav handlers
-document.getElementById('homeBtn').onclick = () => showSection('home');
-document.getElementById('exploreBtn').onclick = () => showSection('explore');
-document.getElementById('searchBtn').onclick = () => showSection('search');
-document.getElementById('genreBtn').onclick = () => showSection('genre');
-
-
-// ----------- Home (Video Scroll) -----------
-const homeContainer = sections.home;
-const homeVideos = [];
-
-function createHomeSlide(data) {
-  const slide = document.createElement('div');
-  slide.className = 'video-slide';
-
-  slide.innerHTML = `
-    <div class="video-container">
-      <video src="${data.src}" playsinline muted></video>
+  <!-- Social Media Menu Overlay -->
+  <div class="menu-overlay" id="menuOverlay"></div>
+  <div class="sidebar-menu" id="sidebarMenu">
+    <div class="menu-header">
+      <h3 style="color:#fff"><i class="fas fa-stream"></i></h3>
+      <div class="close-menu" onclick="closeMenu()" aria-label="Close settings menu">×</div>
     </div>
-    <div class="overlay">
-      <div class="logo">
-        <img src="https://static-cdn77.xvideos-cdn.com/v3/img/skins/default/logo/xvideos.black.svg" alt="App Logo" />
-      </div>
+    <ul class="social-media-list">
+      <li>
+        <a href="https://facebook.com" class="social-media-item" target="_blank" aria-label="Visit our Facebook page">
+          <i class="fab fa-facebook"></i>Facebook
+        </a>
+      </li>
+      <li>
+        <a href="https://twitter.com" class="social-media-item" target="_blank" aria-label="Visit our Twitter page">
+          <i class="fab fa-twitter"></i>Twitter
+        </a>
+      </li>
+      <li>
+        <a href="https://instagram.com" class="social-media-item" target="_blank" aria-label="Visit our Instagram page">
+          <i class="fab fa-instagram"></i>Instagram
+        </a>
+      </li>
+      <li>
+        <a href="https://youtube.com" class="social-media-item" target="_blank" aria-label="Visit our YouTube page">
+          <i class="fab fa-youtube"></i>YouTube
+        </a>
+      </li>
+      <li>
+        <a href="https://tiktok.com" class="social-media-item" target="_blank" aria-label="Visit our TikTok page">
+          <i class="fab fa-tiktok"></i>TikTok
+        </a>
+      </li>
+    </ul>
+  </div>
 
-      <div class="user-info">
-        <div class="profile-section">
-          <div class="profile-logo clickable-user" style="cursor:pointer;">
-            <img src="${data.profileImg}" alt="Profile" />
-          </div>
-          <div class="name-follow-container">
-            <div class="username clickable-user" style="cursor:pointer;">${data.name}</div>
-            <button class="follow-btn" data-url="${sharedLink}">Follow</button>
-          </div>
-        </div>
-        <div class="description">${data.description}</div>
-      </div>
-
-      <div class="actions">
-        <div class="action-item like-btn" aria-label="Like">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
-          <span>${data.likes}</span>
-        </div>
-        <div class="action-item comment-btn" aria-label="Comment">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
-          <span>${data.comments}</span>
-        </div>
-        <div class="action-item share-btn" aria-label="Share">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
-          <span>Share</span>
-        </div>
-        <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
-          <span>Download</span>
-        </div>
+  <!-- Header -->
+  <div class="header">
+    <div class="logo-container">
+      <div class="logo">Reelshort</div>
+    </div>
+    <div class="balance-container">
+      <i class="fas fa-wallet wallet-icon" onclick="showWallet()" aria-label="Open wallet"></i>
+      <span id="headerBalance">$0.00000</span>
+    </div>
+    <!-- Ad Toggle -->
+    <div class="ad-toggle" id="adToggle" onclick="toggleAd()">
+      <span><i class="fas fa-ad"></i></span>
+      <div class="toggle-switch">
+        <div class="toggle-knob"></div>
       </div>
     </div>
-  `;
+    <!-- Menu Button -->
+    <div class="button-group">
+      <div class="bars-icon" onclick="toggleMenu()" aria-label="Open menu" style="cursor:pointer;">
+        <i class="fas fa-bars"></i>
+      </div>
+    </div>
+  </div>
 
-  // Attach click handlers to profile image and username
-  const profileImgElem = slide.querySelector('.profile-logo');
-  const usernameElem = slide.querySelector('.username');
+  <!-- Video Container -->
+  <div class="frame-container">
+    <iframe id="video-frame" allowfullscreen></iframe>
+  </div>
 
-  profileImgElem.onclick = () => { loadUserVideos(data.name); };
-  usernameElem.onclick = () => { loadUserVideos(data.name); };
+  <!-- Popup Ad Overlay -->
+  <div class="ad-overlay" id="adOverlay">
+    <div class="ad-popup">
+      <button class="close-btn" onclick="closeAd()" aria-label="Close ad">✖</button>
+      <img id="adImage" src="" alt="Ad Image" />
+      <button class="get-btn" id="adGetButton">Chat Now</button>
+    </div>
+  </div>
 
-  // Event handlers for follow, share, download
-  slide.querySelector('.follow-btn').onclick = () => {
-    window.location.href = data.profileUrl || sharedLink;
-  };
-  slide.querySelector('.download-btn').onclick = () => {
-    const a = document.createElement('a');
-    a.href = data.src;
-    a.download = 'video.mp4';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-  slide.querySelector('.share-btn').onclick = () => {
-    const shareUrl = 'https://bit.ly/3ENxGyn';
-    if (navigator.share) {
-      navigator.share({title:'Check out this video!', url:shareUrl}).catch(() => {});
-    } else if (navigator.clipboard) {
-      navigator.clipboard.writeText(shareUrl).then(() => alert('Link copied!'));
-    } else {
-      prompt('Copy this link:', shareUrl);
+  <!-- Ad Container (Bottom Fixed) -->
+  <div class="ad-container" id="adContainer">
+    <div class="ad-wrapper" style="display:flex; align-items:center; width:100%; overflow:hidden;">
+      <div class="ad-content" id="adContent"></div>
+      <a href="#" id="installButton" class="install-button" target="_blank">Install</a>
+    </div>
+  </div>
+
+  <script>
+    // Variables
+    let videoUrl = "https://moviebox.ng/web/ranking-list?id=997144265920760504&utm_source=h5seo_www.google.com"; // Change this URL as needed
+    let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
+    let adsEnabled = true; // Track whether ads are enabled
+    const videoFrame = document.getElementById("video-frame");
+    const balanceSpan = document.getElementById('balanceDisplay');
+    const headerBalanceSpan = document.getElementById('headerBalance');
+    const withdrawBtn = document.getElementById('withdrawBtn');
+    const adOverlay = document.getElementById('adOverlay');
+    const adImage = document.getElementById('adImage');
+    const adGetButton = document.getElementById('adGetButton');
+
+    // --- Wallet Functions ---
+    function updateBalanceDisplay() {
+      document.getElementById('balanceDisplay').textContent = `$${balance.toFixed(5)}`;
+      headerBalanceSpan.textContent = `$${balance.toFixed(5)}`;
+      localStorage.setItem('userBalance', balance);
+      withdrawBtn.disabled = balance < 100;
     }
-  };
 
-  // Mute/unmute on click
-  const video = slide.querySelector('video');
-  video.onclick = () => { video.muted = !video.muted; };
-
-  homeContainer.appendChild(slide);
-  homeVideos.push(video);
-}
-videoData.forEach(createHomeSlide);
-
-let activeVideo = null;
-function handleFirstInteraction() {
-  homeVideos.forEach(v => v.play().catch(() => {}));
-  window.removeEventListener('click', handleFirstInteraction);
-  window.removeEventListener('touchstart', handleFirstInteraction);
-}
-window.addEventListener('click', handleFirstInteraction);
-window.addEventListener('touchstart', handleFirstInteraction);
-
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const video = entry.target;
-    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-      if (activeVideo && activeVideo !== video) activeVideo.pause();
-      activeVideo = video;
-      video.muted = false;
-      video.play().catch(() => {});
-    } else {
-      video.pause();
+    function showWallet() {
+      document.getElementById('walletOverlay').style.display = 'flex';
+      updateBalanceDisplay();
     }
-  });
-}, { threshold: 0.5 });
-homeVideos.forEach(v => observer.observe(v));
-
-// ----------- Explore (Grid view) -----------
-function loadExplore() {
-  const container = sections.explore;
-  container.innerHTML = '<h2 style="padding:10px;"></h2><div id="explore-grid"></div>';
-  const grid = document.getElementById('explore-grid');
-  grid.innerHTML = '';
-  videoData.forEach((video, index) => {
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.dataset.src = video.src;
-    item.onclick = () => { openVideoModal(video.src); };
-    item.innerHTML = `
-      <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover" />
-      <div style="margin-top:5px; text-align:center; font-size:12px;">${video.name}</div>
-    `;
-    grid.appendChild(item);
-  });
-}
-
-// ----------- Search by Username -----------
-function loadSearch() {
-  const container = sections.search;
-  container.innerHTML = `
-    <h2 style="padding:10px;"></h2>
-    <input type="text" id="searchInput" placeholder="Search..."/>
-    <div id="search-results-grid" style="padding: 0 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:10px;"></div>
-  `;
-  const searchInput = document.getElementById('searchInput');
-  const resultsGrid = document.getElementById('search-results-grid');
-
-  function performSearch() {
-    const query = searchInput.value.toLowerCase().trim();
-    resultsGrid.innerHTML = '';
-    if (query.length === 0) {
-      resultsGrid.innerHTML = '<p style="text-align:center;">Start typing a username to search.</p>';
-      return;
+    function closeWallet() {
+      document.getElementById('walletOverlay').style.display = 'none';
     }
-    const filtered = videoData.filter(v => v.name.toLowerCase().includes(query));
-    if (filtered.length === 0) {
-      resultsGrid.innerHTML = '<p style="text-align:center;">No videos found for this user.</p>';
-      return;
+
+    function handleWithdraw() {
+      if (balance >= 100) {
+        if (confirm(`Are you sure you want to withdraw $${balance.toFixed(2)}?`)) {
+          alert('Withdrawal request sent! Payment will be processed within 7 working days.');
+          balance = 0;
+          updateBalanceDisplay();
+        }
+      } else {
+        alert('Minimum withdrawal amount is $100. Keep watching to earn more!');
+      }
     }
-    filtered.forEach(v => {
-      const item = document.createElement('div');
-      item.className = 'grid-item';
-      item.dataset.src = v.src;
-      item.onclick = () => { openVideoModal(v.src); };
-      item.innerHTML = `
-        <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
-        <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
+
+    // --- Video Functions ---
+    function changeVideo(src) {
+      videoFrame.style.opacity = "0";
+      setTimeout(() => {
+        videoFrame.src = src;
+        videoFrame.style.opacity = "1";
+      }, 300);
+    }
+    function setCurrentVideo() {
+      changeVideo(videoUrl);
+    }
+
+    // --- Menu ---
+    function toggleMenu() {
+      document.getElementById("sidebarMenu").classList.toggle("active");
+      document.getElementById("menuOverlay").style.display = "block";
+    }
+    function closeMenu() {
+      document.getElementById("sidebarMenu").classList.remove("active");
+      document.getElementById("menuOverlay").style.display = "none";
+    }
+    document.getElementById("menuOverlay").addEventListener("click", closeMenu);
+
+    // --- Ad Toggle ---
+    function toggleAd() {
+      adsEnabled = !adsEnabled;
+      const adToggle = document.getElementById('adToggle');
+      adToggle.classList.toggle('active', adsEnabled);
+      if (adsEnabled) {
+        showAd();
+      } else {
+        closeAd();
+      }
+    }
+
+    // --- Ads System ---
+    const apps = [
+      {
+        name: "Cheelee: Short Videos f...",
+        icon: "https://tinylink.info/119AL",
+        rating: "4.5",
+        link: "https://tinylink.info/119Aa"
+      },
+      {
+        name: "CoolApp",
+        icon: "https://tinylink.info/119A0",
+        rating: "4.8",
+        link: "https://tinylink.info/YchD"
+      },
+      {
+        name: "Z League: Mini Games & Friends",
+        icon: "https://tinylink.info/Ycg4",
+        rating: "4.0",
+        link: "https://tinylink.info/119yG"
+      }
+    ];
+
+    let currentAdIndex = parseInt(localStorage.getItem('currentAdIndex')) || 0;
+
+    function showAd(index) {
+      const app = apps[index];
+      document.getElementById('adContent').innerHTML = `
+        <div class="app-icon">
+          <img src="${app.icon}" alt="App Icon" />
+        </div>
+        <div class="ad-info">
+          <div class="app-name">${app.name}</div>
+          <div class="ad-meta">
+            <span class="sponsored">Sponsored ·</span>
+            <span>${app.rating} ★ FREE</span>
+          </div>
+        </div>
       `;
-      resultsGrid.appendChild(item);
-    });
-  }
-  searchInput.addEventListener('input', performSearch);
-  // initial message
-  resultsGrid.innerHTML = '<p style="text-align:center;">Start typing a username to search.</p>';
-}
+      document.getElementById('installButton').href = app.link;
+      document.getElementById('adContainer').style.display = 'flex';
 
-// ----------- Load videos by user -----------
-
-function loadUserVideos(username) {
-  showSection('search');
-  const container = sections.search;
-  container.innerHTML = `
-    <h2 style="padding:10px;"> ${username}</h2>
-    <div id="search-results-grid" style="padding: 0 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:15px;"></div>
-  `;
-  const resultsGrid = document.getElementById('search-results-grid');
-  const userVideos = videoData.filter(v => v.name === username);
-  if (userVideos.length === 0) {
-    resultsGrid.innerHTML = '<p style="text-align:center;">No videos found for this user.</p>';
-    return;
-  }
-  userVideos.forEach(v => {
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.dataset.src = v.src;
-    item.onclick = () => { openVideoModal(v.src); };
-    item.innerHTML = `
-      <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
-      <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
-    `;
-    resultsGrid.appendChild(item);
-  });
-}
-
-// ----------- Video modal functions -----------
-
-function openVideoModal(src) {
-  const modal = document.getElementById('videoModal');
-  const video = modal.querySelector('video');
-  video.src = src;
-  video.play().catch(() => {});
-  modal.classList.add('active');
-  // Pause background videos
-  homeVideos.forEach(v => v.pause());
-}
-const modal = document.getElementById('videoModal');
-const videoElement = modal.querySelector('video');
-const modalCloseBtn = document.getElementById('videoModalClose');
-modalCloseBtn.onclick = () => { closeVideoModal(); };
-modal.onclick = (e) => { if (e.target === modal) closeVideoModal(); };
-function closeVideoModal() {
-  videoElement.pause();
-  videoElement.src = '';
-  modal.classList.remove('active');
-  // Resume background video if on home
-  if (sections.home.classList.contains('active') && activeVideo) {
-    activeVideo.play().catch(() => {});
-  }
-}
-
-// Notification bar logic
-    setTimeout(() => {
-        document.getElementById('notification-bar').style.opacity = '1';
-    }, 400); // Show after 400ms
-
-    function closeNotification() {
-        document.getElementById('notification-bar').style.opacity = '0';
+      localStorage.setItem('currentAdIndex', index);
     }
 
-// ----------- Ad popup -----------
+    function rotateAds() {
+      showAd(currentAdIndex);
+      currentAdIndex = (currentAdIndex + 1) % apps.length;
+    }
 
-const firstPopupDelay = 150000; // 100 sec
-const popupInterval = 5000000; // 500 sec
-function showAd() {
-  const last = localStorage.getItem('lastPopupTime');
-  const now = Date.now();
-  if (!last || now - last >= popupInterval) {
-    document.getElementById('adOverlay').style.display = 'flex';
-    localStorage.setItem('lastPopupTime', now);
-  } else {
-    setTimeout(showAd, popupInterval - (now - last));
-  }
-}
-function showAdPage(url) {
-  window.open(url, '_blank');
-  closeAd();
-}
-function closeAd() {
-  document.getElementById('adOverlay').style.display = 'none';
-  setTimeout(showAd, popupInterval);
-}
-setTimeout(showAd, firstPopupDelay);
+    // Show initial ad and rotate
+    rotateAds();
+    setInterval(rotateAds, 15000); // every 15 seconds
 
-// ----------- Genre Functions -----------
+    // --- Popup Ad System ---
+    const popupAds = [
+      {
+        image: "https://bit.ly/4gHMJHL",
+        link: "https://true-click.pro/a/44J1UBOggfxOkx",
+        buttonTitle: "Chat Now"
+      },
+      {
+        image: "https://bit.ly/49TAXap",
+        link: "https://true-click.pro/a/44J1UBOggfxOkx",
+        buttonTitle: "Chat Now"
+      }
+    ];
 
-function loadGenre() {
-  const container = sections.genre;
-  container.innerHTML = '<h2 style="padding:10px;">Select a Genre</h2>';
+    let popupAdIndex = 0; // separate from apps index
+    const firstPopupDelay = 100;
+    const popupInterval = 3000;
 
-  const genres = ['Brazzers', 'Purgatoryx', 'Fitness', 'Comedy', 'Music', 'Others'];
-  const tagsContainer = document.createElement('div');
-  tagsContainer.id = 'genre-tags';
+    function showPopupAd() {
+      if (!adsEnabled) return; // Only show ads if enabled
 
-  genres.forEach(genre => {
-    const btn = document.createElement('div');
-    btn.className = 'genre-btn';
-    btn.innerText = genre;
-    btn.onclick = () => loadGenreVideos(genre);
-    tagsContainer.appendChild(btn);
-  });
+      const lastPopupTime = localStorage.getItem('lastPopupTime');
+      const currentTime = Date.now();
 
-  container.appendChild(tagsContainer);
-}
+      if (!lastPopupTime || currentTime - lastPopupTime >= popupInterval) {
+        updatePopupAdContent();
+        document.getElementById('adOverlay').style.display = 'flex';
+        // Increase balance for showing the ad
+        balance += 0.00001;
+        updateBalanceDisplay();
+        localStorage.setItem('lastPopupTime', currentTime);
+      } else {
+        setTimeout(showPopupAd, popupInterval - (currentTime - lastPopupTime));
+      }
+    }
 
-function loadGenreVideos(genre) {
-  showSection('genre');
-  const container = sections.genre;
-  container.innerHTML = `<h2 style="padding:10px;">Genre: ${genre}</h2><div id="genre-videos"></div>`;
-  const videosContainer = document.getElementById('genre-videos');
+    function updatePopupAdContent() {
+      const ad = popupAds[popupAdIndex];
+      const getBtn = document.querySelector('.get-btn');
+      document.getElementById('adImage').src = ad.image;
+      document.getElementById('adImage').setAttribute('data-link', ad.link);
+      getBtn.setAttribute('data-link', ad.link);
+      getBtn.textContent = ad.buttonTitle;
 
-  // Filter videos with matching tags
-  const filteredVideos = videoData.filter(v => v.tags && v.tags.includes(genre.toLowerCase()));
+      // Set click handlers
+      document.getElementById('adImage').onclick = visitAd;
+      getBtn.onclick = visitAd;
 
-  if (filteredVideos.length === 0) {
-    videosContainer.innerHTML = '<p style="text-align:center;">No videos found for this genre.</p>';
-    return;
-  }
+      // Prepare for next ad
+      popupAdIndex = (popupAdIndex + 1) % popupAds.length;
+    }
 
-  filteredVideos.forEach(v => {
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.dataset.src = v.src;
-    item.onclick = () => { openVideoModal(v.src); };
-    item.innerHTML = `
-      <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
-      <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
-    `;
-    document.getElementById('genre-videos').appendChild(item);
-  });
-}
+    function visitAd(event) {
+      const url = event.target.getAttribute('data-link');
+      window.open(url, '_blank');
 
-// Initialize default view
-showSection('home');
+      // Optional: give extra balance for ad click
+      balance += 0.00021;
+      updateBalanceDisplay();
+      closeAd();
+    }
 
-</script>
+    function closeAd() {
+      document.getElementById('adOverlay').style.display = 'none';
+      // Schedule next popup ad after delay
+      setTimeout(showPopupAd, popupInterval);
+    }
+
+    // --- Initialization ---
+    window.onload = function () {
+      setCurrentVideo(); // Set the video URL on load
+      updateBalanceDisplay();
+
+      // Immediately show ads upon page load
+      const adToggleElement = document.getElementById('adToggle');
+      adToggleElement.classList.add('active'); // Set the toggle on
+      showAd(); // Show the first ad immediately
+      showPopupAd(); // Start popup ads
+    };
+  </script>
 </body>
 </html>
