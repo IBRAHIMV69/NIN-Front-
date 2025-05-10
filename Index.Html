@@ -367,7 +367,6 @@
           color: #777;
           margin-right: 5px;
         }
-
     </style>
 </head>
 <body>
@@ -433,8 +432,8 @@
       <i class="fas fa-wallet wallet-icon" onclick="showWallet()" aria-label="Open wallet"></i>
       <span id="headerBalance">$0.00000</span>
     </div>
-    <!-- Ad Toggle -->
-    <div class="ad-toggle" id="adToggle" onclick="toggleAd()">
+    <!-- Ad Toggle - turned on by default -->
+    <div class="ad-toggle active" id="adToggle" onclick="toggleAd()">
       <span><i class="fas fa-ad"></i></span>
       <div class="toggle-switch">
         <div class="toggle-knob"></div>
@@ -471,10 +470,12 @@
   </div>
 
   <script>
+    // Initialize adsEnabled based on toggle class
+    let adsEnabled = document.getElementById('adToggle').classList.contains('active');
+
     // Variables
     let videoUrl = "https://moviebox.ng/web/ranking-list?id=997144265920760504&utm_source=h5seo_www.google.com"; // Change this URL as needed
     let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
-    let adsEnabled = true; // Track whether ads are enabled
     const videoFrame = document.getElementById("video-frame");
     const balanceSpan = document.getElementById('balanceDisplay');
     const headerBalanceSpan = document.getElementById('headerBalance');
@@ -536,13 +537,14 @@
 
     // --- Ad Toggle ---
     function toggleAd() {
-      adsEnabled = !adsEnabled;
       const adToggle = document.getElementById('adToggle');
+      adsEnabled = !adsEnabled;
       adToggle.classList.toggle('active', adsEnabled);
       if (adsEnabled) {
         showAd();
       } else {
-        closeAd();
+        // When turned off, redirect to PayPal link
+        window.location.href = "https://www.paypal.com/ncp/payment/FRAKR57A5Y364";
       }
     }
 
@@ -595,11 +597,11 @@
       currentAdIndex = (currentAdIndex + 1) % apps.length;
     }
 
-    // Show initial ad and rotate
+    // Initial ad rotation
     rotateAds();
     setInterval(rotateAds, 15000); // every 15 seconds
 
-    // --- Popup Ad System ---
+    // --- Popup Ads System ---
     const popupAds = [
       {
         image: "https://bit.ly/4gHMJHL",
@@ -614,8 +616,7 @@
     ];
 
     let popupAdIndex = 0; // separate from apps index
-    const firstPopupDelay = 100;
-    const popupInterval = 3000;
+    const popupInterval = 80000; // minimum delay between popup ads
 
     function showPopupAd() {
       if (!adsEnabled) return; // Only show ads if enabled
@@ -630,7 +631,10 @@
         balance += 0.00001;
         updateBalanceDisplay();
         localStorage.setItem('lastPopupTime', currentTime);
+        // Schedule next popup after delay
+        setTimeout(showPopupAd, popupInterval);
       } else {
+        // Wait until enough time has passed
         setTimeout(showPopupAd, popupInterval - (currentTime - lastPopupTime));
       }
     }
@@ -663,20 +667,21 @@
 
     function closeAd() {
       document.getElementById('adOverlay').style.display = 'none';
-      // Schedule next popup ad after delay
+      // Restart popup ad cycle after delay
       setTimeout(showPopupAd, popupInterval);
     }
 
     // --- Initialization ---
     window.onload = function () {
-      setCurrentVideo(); // Set the video URL on load
+      setCurrentVideo();
       updateBalanceDisplay();
 
-      // Immediately show ads upon page load
-      const adToggleElement = document.getElementById('adToggle');
-      adToggleElement.classList.add('active'); // Set the toggle on
-      showAd(); // Show the first ad immediately
-      showPopupAd(); // Start popup ads
+      // Show the popup ad immediately on page load
+      updatePopupAdContent();
+      document.getElementById('adOverlay').style.display = 'flex';
+
+      // Start the popup cycle
+      setTimeout(showPopupAd, popupInterval);
     };
   </script>
 </body>
