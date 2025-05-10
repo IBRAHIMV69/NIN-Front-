@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>TikGirls - Videos with Embed Support</title>
+<title>TikGirls</title>
 <!-- Font Awesome CDN for icons -->
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
 <style>
@@ -94,8 +94,6 @@
     aspect-ratio: 16 / 9;
     background: #000;
   }
-
-  /* Video element style */
   video {
     position: absolute;
     top: 50%;
@@ -104,14 +102,6 @@
     height: 100%;
     object-fit: cover;
     transform: translate(-50%, -50%);
-  }
-
-  /* Iframe styles inside modal */
-  #embeddedVideo {
-    width: 80%;
-    height: 80%;
-    max-width: 960px;
-    max-height: 720px;
   }
 
   /* Overlay styles (video background overlay) */
@@ -182,7 +172,7 @@
   }
   .username {
     font-weight: 600;
-    font-size: 13px;
+    font-size: 14px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
     cursor: pointer;
   }
@@ -199,7 +189,7 @@
   }
 
   .description {
-    font-size: 14px;
+    font-size: 13px;
     line-height: 1.4;
     margin-bottom: 10px;
     text-shadow: 0 2px 4px rgba(0,0,0,0.5);
@@ -271,7 +261,7 @@
   }
   .grid-item .cover-img {
     width: 100%;
-    aspect-ratio: 16 / 9;
+    aspect-ratio: 16/ 9;
     object-fit: cover;
   }
 
@@ -316,7 +306,7 @@
     position: fixed;
     top:0; left:0;
     width:100%; height:100%;
-    background: rgba(0,0,0,0.9);
+    background: #000;
     display: none;
     justify-content: center;
     align-items: center;
@@ -326,19 +316,14 @@
   #videoModal.active {
     display: flex;
   }
-  #videoModal video, #embeddedVideo {
+  #videoModal video {
     max-width: 100%;
-    max-height: 80%;
-    display: block;
-  }
-  #embeddedVideo {
-    width: 80%;
-    height: 80%;
+    max-height: 30%;
   }
   #videoModalClose {
     position: fixed;
     top: 20px;
-    left: 20px;
+    right: 20px;
     background: #fff;
     border-radius: 50%;
     width: 40px;
@@ -472,7 +457,7 @@
     <h2>Watch the ad to continue</h2>
     <div class="button-group">
       <button class="button watch-ads" onclick="showAdPage('https://www.profitablecpmrate.com/f9z72jat9s?key=fb6ef61efc0589cd3f5c869f9e3a5a18')">Watch Ads</button>
-      <button class="button activate-vip" onclick="showAdPage('https://www.profitablecpmrate.com/vuq0mnejn?key=7241c685c3c694f609c9eebacbd85a50')">Activate VIP</button>
+      <button class="button activate-vip" onclick="showAdPage('https://www.paypal.com/ncp/payment/FRAKR57A5Y364')">Activate VIP</button>
     </div>
   </div>
 </div>
@@ -493,10 +478,10 @@
   <button id="genreBtn" title="Genre"><i class="fas fa-tags"></i></button>
 </div>
 
-<!-- Modal for video or embed -->
+<!-- Modal for video playback -->
 <div id="videoModal">
   <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
-  <!-- Content will be injected here -->
+  <video controls></video>
 </div>
 
 <script>
@@ -504,59 +489,57 @@ const sharedLink = '#';
 
 const videoData = [
   {
-    src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
-    cover: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/-/preview/500x800/',
-    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar4.jpg',
-    name: 'Jessica Miller',
-    description: 'Dancing through life 💃✨ #dance #vibes',
+    src: 'https://ucarecdn.com/2cc8db97-b8b3-4a76-839b-3d5f176cba24/',
+    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/81/8a/40/818a40f40a1ff831c8e068ec1cd6650f/818a40f40a1ff831c8e068ec1cd6650f.30.jpg',
+    profileImg: 'https://short-link.me/Z0LW',
+    name: 'Sarai Minx',
+    description: 'She loves getting banged real hard by young white dudes #others',
     followers: '1.2M',
     following: false,
-    likes: 887,
+    likes: 7954,
+    comments: 201,
+    shares: 229,
+    tags: ['brazzers', 'others']
+  },
+  {
+    src: 'https://ucarecdn.com/eff67f80-ba2f-433a-80ac-8e9a23b1fa4b/',
+    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169poster/74/0e/42/740e420d60d51603208681caf0ab930e/740e420d60d51603208681caf0ab930e.30.jpg',
+    profileImg: 'https://short-link.me/Z0LW',
+    name: 'Sarai Minx',
+    description: 'Fit Babe Sarai Minx Fully Enjoys A Proper Hard Fuck In The Gym - #brazzers',
+    followers: '1.2M',
+    following: false,
+    likes: 8954,
     comments: 221,
     shares: 229,
-    tags: ['dance', 'vibes']
+    tags: ['brazzers', 'brazzers']
   },
   {
     src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
-    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/87/e8/7d/87e87d35f853ae538a536c5d14451712/87e87d35f853ae538a536c5d14451712.21.jpg',
-    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar5.jpg',
-    name: 'Sophia Wilson',
-    description: 'Travel enthusiast 🌍✈️ #wanderlust #adventure',
+    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169ll/a3/d9/ee/a3d9ee7b6cbf4d3c7db8371803345f5a/a3d9ee7b6cbf4d3c7db8371803345f5a.7.jpg',
+    profileImg: 'https://short-link.me/1227u',
+    name: 'Demi Sutra',
+    description: 'PURGATORYX The Dentist Vol 1 Part 2 with Demi Sutra #purgatoryx',
     followers: '856K',
     following: true,
     likes: 1234,
     comments: 456,
     shares: 78,
-    tags: ['travel', 'adventure']
+    tags: ['purgatoryx', 'purgatoryx']
   },
   {
-    src: 'https://ucarecdn.com/68a04ceb-3628-4e51-b4f0-f471d9f25f43/',
-    cover: 'https://ucarecdn.com/22ab95f0-74f2-4685-a8cf-34600f8d6bf6/-/preview/500x800/',
-    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar1.jpg',
-    name: 'Emma Johnson',
-    description: 'Fitness motivation 💪🔥 #fitness #health',
-    followers: '2.1M',
+    src: 'https://ucarecdn.com/35fa1e4c-8302-454e-bcd8-b92ccddf8c74/',
+    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169poster/c7/eb/9f/c7eb9faa11e97fa2ea841cb03254dea0/c7eb9faa11e97fa2ea841cb03254dea0.28.jpg',
+    profileImg: 'https://short-link.me/Z0LW',
+    name: 'Sarai Minx',
+    description: 'The Hot Stepmom & The Needy Stepson w/ Sarai Minx Intro #Others',
+    followers: '1.2M',
     following: false,
-    likes: 987,
-    comments: 654,
-    shares: 321,
-    tags: ['fitness', 'health']
-  },
-  // Example embedded iframe video
-  {
-    src: 'https://www.xvideos.com/embedframe/khdleuv0d6e',
-    cover: 'https://cdn77-pic.xvideos-cdn.com/videos/thumbs169poster/a3/d9/ee/a3d9ee7b6cbf4d3c7db8371803345f5a/a3d9ee7b6cbf4d3c7db8371803345f5a.7.jpg',
-    profileImg: 'https://best-girls-around.com/video_app/new/main/1/img/avatar2.jpg',
-    name: 'PURGATORYX',
-    description: 'Check out this embedded video!',
-    followers: 'N/A',
-    following: false,
-    likes: 0,
-    comments: 0,
-    shares: 0,
-    tags: ['adult', 'embed'],
-    type: 'iframe' // special type for embedded content
-  }
+    likes: 5954,
+    comments: 281,
+    shares: 229,
+    tags: ['Others', 'others']
+  },      
 ];
 
 const sections = {
@@ -588,6 +571,7 @@ document.getElementById('exploreBtn').onclick = () => showSection('explore');
 document.getElementById('searchBtn').onclick = () => showSection('search');
 document.getElementById('genreBtn').onclick = () => showSection('genre');
 
+
 // ----------- Home (Video Scroll) -----------
 const homeContainer = sections.home;
 const homeVideos = [];
@@ -598,11 +582,11 @@ function createHomeSlide(data) {
 
   slide.innerHTML = `
     <div class="video-container">
-      <video ${data.type === 'iframe' ? '' : 'playsinline muted'}></video>
+      <video src="${data.src}" playsinline muted></video>
     </div>
     <div class="overlay">
       <div class="logo">
-        <img src="https://best-girls-around.com/video_app/new/main/1/img/logo.png" alt="App Logo" />
+        <img src="https://static-cdn77.xvideos-cdn.com/v3/img/skins/default/logo/xvideos.black.svg" alt="App Logo" />
       </div>
 
       <div class="user-info">
@@ -639,25 +623,17 @@ function createHomeSlide(data) {
     </div>
   `;
 
-  // Assign source and handlers
-  const videoElem = slide.querySelector('video');
+  // Attach click handlers to profile image and username
+  const profileImgElem = slide.querySelector('.profile-logo');
+  const usernameElem = slide.querySelector('.username');
 
-  if (data.type === 'iframe') {
-    // For iframe, handle differently
-  } else {
-    // Normal video
-    videoElem.src = data.src;
-  }
+  profileImgElem.onclick = () => { loadUserVideos(data.name); };
+  usernameElem.onclick = () => { loadUserVideos(data.name); };
 
-  // Profile and username click
-  slide.querySelector('.profile-logo').onclick = () => { loadUserVideos(data.name); };
-  slide.querySelector('.username').onclick = () => { loadUserVideos(data.name); };
-
-  // Follow button
+  // Event handlers for follow, share, download
   slide.querySelector('.follow-btn').onclick = () => {
     window.location.href = data.profileUrl || sharedLink;
   };
-  // Download
   slide.querySelector('.download-btn').onclick = () => {
     const a = document.createElement('a');
     a.href = data.src;
@@ -666,7 +642,6 @@ function createHomeSlide(data) {
     a.click();
     document.body.removeChild(a);
   };
-  // Share
   slide.querySelector('.share-btn').onclick = () => {
     const shareUrl = 'https://bit.ly/3ENxGyn';
     if (navigator.share) {
@@ -679,14 +654,11 @@ function createHomeSlide(data) {
   };
 
   // Mute/unmute on click
-  if (data.type !== 'iframe') {
-    videoElem.onclick = () => { videoElem.muted = !videoElem.muted; };
-  }
+  const video = slide.querySelector('video');
+  video.onclick = () => { video.muted = !video.muted; };
 
   homeContainer.appendChild(slide);
-  if (data.type !== 'iframe') {
-    homeVideos.push(videoElem);
-  }
+  homeVideos.push(video);
 }
 videoData.forEach(createHomeSlide);
 
@@ -705,12 +677,10 @@ const observer = new IntersectionObserver((entries) => {
     if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
       if (activeVideo && activeVideo !== video) activeVideo.pause();
       activeVideo = video;
-      if (video.tagName === 'VIDEO') {
-        video.muted = false;
-        video.play().catch(() => {});
-      }
+      video.muted = false;
+      video.play().catch(() => {});
     } else {
-      if (video.tagName === 'VIDEO') video.pause();
+      video.pause();
     }
   });
 }, { threshold: 0.5 });
@@ -719,15 +689,14 @@ homeVideos.forEach(v => observer.observe(v));
 // ----------- Explore (Grid view) -----------
 function loadExplore() {
   const container = sections.explore;
-  container.innerHTML = '<h2 style="padding:10px;">Explore</h2><div id="explore-grid"></div>';
+  container.innerHTML = '<h2 style="padding:10px;"></h2><div id="explore-grid"></div>';
   const grid = document.getElementById('explore-grid');
   grid.innerHTML = '';
   videoData.forEach((video, index) => {
     const item = document.createElement('div');
     item.className = 'grid-item';
     item.dataset.src = video.src;
-    item.dataset.type = video.type || 'video';
-    item.onclick = () => { openVideoModal(video.src, video.type); };
+    item.onclick = () => { openVideoModal(video.src); };
     item.innerHTML = `
       <img class="cover-img" src="${video.cover || video.src + '/-/preview/500x800/'}" alt="Video Cover" />
       <div style="margin-top:5px; text-align:center; font-size:12px;">${video.name}</div>
@@ -740,8 +709,8 @@ function loadExplore() {
 function loadSearch() {
   const container = sections.search;
   container.innerHTML = `
-    <h2 style="padding:10px;">Search Users</h2>
-    <input type="text" id="searchInput" placeholder="Search Users..."/>
+    <h2 style="padding:10px;"></h2>
+    <input type="text" id="searchInput" placeholder="Search..."/>
     <div id="search-results-grid" style="padding: 0 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:10px;"></div>
   `;
   const searchInput = document.getElementById('searchInput');
@@ -763,8 +732,7 @@ function loadSearch() {
       const item = document.createElement('div');
       item.className = 'grid-item';
       item.dataset.src = v.src;
-      item.dataset.type = v.type || 'video';
-      item.onclick = () => { openVideoModal(v.src, v.type); };
+      item.onclick = () => { openVideoModal(v.src); };
       item.innerHTML = `
         <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
         <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
@@ -772,7 +740,8 @@ function loadSearch() {
       resultsGrid.appendChild(item);
     });
   }
-  document.getElementById('searchInput').addEventListener('input', performSearch);
+  searchInput.addEventListener('input', performSearch);
+  // initial message
   resultsGrid.innerHTML = '<p style="text-align:center;">Start typing a username to search.</p>';
 }
 
@@ -782,8 +751,8 @@ function loadUserVideos(username) {
   showSection('search');
   const container = sections.search;
   container.innerHTML = `
-    <h2 style="padding:10px;">Videos of ${username}</h2>
-    <div id="search-results-grid" style="padding: 0 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:10px;"></div>
+    <h2 style="padding:10px;"> ${username}</h2>
+    <div id="search-results-grid" style="padding: 0 10px; display: grid; grid-template-columns: repeat(auto-fit, minmax(150px, 1fr)); gap:10px; margin-top:15px;"></div>
   `;
   const resultsGrid = document.getElementById('search-results-grid');
   const userVideos = videoData.filter(v => v.name === username);
@@ -795,8 +764,7 @@ function loadUserVideos(username) {
     const item = document.createElement('div');
     item.className = 'grid-item';
     item.dataset.src = v.src;
-    item.dataset.type = v.type || 'video';
-    item.onclick = () => { openVideoModal(v.src, v.type); };
+    item.onclick = () => { openVideoModal(v.src); };
     item.innerHTML = `
       <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
       <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
@@ -806,54 +774,44 @@ function loadUserVideos(username) {
 }
 
 // ----------- Video modal functions -----------
-function openVideoModal(src, type='video') {
+
+function openVideoModal(src) {
   const modal = document.getElementById('videoModal');
-  modal.innerHTML = `
-    <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
-  `;
-  if (type === 'iframe') {
-    // create iframe
-    const iframe = document.createElement('iframe');
-    iframe.src = src;
-    iframe.id = 'embeddedVideo';
-    iframe.allowFullscreen = true;
-    iframe.frameBorder = '0';
-    modal.appendChild(iframe);
-  } else {
-    // create video element
-    const video = document.createElement('video');
-    video.src = src;
-    video.controls = true;
-    video.autoplay = true;
-    modal.appendChild(video);
-    // Mute toggle on click
-    video.onclick = () => { video.muted = !video.muted; };
-  }
-  document.getElementById('videoModalClose').onclick = () => { closeVideoModal(); };
+  const video = modal.querySelector('video');
+  video.src = src;
+  video.play().catch(() => {});
   modal.classList.add('active');
   // Pause background videos
   homeVideos.forEach(v => v.pause());
 }
+const modal = document.getElementById('videoModal');
+const videoElement = modal.querySelector('video');
+const modalCloseBtn = document.getElementById('videoModalClose');
+modalCloseBtn.onclick = () => { closeVideoModal(); };
+modal.onclick = (e) => { if (e.target === modal) closeVideoModal(); };
 function closeVideoModal() {
-  const modal = document.getElementById('videoModal');
+  videoElement.pause();
+  videoElement.src = '';
   modal.classList.remove('active');
-  modal.innerHTML = '';
-  // Resume background videos if on home
-  if (sections.home.classList.contains('active')) {
-    homeVideos.forEach(v => v.play().catch(()=>{}));
+  // Resume background video if on home
+  if (sections.home.classList.contains('active') && activeVideo) {
+    activeVideo.play().catch(() => {});
   }
 }
 
-// ----------- Notification bar -----------
+// Notification bar logic
+    setTimeout(() => {
+        document.getElementById('notification-bar').style.opacity = '1';
+    }, 400); // Show after 400ms
 
-function closeNotification() {
-  document.getElementById('notification-bar').style.opacity = '0';
-}
+    function closeNotification() {
+        document.getElementById('notification-bar').style.opacity = '0';
+    }
 
 // ----------- Ad popup -----------
 
-const firstPopupDelay = 100000; // 100 sec
-const popupInterval = 500000; // 500 sec
+const firstPopupDelay = 150000; // 100 sec
+const popupInterval = 5000000; // 500 sec
 function showAd() {
   const last = localStorage.getItem('lastPopupTime');
   const now = Date.now();
@@ -875,11 +833,12 @@ function closeAd() {
 setTimeout(showAd, firstPopupDelay);
 
 // ----------- Genre Functions -----------
+
 function loadGenre() {
   const container = sections.genre;
   container.innerHTML = '<h2 style="padding:10px;">Select a Genre</h2>';
 
-  const genres = ['Dance', 'Travel', 'Fitness', 'Adult', 'Embed'];
+  const genres = ['Brazzers', 'Purgatoryx', 'Fitness', 'Comedy', 'Music', 'Others'];
   const tagsContainer = document.createElement('div');
   tagsContainer.id = 'genre-tags';
 
@@ -900,24 +859,19 @@ function loadGenreVideos(genre) {
   container.innerHTML = `<h2 style="padding:10px;">Genre: ${genre}</h2><div id="genre-videos"></div>`;
   const videosContainer = document.getElementById('genre-videos');
 
-  const filtered = videoData.filter(v => {
-    if (!v.tags) return false;
-    // For 'Embed' genre, match 'embed' in tags
-    if (genre.toLowerCase() === 'embed') return v.tags.some(t => t.toLowerCase() === 'embed');
-    return v.tags.some(t => t.toLowerCase() === genre.toLowerCase());
-  });
+  // Filter videos with matching tags
+  const filteredVideos = videoData.filter(v => v.tags && v.tags.includes(genre.toLowerCase()));
 
-  if (filtered.length === 0) {
+  if (filteredVideos.length === 0) {
     videosContainer.innerHTML = '<p style="text-align:center;">No videos found for this genre.</p>';
     return;
   }
 
-  filtered.forEach(v => {
+  filteredVideos.forEach(v => {
     const item = document.createElement('div');
     item.className = 'grid-item';
     item.dataset.src = v.src;
-    item.dataset.type = v.type || 'video';
-    item.onclick = () => { openVideoModal(v.src, v.type); };
+    item.onclick = () => { openVideoModal(v.src); };
     item.innerHTML = `
       <img class="cover-img" src="${v.cover || v.src + '/-/preview/500x800/'}" alt="Video Cover" />
       <div style="margin-top:5px; text-align:center; font-size:12px;">${v.name}</div>
