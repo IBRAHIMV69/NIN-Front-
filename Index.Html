@@ -33,6 +33,7 @@
             align-items: center;
             padding: 5px 20px;
             background-color: #000;
+            border: 1px solid #333;
             z-index: 1000;
         }
         .logo-container {
@@ -42,7 +43,7 @@
         }
         .logo {
             font-size: 20px;
-            border: 1px solid #333;
+            border: 1px solid #;
             background-color: rgba(0, 0, 0, 0.9);
             color: #fff;
             border-radius: 20px;
@@ -51,7 +52,7 @@
         }
         .balance-container {
             display: flex;
-            font-size: 15.5px;
+            font-size: 16px;
             align-items: center;
             gap: 10px;
             color: #fff;
@@ -203,7 +204,8 @@
             padding: 5px 15px;
             border-radius: 50px;
             margin-bottom: 50px;
-            background-color: #ff3300;
+            background: linear-gradient(to right, #00b300, #008000);
+            border: 1px solid #ccc;
         }
         .close-menu {
             background-color: #fff;
@@ -471,7 +473,7 @@
     <!-- Menu Button -->
     <div class="button-group">
       <div class="bars-icon" onclick="toggleMenu()" aria-label="Open menu" style="cursor:pointer;">
-        <i class="fas fa-ellipsis-v"></i>
+        <i class="fas fa-bars"></i>
       </div>
     </div>
   </div>
@@ -492,7 +494,7 @@
   
   <!-- Play In App Button -->
     <div class="play-in-app-container">
-        <a href="https://spa.aisports.cc/h5-live/matches">
+        <a href="https://www.profitableratecpm.com/gph5sivvp?key=7191fbf56c824024de7a4266801a0e57">
             <button class="play-in-app-button" id="play-in-app-button">
                 <i class="fas fa-basketball-ball"></i> Sports
             </button>
@@ -512,7 +514,7 @@
     let adsEnabled = document.getElementById('adToggle').classList.contains('active');
 
     // Variables
-    let videoUrl = "https://moviebox.ng/web/ranking-list?id=997144265920760504&utm_source=h5seo_www.google.com"; // Change this URL as needed
+    let videoUrl = "https://moviebox.ng/"; // Change this URL as needed
     let balance = parseFloat(localStorage.getItem('userBalance')) || 0;
     const videoFrame = document.getElementById("video-frame");
     const balanceSpan = document.getElementById('balanceDisplay');
@@ -582,23 +584,23 @@
         showAd();
       } else {
         // When turned off, redirect to PayPal link
-        window.location.href = "https://www.paypal.com/ncp/payment/FRAKR57A5Y364";
+        window.location.href = "https://www.paypal.com/ncp/payment/R969N82UU56G6";
       }
     }
 
     // --- Ads System ---
     const apps = [
       {
-        name: "Cheelee: Short Videos f...",
-        icon: "https://tinylink.info/119AL",
+        name: "Reelshort: Short Movies &...",
+        icon: "https://www.appcreator24.com/srv/imgs/gen/3556660_ico.png?v=1",
         rating: "4.5",
-        link: "https://tinylink.info/119Aa"
+        link: "https://www.appcreator24.com/app3556660-2dj3ti"
       },
       {
-        name: "CoolApp",
-        icon: "https://tinylink.info/119A0",
+        name: "Tapon: Read Book & Story...",
+        icon: "https://www.appcreator24.com/srv/imgs/gen/3558111_ico.png?v=1",
         rating: "4.8",
-        link: "https://tinylink.info/YchD"
+        link: "https://www.appcreator24.com/app3558111-oy962u"
       },
       {
         name: "Z League: Mini Games & Friends",
@@ -643,18 +645,18 @@
     const popupAds = [
       {
         image: "https://bit.ly/4gHMJHL",
-        link: "https://true-click.pro/a/44J1UBOggfxOkx",
+        link: "https://www.profitableratecpm.com/v673fxda8?key=eaf8364a23f6f6e631b3ae8d4718335d",
         buttonTitle: "Chat Now"
       },
       {
         image: "https://bit.ly/49TAXap",
-        link: "https://true-click.pro/a/44J1UBOggfxOkx",
+        link: "https://www.profitableratecpm.com/gph5sivvp?key=7191fbf56c824024de7a4266801a0e57",
         buttonTitle: "Chat Now"
       }
     ];
 
     let popupAdIndex = 0; // separate from apps index
-    const popupInterval = 80000; // minimum delay between popup ads
+    const popupInterval = 50000; // minimum delay between popup ads
 
     function showPopupAd() {
       if (!adsEnabled) return; // Only show ads if enabled
