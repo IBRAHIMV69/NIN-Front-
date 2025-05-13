@@ -647,7 +647,7 @@ const dramas = [
     ],
   },
   {
-    name: 'Drama Title 2',
+    name: 'Millionaire',
     cover: 'https://images.unsplash.com/photo-1624567890123-abcde12345f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
     episodes: [
       {
@@ -848,7 +848,7 @@ function loadDramaEpisodes(dramaIndex) {
   const episodesGrid = document.getElementById('episodes-grid');
 
   dramas[dramaIndex].episodes.forEach((v, epIndex) => {
-    const isLocked = epIndex >= 5; // Lock episodes beyond 5
+    const isLocked = epIndex >= 12; // Lock episodes beyond 12
     const episodeDiv = document.createElement('div');
     episodeDiv.className = 'grid-item';
     episodeDiv.dataset.src = v.src;
@@ -999,7 +999,7 @@ function loadGenreVideos(genre) {
       item.onclick = () => { openVideoModal(v.src); };
       item.innerHTML = `
         <img class="cover-img" src="${v.cover}" alt="${d.name}"/>
-        <div style="margin-top:5px; text-align:center; font-size:12px;">${d.name} - Episode</div>
+        <div style="margin-top:5px; text-align: left; font-size:11px;">${d.name} - Episode</div>
       `;
       videosContainer.appendChild(item);
     });
@@ -1014,7 +1014,7 @@ showSection('home');
 function loadSearch() {
   const container = sections.search;
   container.innerHTML = `
-    <h2 style="padding:10px;">Search by User, Title, or Episode</h2>
+    <h2 style="padding:10px;"></h2>
     <input type="text" id="searchInput" placeholder="Search..." />
     <div id="search-results-grid" style="padding:10px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px;"></div>
   `;
@@ -1061,7 +1061,7 @@ function loadSearch() {
       div.onclick = () => { openVideoModal(v.src); };
       div.innerHTML = `
         <img class="cover-img" src="${v.cover}" alt="${item.drama} Episode"/>
-        <div style="margin-top:5px; text-align:center; font-size:12px;">${item.drama} - Episode ${epNum}<br/>User: ${v.user.name}</div>
+        <div style="margin-top:5px; text-align: center; font-size:8px;">${item.drama} - Episode ${epNum}<br/>User: ${v.user.name}</div>
       `;
       resultsGrid.appendChild(div);
     });
