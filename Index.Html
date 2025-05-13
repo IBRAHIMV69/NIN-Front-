@@ -250,7 +250,7 @@
   /* Episode grid in explore */
   #episodes-grid {
     display: grid;
-    grid-template-columns: repeat(3, 1fr);
+    grid-template-columns: repeat(4, 1fr);
     gap: 10px;
   }
 
@@ -848,7 +848,7 @@ function loadDramaEpisodes(dramaIndex) {
   const episodesGrid = document.getElementById('episodes-grid');
 
   dramas[dramaIndex].episodes.forEach((v, epIndex) => {
-    const isLocked = epIndex >= 12; // Lock episodes beyond 12
+    const isLocked = epIndex >= 5; // Lock episodes beyond 5
     const episodeDiv = document.createElement('div');
     episodeDiv.className = 'grid-item';
     episodeDiv.dataset.src = v.src;
@@ -871,7 +871,7 @@ function loadDramaEpisodes(dramaIndex) {
             border-radius: 10px;
             font-size: 12px;
             font-weight: bold;
-          ">Episode ${epIndex + 1}</div>
+          "> ${epIndex + 1}</div>
         </div>
       `;
     } else {
@@ -887,9 +887,9 @@ function loadDramaEpisodes(dramaIndex) {
             color: white;
             padding: 2px 6px;
             border-radius: 10px;
-            font-size: 12px;
+            font-size: 15px;
             font-weight: bold;
-          ">Episode ${epIndex + 1}</div>
+          "> ${epIndex + 1}</div>
         </div>
       `;
       episodeDiv.onclick = () => { openVideoModal(v.src); };
