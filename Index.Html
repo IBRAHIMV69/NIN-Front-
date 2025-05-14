@@ -2,1081 +2,454 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8" />
-<meta name="viewport" content="width=device-width, initial-scale=1.0"/>
-<title>DramaShorts</title>
-<!-- Font Awesome CDN for icons -->
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css"/>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Amazing Audio Page with Ads</title>
 <style>
-  :root {
-    --primary-color: #ff0066;
-    --secondary-color: #25F4EE;
-    --glass-bg: rgba(255, 255, 255, 0.1);
-  }
+    /* General Styles */
+    * {
+        box-sizing: border-box;
+        margin: 0;
+        padding: 0;
+    }
 
-  * {
-    margin: 0;
-    padding: 0;
-    box-sizing: border-box;
-  }
+    body {
+        font-family: Arial, sans-serif;
+        background: #1a1a1a;
+        color: #fff;
+        overflow-x: hidden;
+    }
 
-  body, html {
-    height: 100%;
-    font-family: 'Segoe UI', system-ui, sans-serif;
-    background: #000;
-    color: white;
-    overflow: hidden;
-  }
+    /* Audio Container */
+    .audio-container {
+        width: 100%;
+        max-width: 800px;
+        margin: auto;
+        background: #000;
+        padding: 20px;
+        display: flex;
+        justify-content: center;
+    }
 
-  /* Sections for different views */
-  #video-wrapper, #explore-section, #search-section, #genre-section {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%;
-    height: calc(100% - 60px);
-    overflow-y: auto;
-    display: none;
-  }
-  #video-wrapper.active,
-  #explore-section.active,
-  #search-section.active,
-  #genre-section.active {
-    display: block;
-  }
+    /* Audio Player Styles */
+    #audioPlayer {
+        width: 100%;
+        max-width: 600px;
+    }
 
-  /* Video scroll container */
-  #video-wrapper {
-    scroll-behavior: smooth;
-    scroll-snap-type: y mandatory;
-  }
+    /* Scrollable Number Navigation */
+    .scroll-container {
+        display: flex;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding: 10px;
+        background: #000;
+        border: 1px solid #555;
+        scrollbar-width: none;
+        -ms-overflow-style: none;
+    }
 
-  /* Bottom nav styles */
-  #bottom-nav {
-    position: absolute;
-    bottom: 0;
-    width: 100%;
-    height: 60px;
-    background: rgba(0,0,0,0.7);
-    display: flex;
-    justify-content: space-around;
-    align-items: center;
-    z-index: 10;
-  }
-  #bottom-nav button {
-    background: none;
-    border: none;
-    color: #fff;
-    font-size: 25px;
-    cursor: pointer;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-  }
-  #bottom-nav button.active {
-    color: var(--primary-color);
-  }
+    .scroll-container::-webkit-scrollbar {
+        display: none;
+    }
 
-  /* Video slide styles */
-  .video-slide {
-    height: 100vh;
-    width: 95vw;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    scroll-snap-align: start;
-    position: relative;
-  }
+    .number {
+        padding: 8px 20px;
+        background: #333;
+        border-radius: 8px;
+        cursor: pointer;
+        font-weight: bold;
+        margin: 0 5px;
+        flex: 0 0 auto;
+    }
 
-  /* Video container for aspect ratio */
-  .video-container {
-    position: relative;
-    width: 100%;
-    max-width: 1280px;
-    aspect-ratio: 9 / 18;
-    background: #000;
-  }
-  video {
-    position: absolute;
-    top: 50%;
-    left: 50%;
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    transform: translate(-50%, -50%);
-  }
+    .number.active {
+        background: #ffcc00;
+        color: black;
+    }
 
-  /* Overlay styles (video background overlay) */
-  .overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    display: flex;
-    flex-direction: column;
-    justify-content: space-between;
-    padding: 20px;
-    pointer-events: none;
-    background: linear-gradient(180deg, rgba(0,0,0,0.6) 0%, rgba(0,0,0,0) 30%, rgba(0,0,0,0) 70%, rgba(0,0,0,0.6));
-    z-index: 2;
-  }
+    /* Audio List Styles */
+    .audio-list {
+        max-height: 400px;
+        overflow-y: auto;
+        text-align: left;
+        padding: 10px;
+        font-size: 15px;
+        background: #1a1a1a;
+        margin: 20px auto;
+        width: 100%;
+        max-width: 800px;
+        border-radius: 8px;
+    }
 
-  /* Logo image styling */
-  .logo img {
-    height: 40px;
-    object-fit: contain;
-    pointer-events: auto;
-    cursor: pointer;
-  }
+    .audio-item {
+        display: flex;
+        align-items: center;
+        gap: 10px;
+        padding: 10px;
+        cursor: pointer;
+        border-bottom: 1px solid #333;
+        transition: background 0.3s;
+    }
 
-  /* User info styles */
-  .user-info {
-    position: absolute;
-    left: 20px;
-    bottom: 100px;
-    max-width: 70%;
-    z-index: 100;
-    pointer-events: auto;
-  }
+    .audio-item:hover {
+        background: #333;
+    }
 
-  .profile-section {
-    display: flex;
-    align-items: center;
-    gap: 12px;
-  }
+    .audio-item.active {
+        background: #333;
+    }
 
-  .profile-logo {
-    width: 60px;
-    height: 48px;
-    border-radius: 50%;
-    border: 2px solid var(--primary-color);
-    overflow: hidden;
-    box-shadow: 0 0 15px rgba(255, 0, 102, 0.4);
-    transition: transform 0.3s ease;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    cursor: pointer;
-  }
-  .profile-logo:hover {
-    transform: scale(1.05);
-  }
-  .profile-logo img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-  }
+    /* Ads styles as before (unchanged) */
+    .ad-overlay {
+        position: fixed;
+        top: 0;
+        left: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.3);
+        display: none;
+        align-items: center;
+        justify-content: center;
+        z-index: 999;
+    }
 
-  .name-follow-container {
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    width: 100%;
-  }
-  .username {
-    font-weight: 600;
-    font-size: 14px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-    cursor: pointer;
-  }
-  .follow-btn {
-    background: linear-gradient(45deg, var(--primary-color), #ff3385);
-    border: none;
-    color: white;
-    padding: 6px 20px;
-    border-radius: 20px;
-    font-weight: 600;
-    cursor: pointer;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
+    .ad-popup {
+        position: relative;
+        width: 100%;
+        max-width: 250px;
+        border-radius: 15px;
+        text-align: center;
+        cursor: pointer;
+    }
 
-  .description {
-    font-size: 13px;
-    line-height: 1.4;
-    margin-bottom: 10px;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.5);
-  }
+    .ad-popup img {
+        width: 100%;
+        border-radius: 15px;
+        display: block;
+    }
 
-  /* Actions styling */
-  .actions {
-    position: absolute;
-    right: 2px;
-    bottom: 100px;
-    display: flex;
-    flex-direction: column;
-    gap: 25px;
-    align-items: center;
-    z-index: 100;
-  }
-  .action-item {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 8px;
-    transition: transform 0.3s ease;
-    cursor: pointer;
-    pointer-events: auto;
-  }
-  .action-item:hover {
-    transform: translateY(-5px);
-  }
-  .action-item img {
-    width: 40px;
-    height: 40px;
-    padding: 8px;
-    background: var(--glass-bg);
-    border-radius: 50%;
-    backdrop-filter: blur(10px);
-    border: 1px solid rgba(255,255,255,0.2);
-    box-shadow: 0 4px 12px rgba(0,0,0,0.2);
-  }
-  .action-item span {
-    font-size: 12px;
-    font-weight: 500;
-    color: white;
-    text-shadow: 0 2px 4px rgba(0,0,0,0.3);
-    display: block;
-  }
+    .close-btn {
+        position: absolute;
+        top: 7px;
+        right: 10px;
+        background: rgba(0,0,0,0.5);
+        color: white;
+        border: none;
+        padding: 0;
+        font-size: 20px;
+        cursor: pointer;
+        border-radius: 50%;
+    }
 
-  /* Sections for explore, search, genre */
-  .section {
-    padding: 10px;
-  }
+    /* Ad Container Styles */
+    .ad-container {
+        position: fixed;
+        bottom: 0;
+        width: 100%;
+        background: #fff;
+        border: 1px solid #ccc;
+        box-shadow: 0 -2px 8px rgba(0,0,0,0.2);
+        padding: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        z-index: 1000;
+        display: none;
+    }
 
-  /* Grid for explore and search results with 3 columns fixed */
-  #explore-grid, #search-results-grid, #genre-videos {
-    display: grid;
-    grid-template-columns: repeat(3, 1fr);
-    gap: 10px;
-  }
-  /* Episode grid in explore */
-  #episodes-grid {
-    display: grid;
-    grid-template-columns: repeat(4, 1fr);
-    gap: 10px;
-  }
+    .ad-content {
+        display: flex;
+        align-items: center;
+        flex-grow: 1;
+        overflow: hidden;
+    }
 
-  /* Explore/Search video items in grid */
-  .grid-item {
-    background: #111;
-    border-radius: 8px;
-    overflow: hidden;
-    cursor: pointer;
-    padding: 5px;
-    position: relative;
-  }
-  .cover-img {
-    width: 100%;
-    aspect-ratio: 7/10;
-    object-fit: cover;
-  }
+    .app-icon {
+        width: 50px;
+        height: 50px;
+        border-radius: 12px;
+        overflow: hidden;
+        margin-right: 10px;
+        flex-shrink: 0;
+    }
 
-  /* Lock overlay for locked episodes */
-  .lock-overlay {
-    position: absolute;
-    top: 0; left: 0;
-    width: 100%; height: 100%;
-    background: rgba(0,0,0,0.5);
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 10;
-  }
-  .lock-overlay i {
-    font-size: 40px;
-    color: #fff;
-  }
+    .app-icon img {
+        width: 100%;
+        height: 100%;
+        object-fit: cover;
+    }
 
-  /* Search input styling */
-  #search-section input[type="text"] {
-    width: 100%;
-    padding: 10px;
-    margin-bottom: 15px;
-    border: 1px solid #ccc;
-    border-radius: 10px;
-    background: #222;
-    color: white;
-    font-size: 16px;
-    box-sizing: border-box;
-  }
-  #search-section input[type="text"]::placeholder {
-    color: #888;
-  }
+    .ad-info {
+        display: flex;
+        flex-direction: column;
+        overflow: hidden;
+    }
 
-  /* Genre tags styling */
-  #genre-tags {
-    margin-top: 10px;
-    display: flex;
-    flex-wrap: wrap;
-  }
-  .genre-btn {
-    display: inline-block;
-    background: var(--glass-bg);
-    padding: 5px 10px;
-    margin: 5px;
-    border-radius: 15px;
-    cursor: pointer;
-    font-size: 14px;
-    color: #fff;
-  }
-  .genre-btn:hover {
-    background: linear-gradient(45deg, var(--primary-color), #ff3385);
-  }
+    .app-name {
+        font-weight: bold;
+        font-size: 16px;
+        color: #333;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        max-width: 200px;
+        margin-bottom: 4px;
+    }
 
-  /* Modal overlay for video playback */
-  #videoModal {
-    position: fixed;
-    top:0; left:0;
-    width:100%; height:100%;
-    background: rgba(0,0,0,0.9);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    padding: 20px;
-    z-index: 999;
-  }
-  #videoModal.active {
-    display: flex;
-  }
-  #videoModal video {
-    max-width: 100%;
-    max-height: 100%;
-    border-radius: 8px;
-  }
-  #videoModalClose {
-    position: fixed;
-    top: 20px;
-    left: 20px;
-    background: rgba(0,0,0,0.6);
-    border-radius: 50%;
-    width: 40px;
-    height: 40px;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    cursor: pointer;
-    z-index: 1000;
-  }
-  #videoModalClose:hover {
-    background: rgba(255,255,255,0.3);
-  }
-  #videoModalClose i {
-    color: #fff;
-    font-size: 20px;
-  }
+    .ad-meta {
+        font-size: 14px;
+        color: #555;
+        white-space: nowrap;
+    }
 
-  /* Notification Bar Styles */
-  .notification-bar {
-    position: fixed;
-    bottom: 80px;
-    left: 50%;
-    transform: translateX(-50%);
-    width: 90%;
-    max-width: 400px;
-    background: linear-gradient(to right, #004d00, #00b300);
-    color: white;
-    padding: 10px;
-    border-radius: 8px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    opacity: 0;
-    transition: opacity 0.5s ease-in-out;
-    z-index: 1000;
-  }
-  .notification-bar img {
-    width: 50px;
-    height: 50px;
-    border-radius: 8px;
-  }
-  .notification-text {
-    flex: 1;
-    font-size: 12px;
-    text-align: left;
-    margin-left: 10px;
-  }
-  .notification-button {
-    background: #ccff00;
-    color: #000;
-    padding: 5px 15px;
-    border-radius: 20px;
-    font-weight: bold;
-    cursor: pointer;
-    border: none;
-  }
-  .close-button {
-    background: none;
-    border: none;
-    color: white;
-    font-size: 18px;
-    cursor: pointer;
-    margin-left: 10px;
-  }
+    .install-button {
+        background-color: #007bff;
+        color: white;
+        padding: 8px 14px;
+        border: none;
+        border-radius: 20px;
+        font-weight: bold;
+        cursor: pointer;
+        text-decoration: none;
+        margin-left: 10px;
+        flex-shrink: 0;
+    }
 
-  /* Ad Popup Overlay Styles */
-  #adOverlay {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    background: rgba(0, 0, 0, 0.2);
-    backdrop-filter: blur(5px);
-    display: none;
-    justify-content: center;
-    align-items: center;
-    z-index: 1000;
-  }
-  .popup {
-    background: rgba(0, 0, 0, 0.6);
-    padding: 20px;
-    border-radius: 10px;
-    text-align: center;
-    width: 98%;
-    max-width: 400px;
-  }
-  .popup h2 {
-    font-size: 18px;
-    color: white;
-    margin-bottom: 20px;
-  }
-  .button-group {
-    display: flex;
-    justify-content: space-around;
-    margin-top: 10px;
-  }
-  .button {
-    padding: 12px 20px;
-    border-radius: 30px;
-    border: none;
-    cursor: pointer;
-    font-size: 12px;
-    font-weight: bold;
-    flex: 1;
-    margin: 0 10px;
-  }
-  .watch-ads {
-    background: #00b300;
-    color: white;
-  }
-  .activate-vip {
-    background: #f5b58a;
-    color: black;
-  }
+    .install-button:hover {
+        background-color: #0056b3;
+    }
 
-  /* Toast message styles */
-  #toast {
-    position: fixed;
-    bottom: 150px;
-    left: 50%;
-    transform: translateX(-50%);
-    background: rgba(0,0,0,0.8);
-    color: #fff;
-    padding: 10px 20px;
-    border-radius: 20px;
-    font-size: 14px;
-    opacity: 0;
-    pointer-events: none;
-    transition: opacity 0.3s ease;
-    z-index: 9999;
-  }
-  #toast.show {
-    opacity: 1;
-  }
+    .sponsored {
+        font-size: 12px;
+        color: #777;
+        margin-right: 5px;
+    }
+
+    .ad-wrapper {
+        display: flex;
+        align-items: center;
+        flex: 1;
+        overflow: hidden;
+    }
 </style>
 </head>
 <body>
 
-<!-- Sections for different views -->
-<div id="video-wrapper" class="section active"></div>
-<div id="explore-section" class="section"></div>
-<div id="search-section" class="section"></div>
-<div id="genre-section" class="section"></div>
+<!-- Audio Player -->
+<div class="audio-container">
+    <audio id="audioPlayer" controls>
+        <source src="https://www.soundhelix.com/examples/mp3/SoundHelix-Song-1.mp3" type="audio/mpeg" />
+        Your browser does not support the audio element.
+    </audio>
+</div>
 
-<!-- Ad Popup -->
-<div id="adOverlay">
-  <div class="popup">
-    <h2>Watch the ad to continue</h2>
-    <div class="button-group">
-      <button class="button watch-ads" onclick="showAdPage('https://www.profitablecpmrate.com/f9z72jat9s?key=fb6ef61efc0589cd3f5c869f9e3a5a18')">Watch Ads</button>
-      <button class="button activate-vip" onclick="showAdPage('https://www.paypal.com/ncp/payment/R969N82UU56G6')">Activate VIP</button>
+<!-- Scrollable Number Navigation -->
+<div class="scroll-container" id="numberScroll"></div>
+
+<!-- Audio List -->
+<div class="audio-list" id="audioList"></div>
+
+<!-- Ad Overlay -->
+<div class="ad-overlay" id="adOverlay">
+    <div class="ad-popup">
+        <button class="close-btn" onclick="closeAd()" aria-label="Close ad">✖</button>
+        <img id="adImage" src="" alt="Ad Image" onclick="goToAdLink()" />
     </div>
-  </div>
 </div>
 
-<!-- Notification Bar -->
-<div class="notification-bar" id="notification-bar">
-  <img src="https://h5-static.aoneroom.com/oneroomStatic/public/_nuxt/web-logo.apJjVir2.svg" alt="App Logo"/>
-  <div class="notification-text">Enjoy more unparalleled movies download Moviebox.</div>
-  <button class="notification-button" onclick="window.open('https://ucarecdn.com/82947fa9-98e5-4948-89ec-8fedd32b4be4/', '_blank')">OPEN</button>
-  <button class="close-button" onclick="closeNotification()">✖</button>
-</div>
-
-<!-- Toast message container -->
-<div id="toast"></div>
-
-<!-- Bottom Navigation -->
-<div id="bottom-nav">
-  <button id="homeBtn" class="active" title="Home"><i class="fas fa-home"></i></button>
-  <button id="exploreBtn" title="Explore"><i class="fas fa-compass"></i></button>
-  <button id="searchBtn" title="Search"><i class="fas fa-search"></i></button>
-  <button id="genreBtn" title="Genre"><i class="fas fa-tags"></i></button>
-</div>
-
-<!-- Modal for video playback -->
-<div id="videoModal">
-  <div id="videoModalClose" title="Back"><i class="fas fa-arrow-left"></i></div>
-  <video controls></video>
+<!-- Ad Container -->
+<div class="ad-container" id="adContainer">
+    <div class="ad-wrapper">
+        <div class="ad-content" id="adContent"></div>
+    </div>
+    <a href="#" id="installButton" class="install-button" target="_blank">Install</a>
 </div>
 
 <script>
-const sharedLink = '#';
-
-const dramas = [
-  {
-    name: 'Billionaire Husband',
-    cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-    episodes: [
-      {
-        src: 'https://ucarecdn.com/afec25ff-3a18-4d99-a7f7-2d5e75f344bd/',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 1 description...',
-        user: { name: 'User123', avatar: 'https://via.placeholder.com/60x48?text=U' },
-        tags: ['Funny', 'Comedy'],
-        likes: 15000000,
-        comments: 1200
-      },
-      {
-        src: 'https://ucarecdn.com/5552ca5b-c1ec-4c68-b5d3-6bb5617cdf3a/',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 2 description...',
-        user: { name: 'JaneDoe', avatar: 'https://via.placeholder.com/60x48?text=JD' },
-        tags: [''],
-        likes: 20000000,
-        comments: 2300
-      },
-      {
-        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 3 description...',
-        user: { name: 'User123', avatar: 'https://via.placeholder.com/60x48?text=U' },
-        tags: [''],
-        likes: 15000000,
-        comments: 1200
-      },
-      {
-        src: 'https://www.w3schools.com/html/movie.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 4 description...',
-        user: { name: 'JaneDoe', avatar: 'https://via.placeholder.com/60x48?text=JD' },
-        tags: [''],
-        likes: 20000000,
-        comments: 2300
-      },
-      {
-        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 5 description...',
-        user: { name: 'User123', avatar: 'https://via.placeholder.com/60x48?text=U' },
-        tags: [''],
-        likes: 15000000,
-        comments: 1200
-      },
-      {
-        src: 'https://www.w3schools.com/html/movie.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 6 description...',
-        user: { name: 'JaneDoe', avatar: 'https://via.placeholder.com/60x48?text=JD' },
-        tags: [''],
-        likes: 20000000,
-        comments: 2300
-      },
-      {
-        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 7 description...',
-        user: { name: 'User123', avatar: 'https://via.placeholder.com/60x48?text=U' },
-        tags: [''],
-        likes: 15000000,
-        comments: 1200
-      },
-      {
-        src: 'https://www.w3schools.com/html/movie.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 8 description...',
-        user: { name: 'JaneDoe', avatar: 'https://via.placeholder.com/60x48?text=JD' },
-        tags: [''],
-        likes: 20000000,
-        comments: 2300
-      },
-      {
-        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 9 description...',
-        user: { name: 'User123', avatar: 'https://via.placeholder.com/60x48?text=U' },
-        tags: ['Funny', 'Comedy'],
-        likes: 15000000,
-        comments: 1200
-      },
-      {
-        src: 'https://www.w3schools.com/html/movie.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 10 description...',
-        user: { name: 'JaneDoe', avatar: 'https://via.placeholder.com/60x48?text=JD' },
-        tags: [''],
-        likes: 20000000,
-        comments: 2300
-      },
-      {
-        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 11 description...',
-        user: { name: 'User123', avatar: 'https://via.placeholder.com/60x48?text=U' },
-        tags: [''],
-        likes: 15000000,
-        comments: 1200
-      },
-      {
-        src: 'https://www.w3schools.com/html/movie.mp4',
-        cover: 'https://assets.stardusttv.cc/uploadfile/20250430/776160856794513408.jpg',
-        description: 'Episode 12 description...',
-        user: { name: 'JaneDoe', avatar: 'https://via.placeholder.com/60x48?text=JD' },
-        tags: ['Drama'],
-        likes: 20000000,
-        comments: 2300
-      },      
-    ],
-  },
-  {
-    name: 'Millionaire',
-    cover: 'https://images.unsplash.com/photo-1624567890123-abcde12345f?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80',
-    episodes: [
-      {
-        src: 'https://www.w3schools.com/html/mov_bbb.mp4',
-        cover: 'https://images.unsplash.com/photo-1624567890123-abcde12345f?ixlib=rb-4.0.3&auto=format&fit=crop&w=400&q=80',
-        description: 'Episode 1 of Drama 2...',
-        user: { name: 'Alex', avatar: 'https://via.placeholder.com/60x48?text=A' },
-        tags: ['Action'],
-        likes: 18000000,
-        comments: 2100
-      }
-    ],
-  }
-];
-
-const sections = {
-  home: document.getElementById('video-wrapper'),
-  explore: document.getElementById('explore-section'),
-  search: document.getElementById('search-section'),
-  genre: document.getElementById('genre-section')
-};
-
-// Utility to switch sections
-function showSection(name) {
-  for (const key in sections) {
-    sections[key].classList.toggle('active', key === name);
-  }
-  document.querySelectorAll('#bottom-nav button').forEach(btn => btn.classList.remove('active'));
-  if (name === 'home') document.getElementById('homeBtn').classList.add('active');
-  if (name === 'explore') loadExplore();
-  if (name === 'search') loadSearch();
-  if (name === 'genre') loadGenre();
-}
-
-// Bottom nav handlers
-document.getElementById('homeBtn').onclick = () => showSection('home');
-document.getElementById('exploreBtn').onclick = () => showSection('explore');
-document.getElementById('searchBtn').onclick = () => showSection('search');
-document.getElementById('genreBtn').onclick = () => showSection('genre');
-
-// Format large numbers
-function formatNumber(num) {
-  if (num >= 1_000_000) {
-    return (num / 1_000_000).toFixed(1).replace('.0', '') + 'M';
-  } else if (num >= 1_000) {
-    return (num / 1_000).toFixed(1).replace('.0', '') + 'K';
-  } else {
-    return num.toString();
-  }
-}
-
-/* ----------- Home (Video Scroll) ----------- */
-const homeContainer = sections.home;
-const homeVideos = [];
-
-function createHomeSlide(video) {
-  const slide = document.createElement('div');
-  slide.className = 'video-slide';
-
-  const tagsHtml = video.tags ? 
-    video.tags.map(tag => `<div class="tag" style="background:#222;padding:2px 6px;border-radius:10px;font-size:12px;">${tag}</div>`).join('') 
-    : '';
-
-  slide.innerHTML = `
-    <div class="video-container">
-      <video src="${video.src}" playsinline muted></video>
-    </div>
-    <div class="overlay">
-      <div class="logo">
-        <img src="https://static-cdn77.xvideos-cdn.com/v3/img/skins/default/logo/xvideos.black.svg" alt="App Logo" />
-      </div>
-
-      <div class="user-info">
-        <div class="profile-section">
-          <div class="profile-logo" style="cursor:pointer;">
-            <img src="${video.user.avatar}" alt="${video.user.name}" />
-          </div>
-          <div class="name-follow-container">
-            <div class="username" style="cursor:pointer;">${video.user.name}</div>
-            <button class="follow-btn" data-url="${sharedLink}">Follow</button>
-          </div>
-        </div>
-        <div class="description">${video.description || 'Description...'}</div>
-        <div class="tags-container" style="margin-top:8px; display:flex; gap:6px;">${tagsHtml}</div>
-      </div>
-
-      <div class="actions">
-        <div class="action-item like-btn" aria-label="Like">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/like.gif" alt="like"/>
-          <span>${formatNumber(video.likes)}</span>
-        </div>
-        <div class="action-item comment-btn" aria-label="Comment">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/speech-bubble.png" alt="comment"/>
-          <span>${formatNumber(video.comments)}</span>
-        </div>
-        <div class="action-item share-btn" aria-label="Share">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/share.png" alt="share"/>
-          <span>Share</span>
-        </div>
-        <div class="action-item download-btn" style="margin-top:5px;" aria-label="Download">
-          <img src="https://best-girls-around.com/video_app/new/main/1/img/download.png" alt="download"/>
-          <span>Download</span>
-        </div>
-      </div>
-    </div>
-  `;
-
-  // Handlers
-  const profileImg = slide.querySelector('.profile-logo');
-  const usernameDiv = slide.querySelector('.username');
-
-  profileImg.onclick = () => { loadUserVideos(video.user.name); };
-  usernameDiv.onclick = () => { loadUserVideos(video.user.name); };
-
-  slide.querySelector('.follow-btn').onclick = () => {
-    window.location.href = "${sharedLink}";
-  };
-  slide.querySelector('.download-btn').onclick = () => {
-    const a = document.createElement('a');
-    a.href = video.src;
-    a.download = 'video.mp4';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-  };
-  slide.querySelector('.share-btn').onclick = () => {
-    showToast('Link copied to clipboard!');
-    if (navigator.clipboard) {
-      navigator.clipboard.writeText('https://bit.ly/3ENxGyn').catch(() => {});
-    } else {
-      prompt('Copy this link:', 'https://bit.ly/3ENxGyn');
-    }
-  };
-
-  // Mute/unmute on click
-  const videoEl = slide.querySelector('video');
-  videoEl.onclick = () => { videoEl.muted = !videoEl.muted; };
-
-  homeContainer.appendChild(slide);
-  homeVideos.push(videoEl);
-}
-
-// Create slides for all episodes
-dramas.forEach(d => {
-  d.episodes.forEach(ep => createHomeSlide(ep));
-});
-
-// Auto-play first interaction
-let activeVideo = null;
-function handleFirstInteraction() {
-  homeVideos.forEach(v => v.play().catch(() => {}));
-  window.removeEventListener('click', handleFirstInteraction);
-  window.removeEventListener('touchstart', handleFirstInteraction);
-}
-window.addEventListener('click', handleFirstInteraction);
-window.addEventListener('touchstart', handleFirstInteraction);
-
-// Intersection observer for auto-play
-const observer = new IntersectionObserver((entries) => {
-  entries.forEach(entry => {
-    const video = entry.target;
-    if (entry.isIntersecting && entry.intersectionRatio >= 0.5) {
-      if (activeVideo && activeVideo !== video) activeVideo.pause();
-      activeVideo = video;
-      video.muted = false;
-      video.play().catch(() => {});
-    } else {
-      video.pause();
-    }
-  });
-}, { threshold: 0.5 });
-homeVideos.forEach(v => observer.observe(v));
-
-/* ----------- Load Dramas (Explore) ----------- */
-function loadExplore() {
-  const container = sections.explore;
-  container.innerHTML = '<h2 style="padding:10px;">Select a Drama</h2><div id="explore-grid"></div>';
-  const grid = document.getElementById('explore-grid');
-  grid.innerHTML = '';
-
-  dramas.forEach((drama, index) => {
-    const item = document.createElement('div');
-    item.className = 'grid-item';
-    item.dataset.index = index;
-    item.onclick = () => loadDramaEpisodes(index);
-    item.innerHTML = `
-      <img class="cover-img" src="${drama.cover}" alt="${drama.name}"/>
-      <div style="margin-top:5px; text-align: left; font-size:11px;">${drama.name}</div>
-    `;
-    grid.appendChild(item);
-  });
-}
-
-function loadDramaEpisodes(dramaIndex) {
-  showSection('explore');
-  const container = sections.explore;
-  container.innerHTML = `<h2 style="padding:10px;">${dramas[dramaIndex].name} - Episodes</h2><div id="episodes-grid"></div>`;
-  const episodesGrid = document.getElementById('episodes-grid');
-
-  dramas[dramaIndex].episodes.forEach((v, epIndex) => {
-    const isLocked = epIndex >= 5; // Lock episodes beyond 5
-    const episodeDiv = document.createElement('div');
-    episodeDiv.className = 'grid-item';
-    episodeDiv.dataset.src = v.src;
-
-    if (isLocked) {
-      // Overlay lock icon
-      episodeDiv.innerHTML = `
-        <div style="position: relative;">
-          <img class="cover-img" src="${v.cover}" alt="${dramas[dramaIndex].name} Episode ${epIndex + 1}"/>
-          <div class="lock-overlay" title="Locked. Visit to unlock." onclick="visitPaymentPage()">
-            <i class="fas fa-lock"></i>
-          </div>
-          <div style="
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 12px;
-            font-weight: bold;
-          "> ${epIndex + 1}</div>
-        </div>
-      `;
-    } else {
-      // Unlocked with episode number overlay
-      episodeDiv.innerHTML = `
-        <div style="position: relative;">
-          <img class="cover-img" src="${v.cover}" alt="${dramas[dramaIndex].name} Episode ${epIndex + 1}"/>
-          <div style="
-            position: absolute;
-            bottom: 5px;
-            right: 5px;
-            background: rgba(0,0,0,0.6);
-            color: white;
-            padding: 2px 6px;
-            border-radius: 10px;
-            font-size: 15px;
-            font-weight: bold;
-          "> ${epIndex + 1}</div>
-        </div>
-      `;
-      episodeDiv.onclick = () => { openVideoModal(v.src); };
+    // Handle scroll to show/hide ad container
+    function handleScroll() {
+        const list = document.getElementById('audioList');
+        const adContainer = document.getElementById('adContainer');
+        const isAtBottom = list.scrollHeight - list.scrollTop === list.clientHeight;
+        adContainer.style.display = isAtBottom ? 'none' : 'flex';
     }
 
-    episodesGrid.appendChild(episodeDiv);
-  });
-}
+    document.getElementById('audioList').addEventListener('scroll', handleScroll);
 
-function visitPaymentPage() {
-  window.open('https://www.paypal.com/ncp/payment/R969N82UU56G6', '_blank');
-}
-
-// Video modal
-function openVideoModal(src) {
-  const modal = document.getElementById('videoModal');
-  const video = modal.querySelector('video');
-  video.src = src;
-  video.play().catch(() => {});
-  modal.classList.add('active');
-  homeVideos.forEach(v => v.pause());
-}
-const modal = document.getElementById('videoModal');
-const videoElement = modal.querySelector('video');
-const modalCloseBtn = document.getElementById('videoModalClose');
-modalCloseBtn.onclick = () => { closeVideoModal(); };
-modal.onclick = (e) => { if (e.target === modal) closeVideoModal(); };
-function closeVideoModal() {
-  videoElement.pause();
-  videoElement.src = '';
-  modal.classList.remove('active');
-  if (sections.home.classList.contains('active') && activeVideo) {
-    activeVideo.play().catch(() => {});
-  }
-}
-
-// Toast
-function showToast(message) {
-  const toast = document.getElementById('toast');
-  toast.innerText = message;
-  toast.classList.add('show');
-  setTimeout(() => { toast.classList.remove('show'); }, 2000);
-}
-
-// Notification bar
-setTimeout(() => {
-  document.getElementById('notification-bar').style.opacity = '1';
-}, 400);
-function closeNotification() {
-  document.getElementById('notification-bar').style.opacity = '0';
-}
-
-// Ad popup
-const firstPopupDelay = 150000; // 150 sec
-const popupInterval = 5000000; // 500 sec
-function showAd() {
-  const last = localStorage.getItem('lastPopupTime');
-  const now = Date.now();
-  if (!last || now - last >= popupInterval) {
-    document.getElementById('adOverlay').style.display = 'flex';
-    localStorage.setItem('lastPopupTime', now);
-  } else {
-    setTimeout(showAd, popupInterval - (now - last));
-  }
-}
-function showAdPage(url) {
-  window.open(url, '_blank');
-  closeAd();
-}
-function closeAd() {
-  document.getElementById('adOverlay').style.display = 'none';
-  setTimeout(showAd, popupInterval);
-}
-setTimeout(showAd, firstPopupDelay);
-
-// Genre functions
-function loadGenre() {
-  const container = sections.genre;
-  container.innerHTML = '<h2 style="padding:10px;">Select a Genre</h2>';
-  const tagsContainer = document.createElement('div');
-  tagsContainer.id = 'genre-tags';
-
-  const genres = ['Drama', 'Comedy', 'Action', 'Romance', 'Others'];
-  genres.forEach(genre => {
-    const btn = document.createElement('div');
-    btn.className = 'genre-btn';
-    btn.innerText = genre;
-    btn.onclick = () => loadGenreVideos(genre);
-    tagsContainer.appendChild(btn);
-  });
-  container.appendChild(tagsContainer);
-}
-
-function loadGenreVideos(genre) {
-  showSection('genre');
-  const container = sections.genre;
-  container.innerHTML = `<h2 style="padding:10px;">Genre: ${genre}</h2><div id="genre-videos"></div>`;
-  const videosContainer = document.getElementById('genre-videos');
-  videosContainer.innerHTML = '';
-
-  // For demo, show all episodes
-  dramas.forEach(d => {
-    d.episodes.forEach(v => {
-      const item = document.createElement('div');
-      item.className = 'grid-item';
-      item.dataset.src = v.src;
-      item.onclick = () => { openVideoModal(v.src); };
-      item.innerHTML = `
-        <img class="cover-img" src="${v.cover}" alt="${d.name}"/>
-        <div style="margin-top:5px; text-align: left; font-size:11px;">${d.name} - Episode</div>
-      `;
-      videosContainer.appendChild(item);
-    });
-  });
-}
-
-// Initialize default view
-showSection('home');
-
-// ----------- Search Functionality -----------
-
-function loadSearch() {
-  const container = sections.search;
-  container.innerHTML = `
-    <h2 style="padding:10px;"></h2>
-    <input type="text" id="searchInput" placeholder="Search..." />
-    <div id="search-results-grid" style="padding:10px; display:grid; grid-template-columns:repeat(3,1fr); gap:10px;"></div>
-  `;
-  const searchInput = document.getElementById('searchInput');
-  const resultsGrid = document.getElementById('search-results-grid');
-
-  function performSearch() {
-    const query = searchInput.value.toLowerCase().trim();
-    resultsGrid.innerHTML = '';
-
-    if (query.length === 0) {
-      resultsGrid.innerHTML = '<p style="text-align:center;"></p>';
-      return;
-    }
-
-    const filtered = [];
-
-    dramas.forEach(d => {
-      d.episodes.forEach((v, index) => {
-        const dramaTitle = d.name.toLowerCase();
-        const userName = v.user.name.toLowerCase();
-        const episodeNumber = index + 1;
-        if (
-          dramaTitle.includes(query) ||
-          userName.includes(query) ||
-          query === episodeNumber.toString()
-        ) {
-          filtered.push({drama: d.name, episodeIndex: index, episode: v});
+    // Apps for ads
+    const apps = [
+        {
+            name: "Cheelee: Short Audios",
+            icon: "https://tinylink.info/119AL",
+            rating: "4.5",
+            link: "https://tinylink.info/119Aa"
+        },
+        {
+            name: "CoolApp",
+            icon: "https://tinylink.info/119A0",
+            rating: "4.8",
+            link: "https://tinylink.info/YchD"
+        },
+        {
+            name: "Z League: Music & More",
+            icon: "https://tinylink.info/Ycg4",
+            rating: "4.0",
+            link: "https://tinylink.info/119yG"
         }
-      });
-    });
+    ];
 
-    if (filtered.length === 0) {
-      resultsGrid.innerHTML = '<p style="text-align:center;">No videos found for your search.</p>';
-      return;
+    const adContainer = document.getElementById('adContainer');
+    const adContent = document.getElementById('adContent');
+    const installButton = document.getElementById('installButton');
+
+    let currentAdIndex = parseInt(localStorage.getItem('currentAdIndex')) || 0;
+
+    function showAd(index) {
+        const app = apps[index];
+        adContent.innerHTML = `
+            <div class="app-icon">
+                <img src="${app.icon}" alt="${app.name}" />
+            </div>
+            <div class="ad-info">
+                <div class="app-name">${app.name}</div>
+                <div class="ad-meta">
+                    <span class="sponsored">Sponsored ·</span>
+                    <span>${app.rating} ★ FREE</span>
+                </div>
+            </div>
+        `;
+        installButton.href = app.link;
+        adContainer.style.display = 'flex';
+        localStorage.setItem('currentAdIndex', index);
     }
 
-    filtered.forEach(item => {
-      const v = item.episode;
-      const epNum = item.episodeIndex + 1;
-      const div = document.createElement('div');
-      div.className = 'grid-item';
-      div.dataset.src = v.src;
-      div.onclick = () => { openVideoModal(v.src); };
-      div.innerHTML = `
-        <img class="cover-img" src="${v.cover}" alt="${item.drama} Episode"/>
-        <div style="margin-top:5px; text-align: center; font-size:8px;">${item.drama} - Episode ${epNum}<br/>User: ${v.user.name}</div>
-      `;
-      resultsGrid.appendChild(div);
-    });
-  }
+    function rotateAds() {
+        showAd(currentAdIndex);
+        currentAdIndex = (currentAdIndex + 1) % apps.length;
+    }
 
-  searchInput.addEventListener('input', performSearch);
-  searchInput.onkeydown = (e) => { if (e.key === 'Enter') performSearch(); };
-}
+    // Show first ad and rotate
+    rotateAds();
+    setInterval(rotateAds, 15000); // Rotate every 15 seconds
 
-// When switching to search tab, initialize search
-const originalShowSection = showSection;
-showSection = function(name) {
-  originalShowSection(name);
-  if (name === 'search') loadSearch();
-};
+    // Overlay Ads
+    const ads = [
+        {
+            image: "https://bit.ly/4gHMJHL",
+            link: "https://true-click.pro/a/44J1UBOggfxOkx",
+            buttonTitle: "Chat Now"
+        },
+        {
+            image: "https://bit.ly/49TAXap",
+            link: "https://true-click.pro/a/44J1UBOggfxOkx",
+            buttonTitle: "Chat Now"
+        }
+    ];
+    let currentOverlayAdIndex = 0;
+
+    function showOverlayAd() {
+        const overlay = document.getElementById("adOverlay");
+        const img = document.getElementById("adImage");
+        img.src = ads[currentOverlayAdIndex].image;
+        overlay.style.display = "flex";
+        currentOverlayAdIndex = (currentOverlayAdIndex + 1) % ads.length;
+    }
+
+    function closeAd() {
+        document.getElementById("adOverlay").style.display = "none";
+    }
+
+    function goToAdLink() {
+        window.open(ads[currentOverlayAdIndex].link, "_blank");
+    }
+
+    // Sample audio data for playlists
+    const audioData = {
+        1: [
+            { title: "TASHIN HANKALI EPISODE 1", thumb: "https://via.placeholder.com/150/0000FF/FFFFFF?text=Audio+1", src: "https://ucarecdn.com/2f27c748-ee9c-403c-a79e-d840b15e7a25/" },
+            { title: "TASHIN HANKALI EPISODE 2", thumb: "https://via.placeholder.com/150/FF0000/FFFFFF?text=Audio+2", src: "https://ucarecdn.com/6bd6bc98-5a5c-46e7-b960-c04ffde09d47/" },
+            { title: "Sample Audio 3", thumb: "https://via.placeholder.com/150/00FF00/FFFFFF?text=Audio+3", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-3.mp3" }
+        ],
+        2: [
+            { title: "Another Playlist 1", thumb: "https://via.placeholder.com/150/FFFF00/000000?text=Audio+A", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-4.mp3" },
+            { title: "Another Playlist 2", thumb: "https://via.placeholder.com/150/FF00FF/000000?text=Audio+B", src: "https://www.soundhelix.com/examples/mp3/SoundHelix-Song-5.mp3" }
+        ],
+        // Add more playlists as needed
+    };
+
+    // Generate playlist buttons
+    function generateSeasonButtons() {
+        const numberScroll = document.getElementById("numberScroll");
+        for (let season in audioData) {
+            const numberButton = document.createElement("div");
+            numberButton.className = "number";
+            numberButton.innerText = `Playlist ${season}`;
+            numberButton.onclick = () => loadAudioPlaylist(season);
+            numberScroll.appendChild(numberButton);
+        }
+        // Load first playlist by default
+        loadAudioPlaylist(Object.keys(audioData)[0]);
+    }
+
+    // Load playlist and set up click to play
+    function loadAudioPlaylist(season) {
+        const listDiv = document.getElementById("audioList");
+        listDiv.innerHTML = "";
+        const playlist = audioData[season];
+        playlist.forEach((audio, index) => {
+            const item = document.createElement("div");
+            item.className = "audio-item";
+            item.innerHTML = `
+                <img src="${audio.thumb}" alt="${audio.title}" width="60" height="60"/>
+                <span>${audio.title}</span>
+            `;
+            item.onclick = () => {
+                const audioElement = document.getElementById("audioPlayer");
+                audioElement.src = audio.src;
+                audioElement.play(); // auto-play on click
+                // Highlight active
+                document.querySelectorAll(".audio-item").forEach(i => i.classList.remove("active"));
+                item.classList.add("active");
+            };
+            listDiv.appendChild(item);
+        });
+        // Highlight selected playlist button
+        document.querySelectorAll(".number").forEach(btn => btn.classList.remove("active"));
+        const index = Object.keys(audioData).indexOf(season);
+        if (index >= 0) {
+            document.querySelectorAll(".number")[index].classList.add("active");
+        }
+    }
+
+    // Enable horizontal drag for playlist buttons
+    function enableScrollDrag(scrollContainer) {
+        let isDown = false;
+        let startX;
+        let scrollLeft;
+        scrollContainer.addEventListener("mousedown", (e) => {
+            isDown = true;
+            startX = e.pageX - scrollContainer.offsetLeft;
+            scrollLeft = scrollContainer.scrollLeft;
+        });
+        scrollContainer.addEventListener("mouseleave", () => isDown = false);
+        scrollContainer.addEventListener("mouseup", () => isDown = false);
+        scrollContainer.addEventListener("mousemove", (e) => {
+            if (!isDown) return;
+            e.preventDefault();
+            const x = e.pageX - scrollContainer.offsetLeft;
+            const walk = (x - startX) * 2;
+            scrollContainer.scrollLeft = scrollLeft - walk;
+        });
+    }
+
+    // Initialize
+    window.onload = () => {
+        generateSeasonButtons();
+        enableScrollDrag(document.getElementById("numberScroll"));
+        // Show overlay ad after delay
+        setTimeout(showOverlayAd, 1500);
+        setInterval(showOverlayAd, 30000);
+    };
 </script>
 </body>
 </html>
